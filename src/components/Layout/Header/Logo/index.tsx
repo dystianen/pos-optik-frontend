@@ -1,20 +1,17 @@
-import { getImagePrefix } from "@/utils/util";
-import Image from "next/image";
-import Link from "next/link";
+import { Title } from '@mantine/core'
+import Link from 'next/link'
 
 const Logo: React.FC = () => {
   return (
     <Link href="/">
-      <Image
-        src= {`${getImagePrefix()}images/logo/logo.svg`}
-        alt="logo"
-        width={160}
-        height={50}
-        style={{ width: "auto", height: "auto" }}
-        quality={100}
-      />
+      <Title order={1}>
+        SOLUSIKU
+        <Title component="span" c="violet.7" order={1}>
+          .
+        </Title>
+      </Title>
     </Link>
-  );
-};
+  )
+}
 
-export default Logo;
+export default Logo

@@ -1,6 +1,6 @@
-import Image from "next/image";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { getImagePrefix } from "@/utils/util";
+import { getImagePrefix } from '@/utils/util'
+import { Icon } from '@iconify/react/dist/iconify.js'
+import Image from 'next/image'
 
 const Hero = () => {
   return (
@@ -14,15 +14,15 @@ const Hero = () => {
                 className="text-success text-xl inline-block me-2"
               />
               <p className="text-success text-sm font-semibold text-center lg:text-start">
-                Get 30% off on first enroll
+                Get 30% off on new account
               </p>
             </div>
             <h1 className="text-midnight_text text-4xl sm:text-5xl font-semibold pt-5 lg:pt-0">
               Enhance your productivity with the perfect eyewear.
             </h1>
             <h3 className="text-black/70 text-lg pt-5 lg:pt-0">
-              Get personalized recommendations and discover the ideal eyewear
-              that fits your style and work needs.
+              Get personalized recommendations and discover the ideal eyewear that fits your style
+              and work needs.
             </h3>
             <button className="bg-secondary text-white p-5 rounded-full right-2 top-2 w-max px-20">
               Register Now!
@@ -36,9 +36,7 @@ const Hero = () => {
                   height={30}
                   className="smallImage"
                 />
-                <p className="text-sm sm:text-lg font-normal text-black">
-                  Comfortable
-                </p>
+                <p className="text-sm sm:text-lg font-normal text-black">Comfortable</p>
               </div>
               <div className="flex gap-2">
                 <Image
@@ -48,9 +46,7 @@ const Hero = () => {
                   height={30}
                   className="smallImage"
                 />
-                <p className="text-sm sm:text-lg font-normal text-black">
-                  Recommended
-                </p>
+                <p className="text-sm sm:text-lg font-normal text-black">Recommended</p>
               </div>
               <div className="flex gap-2">
                 <Image
@@ -60,9 +56,7 @@ const Hero = () => {
                   height={30}
                   className="smallImage"
                 />
-                <p className="text-sm sm:text-lg font-normal text-black">
-                  Stylish
-                </p>
+                <p className="text-sm sm:text-lg font-normal text-black">Stylish</p>
               </div>
             </div>
           </div>
@@ -77,7 +71,7 @@ const Hero = () => {
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Hero;
+export default Hero

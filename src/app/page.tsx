@@ -1,24 +1,25 @@
-import React from "react";
-import Hero from "@/components/Home/Hero";
-import Companies from "@/components/Home/Companies";
-import Courses from "@/components/Home/Courses";
-import Mentor from "@/components/Home/Mentor";
-import Testimonial from "@/components/Home/Testimonials";
-import Newsletter from "@/components/Home/Newsletter";
-import { Metadata } from "next";
+import Hero from '@/components/Home/Hero'
+import Mentor from '@/components/Home/Mentor'
+import Newsletter from '@/components/Home/Newsletter'
+import SectionCarousel from '@/components/Home/SectionCarousel'
+import Testimonial from '@/components/Home/Testimonials'
+import { Stack } from '@mantine/core'
+import { Metadata } from 'next'
 export const metadata: Metadata = {
-  title: "eLearning",
-};
+  title: 'eLearning'
+}
 
 export default function Home() {
   return (
     <main>
-      <Hero />
-      <Companies />
-      <Courses />
-      <Mentor />
-      <Testimonial />
-      <Newsletter />
+      <Stack gap={'xl'}>
+        <Hero />
+        <SectionCarousel title="Recommendations" exploreTo="/recommendations" />
+        <SectionCarousel title="New Eyewear" exploreTo="/new-eyewear" />
+        <Mentor />
+        <Testimonial />
+        <Newsletter />
+      </Stack>
     </main>
-  );
+  )
 }
