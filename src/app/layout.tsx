@@ -6,6 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Poppins } from 'next/font/google'
+import NextTopLoader from 'nextjs-toploader'
 
 // Stylesheet
 import queryClient from '@/lib/reactQueryClient'
@@ -32,6 +33,7 @@ export default function RootLayout({
         <ColorSchemeScript />
       </head>
       <body className={`${font.className}`}>
+        <NextTopLoader color="#6556FF" showSpinner={false} />
         <QueryClientProvider client={queryClient}>
           <MantineProvider
             theme={{

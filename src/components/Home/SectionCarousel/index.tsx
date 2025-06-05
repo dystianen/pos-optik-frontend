@@ -1,18 +1,18 @@
 'use client'
 import CardProduct from '@/components/Common/CardProduct'
+import { TProduct } from '@/types/product'
 import { Carousel } from '@mantine/carousel'
 import { Container } from '@mantine/core'
 import Link from 'next/link'
 
 type TSectionCarousel = {
   title: string
-  data?: any
+  data: TProduct[]
   exploreTo: string
 }
 
 const SectionCarousel = ({ title, data, exploreTo }: TSectionCarousel) => {
   return (
-    // <Container size={'xl'} my={'xl'}>
     <Container size={'xl'} my={'xl'} w={'100%'}>
       <div className="sm:flex justify-between items-center mb-10">
         <h2 className="text-midnight_text text-4xl lg:text-5xl font-semibold mb-5 sm:mb-0">
@@ -31,22 +31,17 @@ const SectionCarousel = ({ title, data, exploreTo }: TSectionCarousel) => {
         slideGap="md"
         emblaOptions={{ align: 'start', slidesToScroll: 1 }}
         withControls={false}
+        styles={{
+          viewport: {
+            padding: '10px 0'
+          }
+        }}
       >
-        <Carousel.Slide>
-          <CardProduct />
-        </Carousel.Slide>
-        <Carousel.Slide>
-          <CardProduct />
-        </Carousel.Slide>
-        <Carousel.Slide>
-          <CardProduct />
-        </Carousel.Slide>
-        <Carousel.Slide>
-          <CardProduct />
-        </Carousel.Slide>
-        <Carousel.Slide>
-          <CardProduct />
-        </Carousel.Slide>
+        {data.map((item, index: number) => (
+          <Carousel.Slide key={index}>
+            <CardProduct item={item} />
+          </Carousel.Slide>
+        ))}
       </Carousel>
     </Container>
   )

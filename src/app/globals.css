@@ -11,14 +11,25 @@ section {
 }
 
 .slick-dots {
-  color: #1A21BC;
+  color: #1a21bc;
 }
 
 .slick-dots li.slick-active button:before {
   opacity: 1;
-  color: #1A21BC !important;
+  color: #1a21bc !important;
 }
 
 .slick-dots li button:before {
   font-size: 11px !important;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
 }

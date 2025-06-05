@@ -2,10 +2,12 @@
 import Logo from '@/components/Layout/Header/Logo'
 import { useAuth } from '@/hooks/useAuth'
 import { TReqLogin } from '@/types/auth'
+import { setCookieToken, setUser } from '@/utils/auth'
 import { Button, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { jwtDecode } from 'jwt-decode'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 
 const SignUp = () => {
@@ -23,12 +25,22 @@ const SignUp = () => {
   const { mutate: submitLogin } = useAuth.login()
 
   const handleSubmit = (values: TReqLogin) => {
-    // setLoading(true)
-
-    console.log('form: ', values)
+    setLoading(true)
     submitLogin(values, {
       onSuccess: (res) => {
-        console.log({ res })
+        router.push('/')
+        setCookieToken(res.data.token)
+        const decode: { user_id: number; user_name: string; email: string } = jwtDecode(
+          res.data.token
+        )
+        const user = {
+          user_id: decode.user_id,
+          username: decode.user_name,
+          email: decode.email
+        }
+
+        setUser(JSON.stringify(user))
+        setLoading(false)
       }
     })
   }

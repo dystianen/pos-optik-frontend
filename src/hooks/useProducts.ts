@@ -1,11 +1,23 @@
-import { getRecommendations } from '@/services/productService'
+import productService from '@/services/productService'
 import { useQuery } from '@tanstack/react-query'
 
 export const useProducts = {
-  getRecommendations() {
+  getRecommendations(limit: number) {
     return useQuery({
       queryKey: ['recommendations'],
-      queryFn: getRecommendations
+      queryFn: () => productService.getRecommendations({ limit })
+    })
+  },
+  getNewEyeWear() {
+    return useQuery({
+      queryKey: ['new-eyewear'],
+      queryFn: productService.getNewEyeWear
+    })
+  },
+  getProductCategory() {
+    return useQuery({
+      queryKey: ['categories'],
+      queryFn: productService.getProductCategory
     })
   }
 }
