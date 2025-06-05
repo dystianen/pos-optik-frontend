@@ -11,7 +11,7 @@ const CardProduct = ({ item }: { item: TProduct }) => {
       </Card.Section>
 
       <Box mt={'md'}>
-        <Text fw={500} c="violet.7">
+        <Text fw={500} c="primary">
           {item.product_brand}
         </Text>
         <Text fw={500}>{item.product_name}</Text>

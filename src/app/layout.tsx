@@ -1,7 +1,7 @@
 import Footer from '@/components/Layout/Footer'
 import Header from '@/components/Layout/Header'
 import ScrollToTop from '@/components/ScrollToTop'
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core'
+import { ColorSchemeScript, MantineProvider, createTheme, mantineHtmlProps } from '@mantine/core'
 import { QueryClientProvider } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
@@ -22,6 +22,25 @@ const font = Poppins({
   weight: ['400', '500', '600', '700']
 })
 
+const theme = createTheme({
+  primaryColor: 'primary',
+  primaryShade: 3,
+  colors: {
+    primary: [
+      '#eceaff',
+      '#d4cfff',
+      '#a49bff',
+      '#6556ff',
+      '#4836fe',
+      '#2e19fe',
+      '#1f09ff',
+      '#1100e4',
+      '#0800cc',
+      '#0000b4'
+    ]
+  }
+})
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -35,12 +54,7 @@ export default function RootLayout({
       <body className={`${font.className}`}>
         <NextTopLoader color="#6556FF" showSpinner={false} />
         <QueryClientProvider client={queryClient}>
-          <MantineProvider
-            theme={{
-              primaryColor: 'violet',
-              primaryShade: 7
-            }}
-          >
+          <MantineProvider theme={theme}>
             <Header />
             {children}
             <Footer />
