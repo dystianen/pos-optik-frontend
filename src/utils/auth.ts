@@ -1,24 +1,31 @@
-import { deleteCookie, getCookie, setCookie } from 'cookies-next/client'
+'use server'
 
-const setCookieToken = (accessToken: string) => {
-  setCookie('accessToken', accessToken)
+import { cookies } from 'next/headers'
+
+const setCookieToken = async (accessToken: string) => {
+  const cookieStore = await cookies()
+  cookieStore.set('accessToken', accessToken)
 }
 
-const getCookieToken = () => {
-  const accessToken = getCookie('accessToken')
+const getCookieToken = async () => {
+  const cookieStore = await cookies()
+  const accessToken = cookieStore.get('accessToken')
   return accessToken
 }
 
-const removeCookieToken = () => {
-  deleteCookie('accessToken')
+const removeCookieToken = async () => {
+  const cookieStore = await cookies()
+  cookieStore.delete('accessToken')
 }
 
-const setUser = (data: string) => {
-  localStorage.setItem('user', data)
+const setUser = async (data: string) => {
+  const cookieStore = await cookies()
+  cookieStore.set('user', data)
 }
 
-const removeUser = () => {
-  localStorage.clear()
+const removeUser = async () => {
+  const cookieStore = await cookies()
+  cookieStore.delete('user')
 }
 
 export { getCookieToken, removeCookieToken, removeUser, setCookieToken, setUser }

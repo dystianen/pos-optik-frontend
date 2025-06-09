@@ -3,7 +3,6 @@ import Hero from '@/components/Home/Hero'
 import Mentor from '@/components/Home/Mentor'
 import Newsletter from '@/components/Home/Newsletter'
 import SectionCarousel from '@/components/Home/SectionCarousel'
-import Testimonial from '@/components/Home/Testimonials'
 import { useProducts } from '@/hooks/useProducts'
 import { Stack } from '@mantine/core'
 // import { Metadata } from 'next'
@@ -26,7 +25,7 @@ export default function Home() {
         />
         <SectionCarousel title="New Eyewear" exploreTo="/new-eyewear" data={newEyeWear ?? []} />
         <Mentor />
-        <Testimonial />
+        {/* <Testimonial /> */}
         <Newsletter />
       </Stack>
     </main>

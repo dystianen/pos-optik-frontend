@@ -6,6 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Poppins } from 'next/font/google'
+import { cookies } from 'next/headers'
 import NextTopLoader from 'nextjs-toploader'
 
 // Stylesheet
@@ -41,11 +42,15 @@ const theme = createTheme({
   }
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const userCookie = cookieStore.get('user')
+  const user = userCookie && userCookie.value ? JSON.parse(userCookie.value) : null
+
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
@@ -55,7 +60,7 @@ export default function RootLayout({
         <NextTopLoader color="#6556FF" showSpinner={false} />
         <QueryClientProvider client={queryClient}>
           <MantineProvider theme={theme}>
-            <Header />
+            <Header user={user} />
             {children}
             <Footer />
             <ScrollToTop />

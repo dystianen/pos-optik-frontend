@@ -18,14 +18,14 @@ const Hero = () => {
               </p>
             </div>
             <h1 className="text-midnight_text text-4xl sm:text-5xl font-semibold pt-5 lg:pt-0">
-              Enhance your productivity with the perfect eyewear.
+              Boost your confidence with the perfect eyewear
             </h1>
             <h3 className="text-black/70 text-lg pt-5 lg:pt-0">
-              Get personalized recommendations and discover the ideal eyewear that fits your style
-              and work needs.
+              Discover eyewear that blends style, comfort, and productivity, "Look sharp. Feel
+              confident. Work smarter".
             </h3>
             <button className="bg-secondary text-white p-5 rounded-full right-2 top-2 w-max px-20">
-              Register Now!
+              Get 30% off — Register Now!
             </button>
             <div className="flex items-center justify-between pt-10 lg:pt-4">
               <div className="flex gap-2">

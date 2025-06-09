@@ -11,19 +11,17 @@ import { headerData } from '../Header/Navigation/menuData'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
 
-const Header: React.FC = () => {
+type TProps = {
+  user: {
+    username: string
+  }
+}
+
+const Header: React.FC<TProps> = ({ user }) => {
+  console.log('🚀 ~ user:', user)
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
-  const [user, setUser] = useState<{ username?: string }>({})
-
-  // Safely read localStorage
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const userString = localStorage.getItem('user')
-      setUser(userString ? JSON.parse(userString) : {})
-    }
-  }, [router])
 
   // sticky nav
   const handleScroll = () => {
@@ -40,7 +38,6 @@ const Header: React.FC = () => {
   const handleLogout = useCallback(() => {
     removeCookieToken()
     removeUser()
-    router.refresh()
   }, [])
 
   return (
@@ -60,7 +57,7 @@ const Header: React.FC = () => {
 
           <Group>
             <Cart />
-            {user.username ? (
+            {user?.username ? (
               <Menu>
                 <Menu.Target>
                   <UnstyledButton>
@@ -119,7 +116,7 @@ const Header: React.FC = () => {
               <MobileHeaderLink key={index} item={item} />
             ))}
             <div className="mt-4 flex flex-col space-y-4 w-full">
-              {user.username ? (
+              {user?.username ? (
                 <>
                   <button
                     onClick={() => {

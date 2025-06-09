@@ -28,7 +28,6 @@ const SignUp = () => {
     setLoading(true)
     submitLogin(values, {
       onSuccess: (res) => {
-        router.push('/')
         setCookieToken(res.data.token)
         const decode: { user_id: number; user_name: string; email: string } = jwtDecode(
           res.data.token
@@ -41,6 +40,7 @@ const SignUp = () => {
 
         setUser(JSON.stringify(user))
         setLoading(false)
+        router.replace('/')
       }
     })
   }
