@@ -39,8 +39,8 @@
     "prettier-plugin-tailwindcss": "^0.6.12",
     "react": "^18",
     "react-dom": "^18",
-    "react-hot-toast": "^2.4.1",
     "react-slick": "^0.30.2",
+    "react-toastify": "^11.0.5",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "slick-carousel": "^1.8.1"

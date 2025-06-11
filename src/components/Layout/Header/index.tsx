@@ -4,7 +4,6 @@ import { removeCookieToken, removeUser } from '@/utils/auth'
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconUserFilled } from '@tabler/icons-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
 import { headerData } from '../Header/Navigation/menuData'
@@ -18,8 +17,6 @@ type TProps = {
 }
 
 const Header: React.FC<TProps> = ({ user }) => {
-  console.log('🚀 ~ user:', user)
-  const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
 
@@ -62,7 +59,7 @@ const Header: React.FC<TProps> = ({ user }) => {
                 <Menu.Target>
                   <UnstyledButton>
                     <Group gap={'xs'}>
-                      <IconUserFilled color="#6556FF" size={28} />
+                      <IconUserFilled color="#1a21bc" size={28} />
                       <Text size="lg">{user.username}</Text>
                     </Group>
                   </UnstyledButton>

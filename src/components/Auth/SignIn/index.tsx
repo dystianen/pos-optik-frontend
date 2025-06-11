@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const SignUp = () => {
   const router = useRouter()
@@ -41,6 +42,11 @@ const SignUp = () => {
         setUser(JSON.stringify(user))
         setLoading(false)
         router.replace('/')
+      },
+      onError: (err) => {
+        console.log(err)
+        setLoading(false)
+        toast.error(err.message)
       }
     })
   }

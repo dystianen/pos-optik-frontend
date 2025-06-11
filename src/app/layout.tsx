@@ -14,6 +14,7 @@ import queryClient from '@/lib/reactQueryClient'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
+import { ToastContainer } from 'react-toastify'
 import './globals.css'
 
 dayjs.extend(customParseFormat)
@@ -25,19 +26,19 @@ const font = Poppins({
 
 const theme = createTheme({
   primaryColor: 'primary',
-  primaryShade: 3,
+  primaryShade: 8,
   colors: {
     primary: [
-      '#eceaff',
-      '#d4cfff',
-      '#a49bff',
-      '#6556ff',
-      '#4836fe',
-      '#2e19fe',
-      '#1f09ff',
-      '#1100e4',
-      '#0800cc',
-      '#0000b4'
+      '#ecedff',
+      '#d5d7f9',
+      '#a8abf0',
+      '#797de9',
+      '#5155e2',
+      '#393ddf',
+      '#2c30de',
+      '#1f24c5',
+      '#1a21bc',
+      '#0d1a9c'
     ]
   }
 })
@@ -66,6 +67,18 @@ export default async function RootLayout({
             <ScrollToTop />
           </MantineProvider>
         </QueryClientProvider>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
       </body>
     </html>
   )

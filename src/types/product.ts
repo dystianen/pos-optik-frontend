@@ -1,7 +1,7 @@
 import { GeneralResponse } from './general'
 
 export type TProduct = {
-  product_id: string
+  product_id: number
   category_id: string
   product_name: string
   product_price: string

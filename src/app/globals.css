@@ -33,3 +33,7 @@ embed,
 object {
   display: block;
 }
+
+.Toastify {
+  position: absolute;
+}

@@ -5,7 +5,7 @@ const Logo: React.FC = () => {
   return (
     <Link href="/">
       <Title order={1}>
-        SOLUSIKU
+        OPTIKERS
         <Title component="span" c="violet.7" order={1}>
           .
         </Title>

@@ -14,10 +14,10 @@ const apiClient = axios.create({
 
 const addAuthInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
-    (config) => {
-      const accessToken = getCookieToken()
+    async (config) => {
+      const accessToken = await getCookieToken()
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+        config.headers.Authorization = `Bearer ${accessToken.value}`
       }
       return config
     },
@@ -33,16 +33,13 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
     (error) => {
       if ((error.response && error.response.status === 401) || error.response.status === 403) {
         const pathname = window.location.pathname
-        if (pathname !== '/login') {
+        if (pathname !== '/signin') {
           removeCookieToken()
-          window.location.href = '/login'
+          window.location.href = '/signin'
         }
       }
 
-      const err = {
-        status: error.response?.status,
-        data: error.response?.data || error.message
-      }
+      const err = error.response?.data
       return Promise.reject<AxiosError>(err)
     }
   )
