@@ -13,7 +13,7 @@ const CardCart = ({ item }: TCardCart) => {
   return (
     <Card withBorder radius="md">
       <Grid>
-        <Grid.Col span={6}>
+        <Grid.Col span={8}>
           <Group>
             <Image
               src={embedImage(item.product_image_url)}
@@ -28,12 +28,13 @@ const CardCart = ({ item }: TCardCart) => {
               </Title>
               <Text>{item.product_brand}</Text>
               <Text>
-                Color: {item.color} // Extra: {item.material}, {item.uv_protection}
+                Color: {item.color} // Material: {item.material} // UV Protection:{' '}
+                {item.uv_protection === '1' ? 'Yes' : 'No'}
               </Text>
             </Stack>
           </Group>
         </Grid.Col>
-        <Grid.Col span={5}>
+        <Grid.Col span={3}>
           <Stack gap={'xs'} justify="center" h={'100%'}>
             <Title order={5}>{formatCurrency(item.price)}</Title>
           </Stack>

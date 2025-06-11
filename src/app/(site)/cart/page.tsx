@@ -15,10 +15,10 @@ const Cart = () => {
       <Stack>
         <Card bg="primary.0">
           <Grid>
-            <Grid.Col span={6}>
+            <Grid.Col span={8}>
               <Title order={5}>Product</Title>
             </Grid.Col>
-            <Grid.Col span={5}>
+            <Grid.Col span={3}>
               <Title order={5}>Price</Title>
             </Grid.Col>
             <Grid.Col span={1}>
