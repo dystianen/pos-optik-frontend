@@ -7,15 +7,13 @@ import { Card, Container, Grid, Stack, Title } from '@mantine/core'
 const Cart = () => {
   const { data: cart } = useCart.cart()
 
-  console.log('🚀 ~ Cart ~ cart:', cart)
-
   return (
     <Container size={'xl'} my={120}>
       <Title order={2} mb={32}>
         My Cart
       </Title>
       <Stack>
-        <Card shadow="sm">
+        <Card bg="primary.0">
           <Grid>
             <Grid.Col span={6}>
               <Title order={5}>Product</Title>
