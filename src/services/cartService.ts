@@ -13,6 +13,10 @@ const cartService = {
   async cart() {
     const response = await apiClient.get<TResCart>('/cart')
     return response.data.data
+  },
+  async deleteItemCart(id: string) {
+    const response = await apiClient.delete<TResCart>(`/cart/delete/${id}`)
+    return response.data.data
   }
 }
 

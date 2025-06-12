@@ -2,7 +2,7 @@
 
 import CardCart from '@/components/Common/CardCart'
 import { useCart } from '@/hooks/useCart'
-import { Card, Container, Grid, Stack, Title } from '@mantine/core'
+import { Card, Container, Grid, Stack, Text, Title } from '@mantine/core'
 
 const Cart = () => {
   const { data: cart } = useCart.cart()
@@ -26,7 +26,15 @@ const Cart = () => {
             </Grid.Col>
           </Grid>
         </Card>
-        {cart?.items.map((item) => <CardCart key={item.order_item_id} item={item} />)}
+        {Number(cart?.items.length) > 0 ? (
+          cart?.items.map((item) => <CardCart key={item.order_item_id} item={item} />)
+        ) : (
+          <Card withBorder radius="md">
+            <Stack>
+              <Text>No Items Cart Found</Text>
+            </Stack>
+          </Card>
+        )}
       </Stack>
     </Container>
   )

@@ -18,9 +18,9 @@ const CardProduct = ({ item }: { item: TProduct }) => {
   const { mutate: addToCart } = useCart.addToCart()
 
   const handleAddCart = useCallback(async () => {
-    setLoading(true)
     const isLoggedIn = hasCookie('user')
     if (isLoggedIn) {
+      setLoading(true)
       const payload = {
         product_id: item.product_id,
         quantity: 1,

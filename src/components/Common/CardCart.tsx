@@ -1,15 +1,23 @@
 'use client'
 
+import { useCart } from '@/hooks/useCart'
 import { TItem } from '@/types/cart'
 import { embedImage, formatCurrency } from '@/utils/util'
 import { ActionIcon, Card, Grid, Group, Image, Stack, Text, Title } from '@mantine/core'
 import { IconTrash } from '@tabler/icons-react'
+import { useCallback } from 'react'
 
 type TCardCart = {
   item: TItem
 }
 
 const CardCart = ({ item }: TCardCart) => {
+  const { mutate: deleteItem } = useCart.deleteItemCart()
+
+  const handleDeleteItemCart = useCallback(() => {
+    deleteItem(item.order_item_id)
+  }, [])
+
   return (
     <Card withBorder radius="md">
       <Grid>
@@ -41,7 +49,7 @@ const CardCart = ({ item }: TCardCart) => {
         </Grid.Col>
         <Grid.Col span={1}>
           <Stack gap={'xs'} align="center" justify="center" h={'100%'}>
-            <ActionIcon variant="subtle">
+            <ActionIcon variant="subtle" onClick={handleDeleteItemCart}>
               <IconTrash color="#797de9" />
             </ActionIcon>
           </Stack>
