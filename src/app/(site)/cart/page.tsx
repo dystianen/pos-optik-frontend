@@ -2,10 +2,18 @@
 
 import CardCart from '@/components/Common/CardCart'
 import { useCart } from '@/hooks/useCart'
-import { Card, Container, Grid, Stack, Text, Title } from '@mantine/core'
+import { formatCurrency } from '@/utils/util'
+import { Button, Card, Container, Grid, Group, Stack, Text, Title } from '@mantine/core'
+import { useRouter } from 'nextjs-toploader/app'
+import { useCallback } from 'react'
 
 const Cart = () => {
+  const router = useRouter()
   const { data: cart } = useCart.cart()
+
+  const handleCheckout = useCallback(() => {
+    router.push('/checkout')
+  }, [])
 
   return (
     <Container size={'xl'} my={120}>
@@ -35,6 +43,14 @@ const Cart = () => {
             </Stack>
           </Card>
         )}
+        <Card bg="primary.0">
+          <Group justify="space-between" align="center">
+            <Title order={5}>Total Price: {formatCurrency(cart?.total_price || '')}</Title>
+            <Button radius="xl" onClick={handleCheckout}>
+              Checkout
+            </Button>
+          </Group>
+        </Card>
       </Stack>
     </Container>
   )

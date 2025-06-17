@@ -31,7 +31,7 @@ const HeaderLink: React.FC<{ item: HeaderItem }> = ({ item }) => {
   return (
     <div className="relative" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <Link
-        href={`/${item.href}`}
+        href={`${item.href}`}
         className={`text-lg flex hover:text-black capitalized relative ${
           isActive
             ? 'text-black after:absolute after:w-8 after:h-1 after:bg-primary after:rounded-full after:-bottom-1'

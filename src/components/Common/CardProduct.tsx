@@ -25,7 +25,7 @@ const CardProduct = ({ item }: { item: TProduct }) => {
         product_id: item.product_id,
         quantity: 1,
         price: item.product_price,
-        payment_method: null
+        proof_of_payment: null
       }
       addToCart(payload, {
         onSuccess: (res) => {
@@ -46,9 +46,13 @@ const CardProduct = ({ item }: { item: TProduct }) => {
     router.push('/signin')
   }, [])
 
+  const handleDetail = useCallback(() => {
+    router.push(`/product/detail?id=${item.product_id}`)
+  }, [item.product_id])
+
   return (
     <>
-      <Card shadow="sm" padding="lg" radius="md">
+      <Card shadow="sm" padding="lg" radius="md" className="hover:shadow-lg" onClick={handleDetail}>
         <Card.Section>
           <Image src={embedImage(item.product_image_url)} alt="Norway" h={200} fit="inherit" />
         </Card.Section>
@@ -68,7 +72,16 @@ const CardProduct = ({ item }: { item: TProduct }) => {
             </Text>
           </Group>
 
-          <Button fullWidth mt="md" radius="xl" onClick={handleAddCart} loading={loading}>
+          <Button
+            fullWidth
+            mt="md"
+            radius="xl"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleAddCart()
+            }}
+            loading={loading}
+          >
             Add to Cart
           </Button>
         </Box>

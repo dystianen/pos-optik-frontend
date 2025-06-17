@@ -41,7 +41,9 @@ export type TItem = {
 
 export type TCart = {
   order_id: string
+  shipping_costs: string
   total_price: string
+  grand_total: string
   items: TItem[]
 }
 

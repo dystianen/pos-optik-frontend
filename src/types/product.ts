@@ -23,6 +23,7 @@ export type TProduct = {
   score: number
 }
 
+export type TResProduct = GeneralResponse<TProduct>
 export type TResProducts = GeneralResponse<TProduct[]>
 
 export type TCategory = {
