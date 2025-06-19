@@ -22,7 +22,7 @@ const Payment = () => {
 
     payment(values, {
       onSuccess: () => {
-        router.push('/waiting-confirmation')
+        router.push('/orders/waiting-confirmation')
         setLoading(false)
       },
       onError: (err) => {

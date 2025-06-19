@@ -1,7 +1,28 @@
 'use client'
+import { useOrder } from '@/hooks/useOrder'
 import { Container, Image, Stack, Text, Title } from '@mantine/core'
+import { useRouter } from 'nextjs-toploader/app'
+import { useEffect } from 'react'
 
 const WaitingConfirmation = () => {
+  const router = useRouter()
+
+  const { data, refetch } = useOrder.checkStatus()
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch()
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [refetch])
+
+  useEffect(() => {
+    if (data?.data?.isShipped === true) {
+      router.push('/orders/success')
+    }
+  }, [data, router])
+
   return (
     <Container size="xl" my={120}>
       <Stack align="center" gap="lg">

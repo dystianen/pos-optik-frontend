@@ -9,9 +9,10 @@ import { useCallback } from 'react'
 
 type TCardCart = {
   item: TItem
+  hideAction?: boolean
 }
 
-const CardCart = ({ item }: TCardCart) => {
+const CardCart = ({ item, hideAction = false }: TCardCart) => {
   const { mutate: deleteItem } = useCart.deleteItemCart()
 
   const handleDeleteItemCart = useCallback(() => {
@@ -47,13 +48,15 @@ const CardCart = ({ item }: TCardCart) => {
             <Title order={5}>{formatCurrency(item.price)}</Title>
           </Stack>
         </Grid.Col>
-        <Grid.Col span={1}>
-          <Stack gap={'xs'} align="center" justify="center" h={'100%'}>
-            <ActionIcon variant="subtle" onClick={handleDeleteItemCart}>
-              <IconTrash color="#797de9" />
-            </ActionIcon>
-          </Stack>
-        </Grid.Col>
+        {!hideAction && (
+          <Grid.Col span={1}>
+            <Stack gap={'xs'} align="center" justify="center" h={'100%'}>
+              <ActionIcon variant="subtle" onClick={handleDeleteItemCart}>
+                <IconTrash color="#797de9" />
+              </ActionIcon>
+            </Stack>
+          </Grid.Col>
+        )}
       </Grid>
     </Card>
   )

@@ -41,7 +41,7 @@ const Checkout = () => {
     checkout(values, {
       onSuccess: (res) => {
         setLoading(false)
-        router.push('/payment')
+        router.push('/orders/payment')
       },
       onError: (err) => {
         toast.error(err.message)

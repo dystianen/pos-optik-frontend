@@ -11,8 +11,9 @@ import { Stack } from '@mantine/core'
 // }
 
 export default function Home() {
-  const { data: recommendations } = useProducts.getRecommendations(10)
-  const { data: newEyeWear } = useProducts.getNewEyeWear()
+  const { data: recommendations, isLoading: isLoadingRecommendations } =
+    useProducts.getRecommendations(10)
+  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear()
 
   return (
     <main>
@@ -22,8 +23,14 @@ export default function Home() {
           title="Recommendations"
           exploreTo="/recommendations"
           data={recommendations ?? []}
+          isLoading={isLoadingRecommendations}
         />
-        <SectionCarousel title="New Eyewear" exploreTo="/new-eyewear" data={newEyeWear ?? []} />
+        <SectionCarousel
+          title="New Eyewear"
+          exploreTo="/new-eyewear"
+          data={newEyeWear ?? []}
+          isLoading={isLoadingNewEyeWear}
+        />
         <Mentor />
         {/* <Testimonial /> */}
         <Newsletter />

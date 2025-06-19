@@ -1,5 +1,6 @@
 'use client'
 import CardProduct from '@/components/Common/CardProduct'
+import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
 import { TProduct } from '@/types/product'
 import { Carousel } from '@mantine/carousel'
 import { Container } from '@mantine/core'
@@ -9,11 +10,14 @@ type TSectionCarousel = {
   title: string
   data: TProduct[]
   exploreTo: string
+  isLoading: boolean
 }
 
-const SectionCarousel = ({ title, data, exploreTo }: TSectionCarousel) => {
+const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel) => {
+  const skeletonCount = 4
+
   return (
-    <Container size={'xl'} my={'xl'} w={'100%'}>
+    <Container size="xl" my="xl" w="100%">
       <div className="sm:flex justify-between items-center mb-10">
         <h2 className="text-midnight_text text-4xl lg:text-5xl font-semibold mb-5 sm:mb-0">
           {title}.
@@ -27,7 +31,7 @@ const SectionCarousel = ({ title, data, exploreTo }: TSectionCarousel) => {
       </div>
 
       <Carousel
-        slideSize={'25%'}
+        slideSize="25%"
         slideGap="md"
         emblaOptions={{ align: 'start', slidesToScroll: 1 }}
         withControls={false}
@@ -37,9 +41,9 @@ const SectionCarousel = ({ title, data, exploreTo }: TSectionCarousel) => {
           }
         }}
       >
-        {data.map((item, index: number) => (
+        {(isLoading ? Array.from({ length: skeletonCount }) : data).map((item, index: number) => (
           <Carousel.Slide key={index}>
-            <CardProduct item={item} />
+            {isLoading ? <CardProductSkeleton /> : <CardProduct item={item as TProduct} />}
           </Carousel.Slide>
         ))}
       </Carousel>

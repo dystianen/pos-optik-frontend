@@ -2,8 +2,9 @@
 import Cart from '@/components/Common/ShoppingCart'
 import { removeCookieToken, removeUser } from '@/utils/auth'
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core'
-import { IconPower, IconUserFilled } from '@tabler/icons-react'
+import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
 import Link from 'next/link'
+import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useEffect, useState } from 'react'
 import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
 import { headerData } from '../Header/Navigation/menuData'
@@ -17,6 +18,7 @@ type TProps = {
 }
 
 const Header: React.FC<TProps> = ({ user }) => {
+  const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
 
@@ -37,6 +39,10 @@ const Header: React.FC<TProps> = ({ user }) => {
     removeUser()
   }, [])
 
+  const handleRedirectToOrders = useCallback(() => {
+    router.push('/orders')
+  }, [])
+
   return (
     <header
       className={`fixed top-0 z-40 w-full pb-5 transition-all duration-300 bg-white ${
@@ -55,7 +61,7 @@ const Header: React.FC<TProps> = ({ user }) => {
           <Group>
             <Cart />
             {user?.username ? (
-              <Menu>
+              <Menu width={200} position="bottom-start">
                 <Menu.Target>
                   <UnstyledButton>
                     <Group gap={'xs'}>
@@ -66,7 +72,13 @@ const Header: React.FC<TProps> = ({ user }) => {
                 </Menu.Target>
 
                 <Menu.Dropdown>
-                  <Menu.Item onClick={handleLogout} leftSection={<IconPower size={14} />}>
+                  <Menu.Item
+                    onClick={handleRedirectToOrders}
+                    leftSection={<IconTruckDelivery size={14} />}
+                  >
+                    My Orders
+                  </Menu.Item>
+                  <Menu.Item onClick={handleLogout} leftSection={<IconPower size={14} />} c={'red'}>
                     Logout
                   </Menu.Item>
                 </Menu.Dropdown>

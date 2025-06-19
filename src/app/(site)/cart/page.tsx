@@ -1,6 +1,7 @@
 'use client'
 
 import CardCart from '@/components/Common/CardCart'
+import CardCartSkeleton from '@/components/Common/Skeleton/CardCartSkeleton'
 import { useCart } from '@/hooks/useCart'
 import { formatCurrency } from '@/utils/util'
 import { Button, Card, Container, Grid, Group, Stack, Text, Title } from '@mantine/core'
@@ -9,7 +10,7 @@ import { useCallback } from 'react'
 
 const Cart = () => {
   const router = useRouter()
-  const { data: cart } = useCart.cart()
+  const { data: cart, isLoading } = useCart.cart()
 
   const handleCheckout = useCallback(() => {
     router.push('/checkout')
@@ -34,7 +35,9 @@ const Cart = () => {
             </Grid.Col>
           </Grid>
         </Card>
-        {Number(cart?.items.length) > 0 ? (
+        {isLoading ? (
+          Array.from({ length: 2 }).map((_, i) => <CardCartSkeleton key={i} />)
+        ) : Number(cart?.items.length) > 0 ? (
           cart?.items.map((item) => <CardCart key={item.order_item_id} item={item} />)
         ) : (
           <Card withBorder radius="md">
