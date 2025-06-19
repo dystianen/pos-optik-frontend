@@ -1,5 +1,6 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
+import { useAuth } from '@/hooks/useAuth'
 import { Box, Button, Divider, Group, NumberInput, Select, Stack, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
@@ -12,6 +13,8 @@ const SignUp = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
+  const { mutate: submitRegister } = useAuth.register()
+
   const form = useForm({
     mode: 'uncontrolled',
     initialValues: {
@@ -21,12 +24,12 @@ const SignUp = () => {
       customer_dob: '',
       customer_gender: '',
       customer_occupation: '',
-      preferences: {
+      customer_preferences: {
         color: '',
         material: '',
         frame_style: ''
       },
-      eye_history: {
+      customer_eye_history: {
         left_eye: { axis: 0, sphere: 0, cylinder: 0 },
         right_eye: { axis: 0, sphere: 0, cylinder: 0 },
         condition: '',
@@ -38,21 +41,17 @@ const SignUp = () => {
   const handleSubmit = (values: any) => {
     setLoading(true)
 
-    fetch('/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values)
-    })
-      .then((res) => res.json())
-      .then(() => {
+    submitRegister(values, {
+      onSuccess: () => {
         toast.success('Successfully registered')
         setLoading(false)
         router.push('/signin')
-      })
-      .catch((err) => {
+      },
+      onError: (err) => {
         toast.error(err.message || 'Registration failed')
         setLoading(false)
-      })
+      }
+    })
   }
 
   return (
@@ -124,20 +123,20 @@ const SignUp = () => {
             <TextInput
               label="Color Preference"
               placeholder="e.g., Hijau Neon"
-              key={form.key('preferences.color')}
-              {...form.getInputProps('preferences.color')}
+              key={form.key('customer_preferences.color')}
+              {...form.getInputProps('customer_preferences.color')}
             />
             <TextInput
               label="Material Preference"
               placeholder="e.g., Acetate"
-              key={form.key('preferences.material')}
-              {...form.getInputProps('preferences.material')}
+              key={form.key('customer_preferences.material')}
+              {...form.getInputProps('customer_preferences.material')}
             />
             <TextInput
               label="Frame Style"
               placeholder="e.g., Half-rim"
-              key={form.key('preferences.frame_style')}
-              {...form.getInputProps('preferences.frame_style')}
+              key={form.key('customer_preferences.frame_style')}
+              {...form.getInputProps('customer_preferences.frame_style')}
             />
 
             <Divider my="md" label="Eye History" />
@@ -145,14 +144,14 @@ const SignUp = () => {
             <TextInput
               label="Condition"
               placeholder="e.g., Hipermetropi"
-              key={form.key('eye_history.condition')}
-              {...form.getInputProps('eye_history.condition')}
+              key={form.key('customer_eye_history.condition')}
+              {...form.getInputProps('customer_eye_history.condition')}
             />
             <DateInput
               label="Last Checkup"
               placeholder="e.g., 11/03/2024"
-              key={form.key('eye_history.last_checkup')}
-              {...form.getInputProps('eye_history.last_checkup')}
+              key={form.key('customer_eye_history.last_checkup')}
+              {...form.getInputProps('customer_eye_history.last_checkup')}
             />
             {/* Left Eye */}
             <Box>
@@ -160,20 +159,20 @@ const SignUp = () => {
               <Group grow>
                 <NumberInput
                   label="Axis"
-                  key={form.key('eye_history.left_eye.axis')}
-                  {...form.getInputProps('eye_history.left_eye.axis')}
+                  key={form.key('customer_eye_history.left_eye.axis')}
+                  {...form.getInputProps('customer_eye_history.left_eye.axis')}
                 />
                 <NumberInput
                   label="Sphere"
                   step={0.25}
-                  key={form.key('eye_history.left_eye.sphere')}
-                  {...form.getInputProps('eye_history.left_eye.sphere')}
+                  key={form.key('customer_eye_history.left_eye.sphere')}
+                  {...form.getInputProps('customer_eye_history.left_eye.sphere')}
                 />
                 <NumberInput
                   label="Cylinder"
                   step={0.25}
-                  key={form.key('eye_history.left_eye.cylinder')}
-                  {...form.getInputProps('eye_history.left_eye.cylinder')}
+                  key={form.key('customer_eye_history.left_eye.cylinder')}
+                  {...form.getInputProps('customer_eye_history.left_eye.cylinder')}
                 />
               </Group>
             </Box>
@@ -183,20 +182,20 @@ const SignUp = () => {
               <Group grow>
                 <NumberInput
                   label="Axis"
-                  key={form.key('eye_history.right_eye.axis')}
-                  {...form.getInputProps('eye_history.right_eye.axis')}
+                  key={form.key('customer_eye_history.right_eye.axis')}
+                  {...form.getInputProps('customer_eye_history.right_eye.axis')}
                 />
                 <NumberInput
                   label="Sphere"
                   step={0.25}
-                  key={form.key('eye_history.right_eye.sphere')}
-                  {...form.getInputProps('eye_history.right_eye.sphere')}
+                  key={form.key('customer_eye_history.right_eye.sphere')}
+                  {...form.getInputProps('customer_eye_history.right_eye.sphere')}
                 />
                 <NumberInput
                   label="Cylinder"
                   step={0.25}
-                  key={form.key('eye_history.right_eye.cylinder')}
-                  {...form.getInputProps('eye_history.right_eye.cylinder')}
+                  key={form.key('customer_eye_history.right_eye.cylinder')}
+                  {...form.getInputProps('customer_eye_history.right_eye.cylinder')}
                 />
               </Group>
             </Box>
