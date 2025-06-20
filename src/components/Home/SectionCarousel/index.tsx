@@ -31,7 +31,7 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
       </div>
 
       <Carousel
-        slideSize="25%"
+        slideSize={{ base: '80%', sm: '50%', md: '33.333333%', lg: '25%' }}
         slideGap="md"
         emblaOptions={{ align: 'start', slidesToScroll: 1 }}
         withControls={false}

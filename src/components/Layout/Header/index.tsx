@@ -59,30 +59,36 @@ const Header: React.FC<TProps> = ({ user }) => {
           </nav>
 
           <Group>
-            <Cart />
             {user?.username ? (
-              <Menu width={200} position="bottom-start">
-                <Menu.Target>
-                  <UnstyledButton>
-                    <Group gap={'xs'}>
-                      <IconUserFilled color="#1a21bc" size={28} />
-                      <Text size="lg">{user.username}</Text>
-                    </Group>
-                  </UnstyledButton>
-                </Menu.Target>
+              <>
+                <Cart />
+                <Menu width={200} position="bottom-start">
+                  <Menu.Target>
+                    <UnstyledButton>
+                      <Group gap={'xs'}>
+                        <IconUserFilled color="#1a21bc" size={28} />
+                        <Text size="lg">{user.username}</Text>
+                      </Group>
+                    </UnstyledButton>
+                  </Menu.Target>
 
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={handleRedirectToOrders}
-                    leftSection={<IconTruckDelivery size={14} />}
-                  >
-                    My Orders
-                  </Menu.Item>
-                  <Menu.Item onClick={handleLogout} leftSection={<IconPower size={14} />} c={'red'}>
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={handleRedirectToOrders}
+                      leftSection={<IconTruckDelivery size={14} />}
+                    >
+                      My Orders
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={handleLogout}
+                      leftSection={<IconPower size={14} />}
+                      c={'red'}
+                    >
+                      Logout
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </>
             ) : (
               <div className="flex items-center gap-4">
                 <Link
