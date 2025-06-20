@@ -101,10 +101,10 @@ const ProductDetail = () => {
                   Duration: {product.duration || '-'}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  base_curve: {product.base_curve || '-'}
+                  Base Curve: {product.base_curve || '-'}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  diameter: {product.diameter || '-'}
+                  Diameter: {product.diameter || '-'}
                 </Text>
                 <Text size="sm" c="dimmed">
                   Power Range: {product.power_range || '-'}
