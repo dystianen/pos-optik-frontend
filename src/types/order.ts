@@ -1,5 +1,5 @@
 export type TReqCheckout = {
-  address: string
+  shipping_address: string
 }
 
 export type TReqPayment = {

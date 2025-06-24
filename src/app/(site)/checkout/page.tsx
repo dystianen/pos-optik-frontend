@@ -36,7 +36,6 @@ const Checkout = () => {
   })
 
   const handleSubmit = useCallback((values: any) => {
-    console.log('submit')
     setLoading(true)
     checkout(values, {
       onSuccess: (res) => {
