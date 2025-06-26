@@ -4,6 +4,7 @@ import CardCart from '@/components/Common/CardCart'
 import { useOrder } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
+  Badge,
   Button,
   Card,
   Collapse,
@@ -48,6 +49,28 @@ const Orders = () => {
     ))
   }
 
+  const renderColor = (value: string) => {
+    let color = ''
+    switch (value) {
+      case 'pending':
+        color = 'yellow'
+        break
+      case 'paid':
+        color = 'green'
+        break
+      case 'shipped':
+        color = 'lime'
+        break
+      case 'cancelled':
+        color = 'red'
+        break
+      default:
+        color = 'gray'
+    }
+
+    return color
+  }
+
   return (
     <Container size="xl" my={120}>
       <Title order={2} mb={32}>
@@ -79,7 +102,10 @@ const Orders = () => {
               <Grid align="center">
                 <Grid.Col span={3}>{formatDate(order.order_date)}</Grid.Col>
                 <Grid.Col span={3}>{formatCurrency(order.grand_total)}</Grid.Col>
-                <Grid.Col span={3}>{order.status}</Grid.Col>
+                <Grid.Col span={3}>
+                  <Badge color={renderColor(order.status)}>{order.status}</Badge>
+                  {}
+                </Grid.Col>
                 <Grid.Col span={3}>
                   <Button
                     variant="subtle"
