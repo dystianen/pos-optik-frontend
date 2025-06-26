@@ -3,7 +3,7 @@
 import CardCart from '@/components/Common/CardCart'
 import { useCart } from '@/hooks/useCart'
 import { useOrder } from '@/hooks/useOrder'
-import { formatCurrency } from '@/utils/util'
+import { formatCurrency } from '@/utils/format'
 import {
   Box,
   Button,

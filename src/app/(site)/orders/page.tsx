@@ -2,6 +2,7 @@
 
 import CardCart from '@/components/Common/CardCart'
 import { useOrder } from '@/hooks/useOrder'
+import { formatCurrency, formatDate } from '@/utils/format'
 import {
   Button,
   Card,
@@ -76,8 +77,8 @@ const Orders = () => {
           orders.map((order: any, index: number) => (
             <Card key={index} withBorder>
               <Grid align="center">
-                <Grid.Col span={3}>{order.order_date}</Grid.Col>
-                <Grid.Col span={3}>Rp {order.grand_total?.toLocaleString()}</Grid.Col>
+                <Grid.Col span={3}>{formatDate(order.order_date)}</Grid.Col>
+                <Grid.Col span={3}>{formatCurrency(order.grand_total)}</Grid.Col>
                 <Grid.Col span={3}>{order.status}</Grid.Col>
                 <Grid.Col span={3}>
                   <Button

@@ -3,7 +3,7 @@
 import CardCart from '@/components/Common/CardCart'
 import CardCartSkeleton from '@/components/Common/Skeleton/CardCartSkeleton'
 import { useCart } from '@/hooks/useCart'
-import { formatCurrency } from '@/utils/util'
+import { formatCurrency } from '@/utils/format'
 import { Button, Card, Container, Grid, Group, Stack, Text, Title } from '@mantine/core'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback } from 'react'

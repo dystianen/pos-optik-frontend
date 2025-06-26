@@ -2,7 +2,8 @@
 
 import { useCart } from '@/hooks/useCart'
 import { TItem } from '@/types/cart'
-import { embedImage, formatCurrency } from '@/utils/util'
+import { formatCurrency } from '@/utils/format'
+import { embedImage } from '@/utils/util'
 import { ActionIcon, Card, Grid, Group, Image, Stack, Text, Title } from '@mantine/core'
 import { IconTrash } from '@tabler/icons-react'
 import { useCallback } from 'react'

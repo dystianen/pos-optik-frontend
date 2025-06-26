@@ -2,7 +2,8 @@
 
 import { useCart } from '@/hooks/useCart'
 import { TProduct } from '@/types/product'
-import { embedImage, formatCurrency } from '@/utils/util'
+import { formatCurrency } from '@/utils/format'
+import { embedImage } from '@/utils/util'
 import { Box, Button, Card, Group, Image, Text } from '@mantine/core'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
