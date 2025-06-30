@@ -97,7 +97,7 @@ const Checkout = () => {
                 <Title order={5}>Grand Total: {formatCurrency(cart?.grand_total || '')}</Title>
               </Stack>
               <Button radius="xl" size="xl" type="submit" loading={loading}>
-                Checkout
+                Payment
               </Button>
             </Group>
           </Card>
