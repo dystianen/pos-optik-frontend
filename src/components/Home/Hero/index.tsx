@@ -26,7 +26,7 @@ const Hero = () => {
               Discover eyewear that blends style, comfort, and productivity, "Look sharp. Feel
               confident. Work smarter".
             </h3>
-            <button className="bg-secondary text-white p-5 rounded-full right-2 top-2 w-max px-20">
+            <button className="bg-secondary text-white p-5 rounded-full w-max px-10 lg:px-20">
               Get 30% off — Register Now!
             </button>
             <div className="flex items-center justify-between pt-10 lg:pt-4">

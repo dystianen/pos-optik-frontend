@@ -45,11 +45,11 @@ const Header: React.FC<TProps> = ({ user }) => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full pb-5 transition-all duration-300 bg-white ${
-        sticky ? ' shadow-lg py-5' : 'shadow-none py-6'
+      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
+        sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
       }`}
     >
-      <div className="lg:py-0 py-2">
+      <div>
         <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between">
           <Logo />
           <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
@@ -67,10 +67,21 @@ const Header: React.FC<TProps> = ({ user }) => {
                     <UnstyledButton>
                       <Group gap={'xs'}>
                         <IconUserFilled color="#1a21bc" size={28} />
-                        <Text size="lg">{user.username}</Text>
+                        <Text size="lg" className="hidden md:block">
+                          {user.username}
+                        </Text>
                       </Group>
                     </UnstyledButton>
                   </Menu.Target>
+                  <button
+                    onClick={() => setNavbarOpen(!navbarOpen)}
+                    className="block lg:hidden p-2 rounded-lg"
+                    aria-label="Toggle mobile menu"
+                  >
+                    <span className="block w-6 h-0.5 bg-black"></span>
+                    <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
+                    <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
+                  </button>
 
                   <Menu.Dropdown>
                     <Menu.Item
@@ -111,7 +122,7 @@ const Header: React.FC<TProps> = ({ user }) => {
           </Group>
         </div>
         {navbarOpen && (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-40" />
+          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
         )}
         <div
           className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
@@ -144,22 +155,12 @@ const Header: React.FC<TProps> = ({ user }) => {
                   </button>
                 </>
               ) : (
-                <>
-                  <Link
-                    href="/signin"
-                    className="bg-transparent border border-primary text-primary px-4 py-2 rounded-lg hover:bg-blue-600 hover:text-white"
-                    onClick={() => setNavbarOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/signup"
-                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700"
-                    onClick={() => setNavbarOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </>
+                <Link
+                  href="/signin"
+                  className="bg-primary text-white hover:bg-primary/15 hover:text-primary w-max px-6 py-3 rounded-full text-lg font-medium text-center"
+                >
+                  Sign In/Sign Up
+                </Link>
               )}
             </div>
           </nav>

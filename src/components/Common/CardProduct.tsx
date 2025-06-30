@@ -4,7 +4,7 @@ import { useCart } from '@/hooks/useCart'
 import { TProduct } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
 import { embedImage } from '@/utils/util'
-import { Box, Button, Card, Group, Image, Text } from '@mantine/core'
+import { Box, Button, Card, Flex, Image, Text } from '@mantine/core'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useState } from 'react'
@@ -53,25 +53,42 @@ const CardProduct = ({ item }: { item: TProduct }) => {
 
   return (
     <>
-      <Card shadow="sm" padding="lg" radius="md" className="hover:shadow-lg" onClick={handleDetail}>
+      <Card
+        shadow="sm"
+        p={{ base: 'sm', md: 'lg' }}
+        radius="md"
+        className="hover:shadow-lg"
+        onClick={handleDetail}
+      >
         <Card.Section>
-          <Image src={embedImage(item.product_image_url)} alt="Norway" h={200} fit="inherit" />
+          <Image
+            src={embedImage(item.product_image_url)}
+            alt="Norway"
+            h={{ base: 120, md: 200 }}
+            fit="inherit"
+          />
         </Card.Section>
 
         <Box mt={'md'}>
-          <Text fw={500} c="primary">
+          <Text fw={500} c="primary" fz={{ base: 12, md: 14 }}>
             {item.product_brand}
           </Text>
-          <Text fw={500}>{item.product_name}</Text>
+          <Text fw={500} fz={{ base: 12, md: 14 }}>
+            {item.product_name}
+          </Text>
 
-          <Group justify="space-between" mt={'md'}>
-            <Text size="sm" c="dimmed">
+          <Flex
+            direction={{ base: 'column', md: 'row' }}
+            justify={{ base: 'left', md: 'space-between' }}
+            mt={'md'}
+          >
+            <Text size="sm" c="dimmed" fz={{ base: 12, md: 14 }}>
               {item.model}
             </Text>
-            <Text size="sm" c="dimmed">
+            <Text size="sm" c="dimmed" fz={{ base: 12, md: 14 }}>
               {formatCurrency(item.product_price)}
             </Text>
-          </Group>
+          </Flex>
 
           <Button
             fullWidth
