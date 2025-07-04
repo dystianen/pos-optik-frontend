@@ -5,15 +5,11 @@ import Newsletter from '@/components/Home/Newsletter'
 import SectionCarousel from '@/components/Home/SectionCarousel'
 import { useProducts } from '@/hooks/useProducts'
 import { Stack } from '@mantine/core'
-// import { Metadata } from 'next'
-// export const metadata: Metadata = {
-//   title: 'eLearning'
-// }
 
 export default function Home() {
   const { data: recommendations, isLoading: isLoadingRecommendations } =
     useProducts.getRecommendations(10)
-  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear()
+  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear(10)
 
   return (
     <main>

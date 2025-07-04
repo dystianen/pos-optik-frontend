@@ -2,10 +2,18 @@ import productService from '@/services/productService'
 import { useQuery } from '@tanstack/react-query'
 
 export const useProducts = {
-  getProduct(category: string | null) {
+  getProduct({
+    limit,
+    search,
+    category
+  }: {
+    limit?: number
+    search?: string
+    category: string | null
+  }) {
     return useQuery({
-      queryKey: ['products'],
-      queryFn: () => productService.getProduct({ category })
+      queryKey: ['products', category, limit, search],
+      queryFn: () => productService.getProduct({ category, limit, search })
     })
   },
   getProductDetail(id: string | null) {
@@ -15,16 +23,16 @@ export const useProducts = {
       enabled: !!id
     })
   },
-  getRecommendations(limit: number) {
+  getRecommendations({ limit, search }: { limit?: number; search?: string }) {
     return useQuery({
-      queryKey: ['recommendations'],
-      queryFn: () => productService.getRecommendations({ limit })
+      queryKey: ['recommendations', limit, search],
+      queryFn: () => productService.getRecommendations({ limit, search })
     })
   },
-  getNewEyeWear() {
+  getNewEyeWear({ limit, search }: { limit?: number; search?: string }) {
     return useQuery({
-      queryKey: ['new-eyewear'],
-      queryFn: productService.getNewEyeWear
+      queryKey: ['new-eyewear', limit, search],
+      queryFn: () => productService.getNewEyeWear({ limit, search })
     })
   },
   getProductCategory() {

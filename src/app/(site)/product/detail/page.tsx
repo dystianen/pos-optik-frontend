@@ -53,7 +53,7 @@ const ProductDetail = () => {
   return (
     <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
       <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-5 sm:mb-0"></h2>
+        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">Product Details</h2>
       </div>
       <Grid>
         {product && (

@@ -6,37 +6,18 @@ import { useProducts } from '@/hooks/useProducts'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import Image from 'next/image'
-import { useParams, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-function formatCategoryName(slug: string) {
-  return slug
-    .split('-')
-    .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
-}
-
-const Products = () => {
-  const params = useParams()
-  const slug = params.slug as string
-
-  const searchParams = useSearchParams()
-  const category = searchParams.get('category')
-
+const Recommendations = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: products, isLoading } = useProducts.getProduct({
-    category,
-    search: debouncedSearch
-  })
+  const { data: products, isLoading } = useProducts.getRecommendations({ search: debouncedSearch })
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">
       <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-5 sm:mb-0">
-          {formatCategoryName(slug)}
-        </h2>
+        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">Recommendations</h2>
         <TextInput
           placeholder="Search..."
           value={search}
@@ -79,4 +60,4 @@ const Products = () => {
   )
 }
 
-export default Products
+export default Recommendations

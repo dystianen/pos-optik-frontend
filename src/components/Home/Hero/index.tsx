@@ -1,10 +1,8 @@
 import { getImagePrefix } from '@/utils/util'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { hasCookie } from 'cookies-next/client'
 import Image from 'next/image'
 
 const Hero = () => {
-  const isLoggedIn = hasCookie('user')
   return (
     <section id="home-section" className="bg-slateGray">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4 pt-20">
