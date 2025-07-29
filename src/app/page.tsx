@@ -8,8 +8,10 @@ import { Stack } from '@mantine/core'
 
 export default function Home() {
   const { data: recommendations, isLoading: isLoadingRecommendations } =
-    useProducts.getRecommendations(10)
-  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear(10)
+    useProducts.getRecommendations({ limit: 10 })
+  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear({
+    limit: 10
+  })
 
   return (
     <main>
