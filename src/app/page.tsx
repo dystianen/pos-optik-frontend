@@ -17,12 +17,12 @@ export default function Home() {
     <main>
       <Stack gap={'xl'}>
         <Hero />
-        <SectionCarousel
+        {/* <SectionCarousel
           title="Recommendations"
           exploreTo="/recommendations"
           data={recommendations ?? []}
           isLoading={isLoadingRecommendations}
-        />
+        /> */}
         <SectionCarousel
           title="New Eyewear"
           exploreTo="/new-eyewear"

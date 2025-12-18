@@ -3,7 +3,6 @@
 import { useCart } from '@/hooks/useCart'
 import { TProduct } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
-import { embedImage } from '@/utils/util'
 import { Box, Button, Card, Flex, Image, Text } from '@mantine/core'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
@@ -62,7 +61,7 @@ const CardProduct = ({ item }: { item: TProduct }) => {
       >
         <Card.Section>
           <Image
-            src={embedImage(item.product_image_url)}
+            src={item.product_image_url}
             alt="Norway"
             h={{ base: 120, md: 200 }}
             fit="inherit"

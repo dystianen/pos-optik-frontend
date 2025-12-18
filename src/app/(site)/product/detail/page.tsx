@@ -91,36 +91,18 @@ const ProductDetail = () => {
               </Group>
 
               <Stack mt={'lg'} gap={'xs'}>
-                <Text size="sm" c="dimmed">
+                <Text size="sm" fw={500}>
                   Deskripsi
                 </Text>
 
                 <Text size="sm" c="dimmed">
-                  Material: {product.material || '-'}
+                  Lens Material: {product.material || '-'}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Duration: {product.duration || '-'}
+                  Frame Material: {product.duration || '-'}
                 </Text>
                 <Text size="sm" c="dimmed">
-                  Base Curve: {product.base_curve || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Diameter: {product.diameter || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Power Range: {product.power_range || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Water Content: {product.water_content || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  UV Protection: {product.uv_protection || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Color: {product.color || '-'}
-                </Text>
-                <Text size="sm" c="dimmed">
-                  Coating: {product.coating || '-'}
+                  Frame Shape: {product.base_curve || '-'}
                 </Text>
               </Stack>
 
