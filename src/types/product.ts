@@ -1,5 +1,19 @@
 import { GeneralResponse } from './general'
 
+export interface Gallery {
+  product_image_id: string
+  product_id: string
+  url: string
+  alt_text: string
+  sort_order: string
+  is_primary: string
+  mime_type: string
+  size_bytes: string
+  created_at: Date
+  updated_at: Date
+  deleted_at: null
+}
+
 export type TProduct = {
   product_id: number
   category_id: string
@@ -7,6 +21,8 @@ export type TProduct = {
   product_price: string
   product_stock: string
   product_brand: string
+  gallery: Gallery[]
+  variant_image: Gallery[]
   product_image_url: string
   model: string
   duration: null

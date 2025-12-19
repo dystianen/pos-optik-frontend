@@ -7,8 +7,6 @@ import { useProducts } from '@/hooks/useProducts'
 import { Stack } from '@mantine/core'
 
 export default function Home() {
-  const { data: recommendations, isLoading: isLoadingRecommendations } =
-    useProducts.getRecommendations({ limit: 10 })
   const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear({
     limit: 10
   })
@@ -17,12 +15,6 @@ export default function Home() {
     <main>
       <Stack gap={'xl'}>
         <Hero />
-        {/* <SectionCarousel
-          title="Recommendations"
-          exploreTo="/recommendations"
-          data={recommendations ?? []}
-          isLoading={isLoadingRecommendations}
-        /> */}
         <SectionCarousel
           title="New Eyewear"
           exploreTo="/new-eyewear"
