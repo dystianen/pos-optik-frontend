@@ -64,7 +64,7 @@ export function ProductDetailSkeleton() {
             <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }}>
               {Array.from({ length: 6 }).map((_, i) => (
                 <Card key={i} shadow="sm" p="xs">
-                  <Skeleton height={50} mb={6} />
+                  <Skeleton height={80} mb={6} />
                   <Skeleton height={10} width="70%" mb={6} />
                   <Skeleton height={10} width="50%" />
                 </Card>

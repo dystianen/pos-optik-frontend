@@ -217,7 +217,12 @@ const ProductDetail = () => {
                           primaryImage?.url === item.image.url && 'border-primary'
                         )}
                       >
-                        <Image src={item.image.url} alt={item.image.alt_text} h={50} />
+                        <Image
+                          src={item.image.url}
+                          alt={item.image.alt_text}
+                          h={80}
+                          fit="contain"
+                        />
                         <Text fz={'10'} lineClamp={2}>
                           {item.variant_name}
                         </Text>
