@@ -23,10 +23,18 @@ export const useProducts = {
       enabled: !!id
     })
   },
-  getRecommendations({ limit, search }: { limit?: number; search?: string }) {
+  getRecommendations({
+    productId,
+    limit,
+    search
+  }: {
+    productId: string
+    limit?: number
+    search?: string
+  }) {
     return useQuery({
-      queryKey: ['recommendations', limit, search],
-      queryFn: () => productService.getRecommendations({ limit, search })
+      queryKey: ['recommendations', productId, limit, search],
+      queryFn: () => productService.getRecommendations({ productId, limit, search })
     })
   },
   getNewEyeWear({ limit, search }: { limit?: number; search?: string }) {
@@ -39,6 +47,12 @@ export const useProducts = {
     return useQuery({
       queryKey: ['categories'],
       queryFn: productService.getProductCategory
+    })
+  },
+  getProductAttribute(id: string) {
+    return useQuery({
+      queryKey: ['attributes'],
+      queryFn: () => productService.getProductAttribute(id)
     })
   }
 }

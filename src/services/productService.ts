@@ -1,5 +1,10 @@
 import apiClient from '@/lib/apiClient'
-import type { TResCategories, TResProduct, TResProducts } from '@/types/product'
+import type {
+  TResAttribute,
+  TResCategories,
+  TResDetailProduct,
+  TResProducts
+} from '@/types/product'
 
 const productService = {
   async getProduct({
@@ -20,16 +25,25 @@ const productService = {
     return response.data.data
   },
   async getProductDetail({ id }: { id: string | null }) {
-    const response = await apiClient.get<TResProduct>(`/products/${id}`)
+    const response = await apiClient.get<TResDetailProduct>(`/products/${id}`)
     return response.data.data
   },
-  async getRecommendations({ limit, search }: { limit?: number; search?: string }) {
+  async getRecommendations({
+    productId,
+    limit,
+    search
+  }: {
+    productId: string
+    limit?: number
+    search?: string
+  }) {
     const params = new URLSearchParams()
+    if (productId) params.append('productId', productId.toString())
     if (limit) params.append('limit', limit.toString())
     if (search) params.append('search', search)
 
     const response = await apiClient.get<TResProducts>(
-      `/products/recommendations?${params.toString()}`
+      `/products/recommendations/${productId}?${params.toString()}`
     )
     return response.data.data
   },
@@ -43,6 +57,10 @@ const productService = {
   },
   async getProductCategory() {
     const response = await apiClient.get<TResCategories>('/products/category')
+    return response.data.data
+  },
+  async getProductAttribute(id: string) {
+    const response = await apiClient.get<TResAttribute>(`/products/${id}/attributes`)
     return response.data.data
   }
 }

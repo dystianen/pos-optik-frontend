@@ -39,8 +39,38 @@ export type TProduct = {
   score: number
 }
 
-export type TResProduct = GeneralResponse<TProduct>
 export type TResProducts = GeneralResponse<TProduct[]>
+
+export interface TGalleryDetail {
+  product_image_id: string
+  url: string
+  alt_text: string
+  is_primary: number
+}
+
+export interface Variant {
+  variant_id: string
+  variant_name: string
+  price: string
+  stock: string
+  image: TGalleryDetail
+}
+
+export interface TDetailProduct {
+  product_id: string
+  category_id: string
+  product_name: string
+  product_price: string
+  product_stock: string
+  product_brand: string
+  created_at: Date
+  updated_at: Date
+  deleted_at: null
+  gallery: TGalleryDetail[]
+  variants: Variant[]
+}
+
+export type TResDetailProduct = GeneralResponse<TDetailProduct>
 
 export type TCategory = {
   category_id: string
@@ -48,3 +78,10 @@ export type TCategory = {
   category_description: string
 }
 export type TResCategories = GeneralResponse<TCategory[]>
+
+export type TAttribute = {
+  attribute_id: string
+  attribute_name: string
+  values: string[]
+}
+export type TResAttribute = GeneralResponse<TAttribute[]>

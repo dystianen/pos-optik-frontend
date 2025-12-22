@@ -3,7 +3,7 @@ import CardProduct from '@/components/Common/CardProduct'
 import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
 import { TProduct } from '@/types/product'
 import { Carousel } from '@mantine/carousel'
-import { Box } from '@mantine/core'
+import { Container } from '@mantine/core'
 import Link from 'next/link'
 
 type TSectionCarousel = {
@@ -17,7 +17,7 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
   const skeletonCount = 4
 
   return (
-    <Box mt={'xl'}>
+    <Container size={'xl'} mt={'xl'} w="100%">
       <div className="sm:flex justify-between items-center mb-10">
         <h2 className="text-midnight_text text-4xl lg:text-5xl font-semibold mb-5 sm:mb-0">
           {title}.
@@ -47,7 +47,7 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
           </Carousel.Slide>
         ))}
       </Carousel>
-    </Box>
+    </Container>
   )
 }
 

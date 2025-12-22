@@ -9,7 +9,6 @@ const apiClient = axios.create({
   },
   responseType: 'json',
   timeout: 3000000
-  // withCredentials: true
 })
 
 const addAuthInterceptor = (instance: AxiosInstance) => {
