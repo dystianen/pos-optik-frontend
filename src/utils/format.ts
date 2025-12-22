@@ -11,3 +11,11 @@ export const formatCurrency = (data: string) => {
     currency: 'IDR'
   }).format(price)
 }
+
+export const formatLabel = (slug: string) =>
+  slug
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+export const formatSlug = (name: string) => name.toLowerCase().trim().replace(/\s+/g, '-')

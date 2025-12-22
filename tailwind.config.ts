@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
 
 const config: Config = {
   darkMode: 'class',
@@ -28,11 +29,21 @@ const config: Config = {
         '75%': '75%'
       },
       backgroundImage: {
-        'newsletter-bg': `url('/images/newsletter/bgFile.png')`,
-        'newsletter-bg-2': `url('/E-learning/images/newsletter/bgFile.png')`
+        'newsletter-bg': "url('/images/newsletter/bgFile.png')",
+        'newsletter-bg-2': "url('/E-learning/images/newsletter/bgFile.png')"
       }
     }
   },
-  plugins: []
+  plugins: [
+    plugin(({ addComponents }) => {
+      addComponents({
+        '.card-hover': {
+          '@apply cursor-pointer border border-transparent transition-all duration-200 hover:shadow-lg hover:border-primary':
+            {}
+        }
+      })
+    })
+  ]
 }
+
 export default config

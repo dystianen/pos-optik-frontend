@@ -1,4 +1,5 @@
 'use client'
+import { ProductDetailSkeleton } from '@/components/Common/Skeleton/ProductDetailSkeleton'
 import SectionCarousel from '@/components/Home/SectionCarousel'
 import ModalAuthentication from '@/components/Modal/ModalAuthentication'
 import { useCart } from '@/hooks/useCart'
@@ -42,7 +43,7 @@ const ProductDetail = () => {
   const [variants, setVariants] = useState<Variant[]>([])
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
 
-  const { data: product } = useProducts.getProductDetail(productId)
+  const { data: product, isLoading: isLoadingPage } = useProducts.getProductDetail(productId)
   const { data: attributes } = useProducts.getProductAttribute(productId || '')
   const { mutate: addToCart } = useCart.addToCart()
   const { data: recommendations, isLoading: isLoadingRecommendations } =
@@ -117,113 +118,123 @@ const ProductDetail = () => {
 
   return (
     <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
-      <Text fw={600} fz={'h3'} mb={'sm'}>
-        Product Details
-      </Text>
-      <Grid>
-        <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-          {product && (
-            <Card shadow="sm" padding="lg" radius="md" w={'100%'}>
-              <Card.Section>
-                <Grid>
-                  <Grid.Col span={{ md: 2 }}>
-                    <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
-                      {galleryImage.map((item, index) => (
-                        <UnstyledButton
-                          key={index}
-                          onClick={() => handleSelectGallery(item)}
-                          style={{
-                            border: primaryImage?.url === item.url ? '1px solid #4F46E5' : '',
-                            borderRadius: 5
-                          }}
-                        >
-                          <Card p={2} shadow="md" radius={'md'}>
-                            <Image src={item.url} h={80} />
-                          </Card>
-                        </UnstyledButton>
+      {isLoadingPage ? (
+        <ProductDetailSkeleton />
+      ) : (
+        <>
+          <Text fw={600} fz={'h3'} mb={'sm'}>
+            Product Details
+          </Text>
+          <Grid>
+            <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
+              {product && (
+                <Card shadow="sm" padding="lg" radius="md" w={'100%'}>
+                  <Card.Section>
+                    <Grid>
+                      <Grid.Col span={{ md: 2 }}>
+                        <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
+                          {galleryImage.map((item, index) => (
+                            <UnstyledButton
+                              key={index}
+                              className="card-hover"
+                              onClick={() => handleSelectGallery(item)}
+                              style={{
+                                border: primaryImage?.url === item.url ? '1px solid #4F46E5' : '',
+                                borderRadius: 5
+                              }}
+                            >
+                              <Card p={2} shadow="md" radius={'md'}>
+                                <Image src={item.url} h={80} fit="contain" />
+                              </Card>
+                            </UnstyledButton>
+                          ))}
+                        </Stack>
+                      </Grid.Col>
+                      <Grid.Col span={{ md: 10 }}>
+                        {primaryImage.url !== '' && (
+                          <Image
+                            src={primaryImage.url}
+                            alt={primaryImage.alt_text}
+                            h={400}
+                            fit="contain"
+                          />
+                        )}
+                      </Grid.Col>
+                    </Grid>
+                  </Card.Section>
+
+                  <Box mt={'md'}>
+                    <Group justify="space-between">
+                      <Box>
+                        <Text fw={600} c="primary" style={{ textTransform: 'uppercase' }}>
+                          {product.product_brand}
+                        </Text>
+                        <Text fw={500}>
+                          {product.product_name} {variantLabel}
+                        </Text>
+                      </Box>
+
+                      <Button mt="md" radius="xl" onClick={handleAddCart} loading={loading}>
+                        Add to Cart
+                      </Button>
+                    </Group>
+
+                    <Group justify="space-between" mt={'md'}>
+                      <Text size="xl" fw={600} c="primary">
+                        {formatCurrency(price)}
+                      </Text>
+                    </Group>
+
+                    <Stack mt={'lg'} gap={'xs'}>
+                      <Text size="sm" fw={500}>
+                        Product Description
+                      </Text>
+
+                      {attributes?.map((attr) => (
+                        <Text size="sm" c="dimmed" key={attr.attribute_id}>
+                          {attr.attribute_name} : {attr.values.join(', ')}
+                        </Text>
                       ))}
                     </Stack>
-                  </Grid.Col>
-                  <Grid.Col span={{ md: 10 }}>
-                    {primaryImage.url !== '' && (
-                      <Image
-                        src={primaryImage.url}
-                        alt={primaryImage.alt_text}
-                        h={400}
-                        fit="contain"
-                      />
-                    )}
-                  </Grid.Col>
-                </Grid>
-              </Card.Section>
-
-              <Box mt={'md'}>
-                <Group justify="space-between">
-                  <Box>
-                    <Text fw={600} c="primary" style={{ textTransform: 'uppercase' }}>
-                      {product.product_brand}
-                    </Text>
-                    <Text fw={500}>
-                      {product.product_name} {variantLabel}
-                    </Text>
                   </Box>
-
-                  <Button mt="md" radius="xl" onClick={handleAddCart} loading={loading}>
-                    Add to Cart
-                  </Button>
-                </Group>
-
-                <Group justify="space-between" mt={'md'}>
-                  <Text size="xl" fw={600} c="primary">
-                    {formatCurrency(price)}
-                  </Text>
-                </Group>
-
-                <Stack mt={'lg'} gap={'xs'}>
-                  <Text size="sm" fw={500}>
-                    Product Description
-                  </Text>
-
-                  {attributes?.map((attr) => (
-                    <Text size="sm" c="dimmed" key={attr.attribute_id}>
-                      {attr.attribute_name} : {attr.values.join(', ')}
-                    </Text>
+                </Card>
+              )}
+            </Grid.Col>
+            <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
+              <Card shadow="sm">
+                <h2 className="text-xl font-semibold mb-5 sm:mb-0">Product Variants</h2>
+                <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
+                  {variants.map((item, index) => (
+                    <UnstyledButton
+                      key={index}
+                      className="card-hover"
+                      onClick={() => handleSelectVariant(item)}
+                      style={{
+                        border: primaryImage?.url === item.image.url ? '1px solid #4F46E5' : '',
+                        borderRadius: 5
+                      }}
+                    >
+                      <Card shadow="sm" p={'xs'}>
+                        <Image src={item.image.url} alt={item.image.alt_text} h={50} />
+                        <Text fz={'10'} lineClamp={2}>
+                          {item.variant_name}
+                        </Text>
+                        <Text fz={'10'} c="primary" mt={'xs'}>
+                          {formatCurrency(item.price)}
+                        </Text>
+                      </Card>
+                    </UnstyledButton>
                   ))}
-                </Stack>
-              </Box>
-            </Card>
-          )}
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-          <Card shadow="sm">
-            <h2 className="text-xl font-semibold mb-5 sm:mb-0">Product Variants</h2>
-            <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
-              {variants.map((item, index) => (
-                <UnstyledButton
-                  key={index}
-                  onClick={() => handleSelectVariant(item)}
-                  style={{
-                    border: primaryImage?.url === item.image.url ? '1px solid #4F46E5' : '',
-                    borderRadius: 5
-                  }}
-                >
-                  <Card shadow="sm" p={'xs'}>
-                    <Image src={item.image.url} alt={item.image.alt_text} h={50} />
-                    <Text fz={'10'}>{item.variant_name}</Text>
-                    <Text fz={'10'} c="primary" mt={'xs'}>
-                      {formatCurrency(item.price)}
-                    </Text>
-                  </Card>
-                </UnstyledButton>
-              ))}
-            </SimpleGrid>
-          </Card>
-        </Grid.Col>
-      </Grid>
+                </SimpleGrid>
+              </Card>
+            </Grid.Col>
+          </Grid>
+        </>
+      )}
 
       <SectionCarousel
         title="Recommendations"
-        exploreTo="/recommendations"
+        exploreTo=""
         data={recommendations ?? []}
         isLoading={isLoadingRecommendations}
       />

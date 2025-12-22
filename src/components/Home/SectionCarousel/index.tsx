@@ -22,16 +22,18 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
         <h2 className="text-midnight_text text-4xl lg:text-5xl font-semibold mb-5 sm:mb-0">
           {title}.
         </h2>
-        <Link
-          href={exploreTo}
-          className="text-primary text-lg font-medium hover:tracking-widest duration-500"
-        >
-          Explore &nbsp;&gt;&nbsp;
-        </Link>
+        {exploreTo && (
+          <Link
+            href={exploreTo}
+            className="text-primary text-lg font-medium hover:tracking-widest duration-500"
+          >
+            Explore &nbsp;&gt;&nbsp;
+          </Link>
+        )}
       </div>
 
       <Carousel
-        slideSize={{ base: '80%', sm: '50%', md: '33.333333%', lg: '25%' }}
+        slideSize={{ base: '80%', sm: '50%', md: '33.333333%', lg: '20%' }}
         slideGap="md"
         emblaOptions={{ align: 'start', slidesToScroll: 1 }}
         withControls={false}

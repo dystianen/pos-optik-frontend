@@ -1,5 +1,6 @@
 'use client'
 import Cart from '@/components/Common/ShoppingCart'
+import { useMenu } from '@/hooks/useMenu'
 import { removeCookieToken, removeUser } from '@/utils/auth'
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
@@ -21,6 +22,8 @@ const Header: React.FC<TProps> = ({ user }) => {
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
+
+  const { data: menu } = useMenu.menu()
 
   // sticky nav
   const handleScroll = () => {
@@ -53,7 +56,7 @@ const Header: React.FC<TProps> = ({ user }) => {
         <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between">
           <Logo />
           <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
-            {headerData.map((item, index) => (
+            {menu?.map((item, index) => (
               <HeaderLink key={index} item={item} />
             ))}
           </nav>

@@ -3,7 +3,7 @@
 import { useCart } from '@/hooks/useCart'
 import { TProduct } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
-import { Box, Button, Card, Flex, Image, Text } from '@mantine/core'
+import { Box, Card, Image, Text } from '@mantine/core'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useState } from 'react'
@@ -54,42 +54,38 @@ const CardProduct = ({ item }: { item: TProduct }) => {
     <>
       <Card
         shadow="sm"
-        p={{ base: 'sm', md: 'lg' }}
+        p={{ base: 'sm', md: 'md' }}
         radius="md"
-        className="hover:shadow-lg"
         onClick={handleDetail}
+        className="card-hover"
       >
         <Card.Section>
           <Image
             src={item.product_image_url}
             alt="Norway"
-            h={{ base: 120, md: 200 }}
+            h={{ base: 120, md: 200, lg: 150 }}
             fit="inherit"
           />
         </Card.Section>
 
         <Box mt={'md'}>
-          <Text fw={500} c="primary" fz={{ base: 12, md: 14 }}>
+          <Text
+            fw={500}
+            c="primary"
+            fz={{ base: 12, md: 14 }}
+            style={{ textTransform: 'uppercase' }}
+          >
             {item.product_brand}
           </Text>
           <Text fw={500} fz={{ base: 12, md: 14 }}>
             {item.product_name}
           </Text>
 
-          <Flex
-            direction={{ base: 'column', md: 'row' }}
-            justify={{ base: 'left', md: 'space-between' }}
-            mt={'md'}
-          >
-            <Text size="sm" c="dimmed" fz={{ base: 12, md: 14 }}>
-              {item.model}
-            </Text>
-            <Text size="sm" c="dimmed" fz={{ base: 12, md: 14 }}>
-              {formatCurrency(item.product_price)}
-            </Text>
-          </Flex>
+          <Text mt={'sm'} size="sm" c="dimmed" fz={{ base: 12, md: 14 }}>
+            {formatCurrency(item.product_price)}
+          </Text>
 
-          <Button
+          {/* <Button
             fullWidth
             mt="md"
             radius="xl"
@@ -100,7 +96,7 @@ const CardProduct = ({ item }: { item: TProduct }) => {
             loading={loading}
           >
             Add to Cart
-          </Button>
+          </Button> */}
         </Box>
       </Card>
 
