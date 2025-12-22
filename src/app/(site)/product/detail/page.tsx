@@ -19,6 +19,7 @@ import {
   Text,
   UnstyledButton
 } from '@mantine/core'
+import { clsx } from 'clsx'
 import { hasCookie } from 'cookies-next/client'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
@@ -43,7 +44,7 @@ const ProductDetail = () => {
   const [variants, setVariants] = useState<Variant[]>([])
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
 
-  const { data: product, isLoading: isLoadingPage } = useProducts.getProductDetail(productId)
+  const { data: product, isFetching: isLoadingPage } = useProducts.getProductDetail(productId)
   const { data: attributes } = useProducts.getProductAttribute(productId || '')
   const { mutate: addToCart } = useCart.addToCart()
   const { data: recommendations, isLoading: isLoadingRecommendations } =
@@ -134,16 +135,16 @@ const ProductDetail = () => {
                       <Grid.Col span={{ md: 2 }}>
                         <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
                           {galleryImage.map((item, index) => (
-                            <UnstyledButton
-                              key={index}
-                              className="card-hover"
-                              onClick={() => handleSelectGallery(item)}
-                              style={{
-                                border: primaryImage?.url === item.url ? '1px solid #4F46E5' : '',
-                                borderRadius: 5
-                              }}
-                            >
-                              <Card p={2} shadow="md" radius={'md'}>
+                            <UnstyledButton key={index} onClick={() => handleSelectGallery(item)}>
+                              <Card
+                                p={2}
+                                shadow="md"
+                                radius="md"
+                                className={clsx(
+                                  'card-hover',
+                                  primaryImage?.url === item.url && 'border-primary'
+                                )}
+                              >
                                 <Image src={item.url} h={80} fit="contain" />
                               </Card>
                             </UnstyledButton>
@@ -179,11 +180,9 @@ const ProductDetail = () => {
                       </Button>
                     </Group>
 
-                    <Group justify="space-between" mt={'md'}>
-                      <Text size="xl" fw={600} c="primary">
-                        {formatCurrency(price)}
-                      </Text>
-                    </Group>
+                    <Text size="xl" fw={600} c="primary">
+                      {formatCurrency(price)}
+                    </Text>
 
                     <Stack mt={'lg'} gap={'xs'}>
                       <Text size="sm" fw={500}>
@@ -209,12 +208,15 @@ const ProductDetail = () => {
                       key={index}
                       className="card-hover"
                       onClick={() => handleSelectVariant(item)}
-                      style={{
-                        border: primaryImage?.url === item.image.url ? '1px solid #4F46E5' : '',
-                        borderRadius: 5
-                      }}
                     >
-                      <Card shadow="sm" p={'xs'}>
+                      <Card
+                        shadow="sm"
+                        p={'xs'}
+                        className={clsx(
+                          'card-hover',
+                          primaryImage?.url === item.image.url && 'border-primary'
+                        )}
+                      >
                         <Image src={item.image.url} alt={item.image.alt_text} h={50} />
                         <Text fz={'10'} lineClamp={2}>
                           {item.variant_name}

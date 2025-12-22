@@ -65,7 +65,7 @@ export function ProductDetailSkeleton() {
               {Array.from({ length: 6 }).map((_, i) => (
                 <Card key={i} shadow="sm" p="xs">
                   <Skeleton height={50} mb={6} />
-                  <Skeleton height={10} width="70%" mb={4} />
+                  <Skeleton height={10} width="70%" mb={6} />
                   <Skeleton height={10} width="50%" />
                 </Card>
               ))}
