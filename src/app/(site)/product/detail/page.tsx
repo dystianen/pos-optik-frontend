@@ -24,6 +24,7 @@ import { hasCookie } from 'cookies-next/client'
 import { useSearchParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 type TImage = {
   url: string
@@ -75,24 +76,23 @@ const ProductDetail = () => {
       setLoading(true)
       const payload = {
         product_id: product!.product_id,
-        quantity: 1,
-        price: product!.product_price,
-        payment_method: null
+        variant_id: selectedVariant?.variant_id ?? null,
+        quantity: 1
       }
-      // addToCart(payload, {
-      //   onSuccess: (res) => {
-      //     setLoading(false)
-      //     toast.success(res.message)
-      //   },
-      //   onError: (err) => {
-      //     setLoading(false)
-      //     toast.error(err.message)
-      //   }
-      // })
+      addToCart(payload, {
+        onSuccess: (res) => {
+          setLoading(false)
+          toast.success(res.message)
+        },
+        onError: (err) => {
+          setLoading(false)
+          toast.error(err.message)
+        }
+      })
     } else {
       setAuthModalOpen(true)
     }
-  }, [])
+  }, [product, selectedVariant])
 
   const handleLogin = useCallback(() => {
     router.push('/signin')

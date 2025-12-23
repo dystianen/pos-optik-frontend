@@ -1,9 +1,9 @@
 import { GeneralResponse } from './general'
 
 export type TReqAddToCart = {
-  product_id: number
+  product_id: string
+  variant_id: string | null
   quantity: number
-  price: string
 }
 
 export type TTotalCart = {
@@ -13,38 +13,24 @@ export type TTotalCart = {
 
 export type TResTotalCart = GeneralResponse<TTotalCart>
 
-export type TItem = {
-  order_item_id: string
-  order_id: string
+export type TCartItem = {
+  cart_item_id: string
   product_id: string
-  quantity: string
-  price: string
-  category_id: string
+  variant_id: string | null
   product_name: string
-  product_price: string
-  product_stock: string
-  product_brand: string
-  product_image_url: string
-  model: string
-  duration: string
-  material: string
-  base_curve: string
-  diameter: string
-  power_range: string
-  water_content: string
-  uv_protection: string
-  color: string
-  coating: string
-  created_at: string
-  updated_at: string
+  variant_name: string | null
+  image: string | null
+  price: string
+  quantity: number
+  subtotal: string
 }
 
 export type TCart = {
-  order_id: string
-  shipping_costs: string
-  total_price: string
-  grand_total: string
-  items: TItem[]
+  items: TCartItem[]
+  summary: {
+    total_qty: number
+    total_price: string
+  }
 }
 
 export type TResCart = GeneralResponse<TCart>

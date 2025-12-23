@@ -1,59 +1,73 @@
 'use client'
 
 import { useCart } from '@/hooks/useCart'
-import { TItem } from '@/types/cart'
+import { TCartItem } from '@/types/cart'
 import { formatCurrency } from '@/utils/format'
-import { embedImage } from '@/utils/util'
-import { ActionIcon, Card, Grid, Group, Image, Stack, Text, Title } from '@mantine/core'
+import { ActionIcon, Badge, Card, Grid, Group, Image, Stack, Text, Title } from '@mantine/core'
 import { IconTrash } from '@tabler/icons-react'
 import { useCallback } from 'react'
 
 type TCardCart = {
-  item: TItem
+  item: TCartItem
   hideAction?: boolean
 }
 
 const CardCart = ({ item, hideAction = false }: TCardCart) => {
-  const { mutate: deleteItem } = useCart.deleteItemCart()
+  const { mutate: deleteItem, isPending } = useCart.deleteItemCart()
 
   const handleDeleteItemCart = useCallback(() => {
-    deleteItem(item.order_item_id)
-  }, [])
+    deleteItem(item.cart_item_id)
+  }, [deleteItem, item.cart_item_id])
 
   return (
-    <Card withBorder radius="md">
-      <Grid>
+    <Card withBorder radius="lg" p="md">
+      <Grid align="center">
+        {/* LEFT - Product Info */}
         <Grid.Col span={8}>
-          <Group>
+          <Group align="flex-start" gap="md" wrap="nowrap">
             <Image
-              src={embedImage(item.product_image_url)}
+              src={item.image || '/images/placeholder.png'}
               alt={item.product_name}
-              w={100}
-              h={100}
-              radius={'md'}
+              w={90}
+              h={90}
+              radius="md"
+              fit="cover"
             />
-            <Stack gap={'xs'}>
-              <Title order={5}>
-                {item.product_name} - {item.model}
-              </Title>
-              <Text>{item.product_brand}</Text>
-              <Text>
-                Color: {item.color} // Material: {item.material} // UV Protection:{' '}
-                {item.uv_protection === '1' ? 'Yes' : 'No'}
+
+            <Stack gap={6}>
+              <Title order={6}>{item.product_name}</Title>
+
+              {item.variant_name && (
+                <Badge variant="light" color="gray" w="fit-content">
+                  {item.variant_name}
+                </Badge>
+              )}
+
+              <Text size="sm" c="dimmed">
+                {item.quantity} × {formatCurrency(item.price)}
               </Text>
             </Stack>
           </Group>
         </Grid.Col>
+
+        {/* MIDDLE - Subtotal */}
         <Grid.Col span={3}>
-          <Stack gap={'xs'} justify="center" h={'100%'}>
-            <Title order={5}>{formatCurrency(item.price)}</Title>
+          <Stack justify="center">
+            <Text fw={600}>{formatCurrency(item.subtotal)}</Text>
           </Stack>
         </Grid.Col>
+
+        {/* RIGHT - Action */}
         {!hideAction && (
           <Grid.Col span={1}>
-            <Stack gap={'xs'} align="center" justify="center" h={'100%'}>
-              <ActionIcon variant="subtle" onClick={handleDeleteItemCart}>
-                <IconTrash color="#797de9" />
+            <Stack align="center" justify="center" h="100%">
+              <ActionIcon
+                variant="subtle"
+                color="red"
+                onClick={handleDeleteItemCart}
+                loading={isPending}
+              >
+                <IconTrash size={18} />
               </ActionIcon>
             </Stack>
           </Grid.Col>
