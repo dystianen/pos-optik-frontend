@@ -1,9 +1,11 @@
 'use client'
+import CartLensForm from '@/components/Cart/CartLensForm'
 import { ProductDetailSkeleton } from '@/components/Common/Skeleton/ProductDetailSkeleton'
 import SectionCarousel from '@/components/Home/SectionCarousel'
 import ModalAuthentication from '@/components/Modal/ModalAuthentication'
 import { useCart } from '@/hooks/useCart'
 import { useProducts } from '@/hooks/useProducts'
+import type { PrescriptionPayload } from '@/types/cart'
 import { TGalleryDetail, Variant } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
 import {
@@ -11,6 +13,7 @@ import {
   Button,
   Card,
   Container,
+  Divider,
   Grid,
   Group,
   Image,
@@ -44,8 +47,11 @@ const ProductDetail = () => {
   const [galleryImage, setGalleryImage] = useState<TGalleryDetail[]>([])
   const [variants, setVariants] = useState<Variant[]>([])
   const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
+  const [prescription, setPrescription] = useState<PrescriptionPayload>({
+    type: 'none'
+  })
 
-  const { data: product, isFetching: isLoadingPage } = useProducts.getProductDetail(productId)
+  const { data: product, isLoading: isLoadingPage } = useProducts.getProductDetail(productId)
   const { data: attributes } = useProducts.getProductAttribute(productId || '')
   const { mutate: addToCart } = useCart.addToCart()
   const { data: recommendations, isLoading: isLoadingRecommendations } =
@@ -70,14 +76,15 @@ const ProductDetail = () => {
     setVariants(product.variants)
   }, [product])
 
-  const handleAddCart = useCallback(async () => {
+  const handleAddCart = async () => {
     const isLoggedIn = hasCookie('user')
     if (isLoggedIn) {
       setLoading(true)
       const payload = {
         product_id: product!.product_id,
         variant_id: selectedVariant?.variant_id ?? null,
-        quantity: 1
+        quantity: 1,
+        prescription
       }
       addToCart(payload, {
         onSuccess: (res) => {
@@ -92,13 +99,11 @@ const ProductDetail = () => {
     } else {
       setAuthModalOpen(true)
     }
-  }, [product, selectedVariant])
+  }
 
   const handleLogin = useCallback(() => {
     router.push('/signin')
   }, [])
-
-  const handleSubmit = useCallback(() => {}, [])
 
   const handleSelectGallery = useCallback((item: TGalleryDetail) => {
     setPrimaryImage({ url: item.url, alt_text: item.alt_text })
@@ -200,40 +205,55 @@ const ProductDetail = () => {
               )}
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-              <Card shadow="sm">
-                <h2 className="text-xl font-semibold mb-5 sm:mb-0">Product Variants</h2>
-                <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
-                  {variants.map((item, index) => (
-                    <UnstyledButton
-                      key={index}
-                      className="card-hover"
-                      onClick={() => handleSelectVariant(item)}
-                    >
-                      <Card
-                        shadow="sm"
-                        p={'xs'}
-                        className={clsx(
-                          'card-hover',
-                          primaryImage?.url === item.image.url && 'border-primary'
-                        )}
+              <Stack gap={'md'}>
+                <Card shadow="sm">
+                  <Text fw={600} fz="lg" mb="sm">
+                    Product Variants
+                  </Text>
+                  <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
+                    {variants.map((item, index) => (
+                      <UnstyledButton
+                        key={index}
+                        className="card-hover"
+                        onClick={() => handleSelectVariant(item)}
                       >
-                        <Image
-                          src={item.image.url}
-                          alt={item.image.alt_text}
-                          h={80}
-                          fit="contain"
-                        />
-                        <Text fz={'10'} lineClamp={2}>
-                          {item.variant_name}
-                        </Text>
-                        <Text fz={'10'} c="primary" mt={'xs'}>
-                          {formatCurrency(item.price)}
-                        </Text>
-                      </Card>
-                    </UnstyledButton>
-                  ))}
-                </SimpleGrid>
-              </Card>
+                        <Card
+                          shadow="sm"
+                          p={'xs'}
+                          className={clsx(
+                            'card-hover',
+                            primaryImage?.url === item.image.url && 'border-primary'
+                          )}
+                        >
+                          <Image
+                            src={item.image.url}
+                            alt={item.image.alt_text}
+                            h={80}
+                            fit="contain"
+                          />
+                          <Text fz={'10'} lineClamp={2}>
+                            {item.variant_name}
+                          </Text>
+                          <Text fz={'10'} c="primary" mt={'xs'}>
+                            {formatCurrency(item.price)}
+                          </Text>
+                        </Card>
+                      </UnstyledButton>
+                    ))}
+                  </SimpleGrid>
+                </Card>
+
+                <Divider my="sm" />
+
+                <CartLensForm value={prescription} onChange={setPrescription} />
+
+                <Divider my="sm" />
+
+                {/* Checkout Button */}
+                <Button radius={'xl'} size="md" fullWidth color="red">
+                  Checkout
+                </Button>
+              </Stack>
             </Grid.Col>
           </Grid>
         </>

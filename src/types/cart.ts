@@ -1,9 +1,26 @@
 import { GeneralResponse } from './general'
 
+export type PrescriptionPayload = {
+  type: 'none' | 'manual'
+  right?: {
+    sph?: string
+    cyl?: string
+    axis?: string
+    pd?: string
+  }
+  left?: {
+    sph?: string
+    cyl?: string
+    axis?: string
+    pd?: string
+  }
+}
+
 export type TReqAddToCart = {
   product_id: string
   variant_id: string | null
   quantity: number
+  prescription: PrescriptionPayload
 }
 
 export type TTotalCart = {

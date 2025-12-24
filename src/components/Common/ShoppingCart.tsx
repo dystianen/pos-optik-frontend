@@ -9,7 +9,6 @@ import { useCallback, useMemo } from 'react'
 export default function Cart() {
   const router = useRouter()
   const { data: cart } = useCart.totalCart()
-  console.log('🚀 ~ Cart ~ cart:', cart)
   const isCart = useMemo(() => Number(cart?.total_items) > 0, [cart])
 
   const handleRedirectToCart = useCallback(() => {
