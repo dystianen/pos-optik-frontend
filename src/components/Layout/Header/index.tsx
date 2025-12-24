@@ -1,7 +1,9 @@
 'use client'
 import Cart from '@/components/Common/ShoppingCart'
+import { NavbarSkeleton } from '@/components/Common/Skeleton/NavbarSkeleton'
+import { useAuth } from '@/contexts/AuthContext'
 import { useMenu } from '@/hooks/useMenu'
-import { removeCookieToken, removeUser } from '@/utils/auth'
+import { tokenStorage } from '@/utils/auth'
 import { Group, Menu, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -14,16 +16,19 @@ import HeaderLink from './Navigation/HeaderLink'
 
 type TProps = {
   user: {
-    username: string
+    id: string
+    name: string
+    email: string
   }
 }
 
-const Header: React.FC<TProps> = ({ user }) => {
+const Header: React.FC = () => {
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
 
   const { data: menu } = useMenu.menu()
+  const { user, loading, logout } = useAuth()
 
   // sticky nav
   const handleScroll = () => {
@@ -38,14 +43,17 @@ const Header: React.FC<TProps> = ({ user }) => {
   }, [])
 
   const handleLogout = useCallback(() => {
-    removeCookieToken()
-    removeUser()
+    logout()
+    tokenStorage.removeTokens()
   }, [])
 
   const handleRedirectToOrders = useCallback(() => {
     router.push('/orders')
   }, [])
 
+  if (loading) {
+    return <NavbarSkeleton />
+  }
   return (
     <header
       className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
@@ -62,7 +70,7 @@ const Header: React.FC<TProps> = ({ user }) => {
           </nav>
 
           <Group>
-            {user?.username ? (
+            {user?.name ? (
               <>
                 <Cart />
                 <Menu width={200} position="bottom-start">
@@ -71,7 +79,7 @@ const Header: React.FC<TProps> = ({ user }) => {
                       <Group gap={'xs'}>
                         <IconUserFilled color="#1a21bc" size={28} />
                         <Text size="lg" className="hidden md:block">
-                          {user.username}
+                          {user.name}
                         </Text>
                       </Group>
                     </UnstyledButton>
@@ -145,7 +153,7 @@ const Header: React.FC<TProps> = ({ user }) => {
               <MobileHeaderLink key={index} item={item} />
             ))}
             <div className="mt-4 flex flex-col space-y-4 w-full">
-              {user?.username ? (
+              {user?.name ? (
                 <>
                   <button
                     onClick={() => {

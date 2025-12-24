@@ -2,16 +2,15 @@
 import Logo from '@/components/Layout/Header/Logo'
 import { useAuth } from '@/hooks/useAuth'
 import { TReqLogin } from '@/types/auth'
-import { setCookieToken, setUser } from '@/utils/auth'
+import { tokenStorage } from '@/utils/auth'
 import { Button, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { jwtDecode } from 'jwt-decode'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-const SignUp = () => {
+const SignIn = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -28,18 +27,12 @@ const SignUp = () => {
   const handleSubmit = (values: TReqLogin) => {
     setLoading(true)
     submitLogin(values, {
-      onSuccess: (res) => {
-        setCookieToken(res.data.token)
-        const decode: { user_id: number; user_name: string; email: string } = jwtDecode(
-          res.data.token
-        )
-        const user = {
-          user_id: decode.user_id,
-          username: decode.user_name,
-          email: decode.email
-        }
-
-        setUser(JSON.stringify(user))
+      onSuccess: ({ data }) => {
+        tokenStorage.setAccessToken(data.access_token)
+        tokenStorage.setRefreshToken(data.refresh_token)
+        tokenStorage.setUser(data.user)
+        // setAccessToken(data.access_token)
+        // setRefreshToken(data.refresh_token)
         setLoading(false)
         router.replace('/')
       },
@@ -111,4 +104,4 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+export default SignIn

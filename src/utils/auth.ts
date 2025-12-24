@@ -1,31 +1,49 @@
-'use server'
+export const tokenStorage = {
+  setAccessToken: (token: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('access_token', token)
+    }
+  },
 
-import { cookies } from 'next/headers'
+  getAccessToken: () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('access_token')
+    }
+    return null
+  },
 
-const setCookieToken = async (accessToken: string) => {
-  const cookieStore = await cookies()
-  cookieStore.set('accessToken', accessToken)
+  setRefreshToken: (token: string) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('refresh_token', token)
+    }
+  },
+
+  getRefreshToken: () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('refresh_token')
+    }
+    return null
+  },
+
+  removeTokens: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      localStorage.removeItem('user')
+    }
+  },
+
+  setUser: (user: any) => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('user', JSON.stringify(user))
+    }
+  },
+
+  getUser: () => {
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('user')
+      return user ? JSON.parse(user) : null
+    }
+    return null
+  }
 }
-
-const getCookieToken = async () => {
-  const cookieStore = await cookies()
-  const accessToken = cookieStore.get('accessToken')
-  return accessToken
-}
-
-const removeCookieToken = async () => {
-  const cookieStore = await cookies()
-  cookieStore.delete('accessToken')
-}
-
-const setUser = async (data: string) => {
-  const cookieStore = await cookies()
-  cookieStore.set('user', data)
-}
-
-const removeUser = async () => {
-  const cookieStore = await cookies()
-  cookieStore.delete('user')
-}
-
-export { getCookieToken, removeCookieToken, removeUser, setCookieToken, setUser }

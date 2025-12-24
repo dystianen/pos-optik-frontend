@@ -1,5 +1,5 @@
-import { getCookieToken, removeCookieToken } from '@/utils/auth'
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios'
+import { tokenStorage } from '@/utils/auth'
+import axios, { AxiosInstance } from 'axios'
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
@@ -14,9 +14,10 @@ const apiClient = axios.create({
 const addAuthInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     async (config) => {
-      const accessToken = await getCookieToken()
+      const accessToken = tokenStorage.getAccessToken()
+      console.log('🚀 ~ addAuthInterceptor ~ accessToken:', accessToken)
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken.value}`
+        config.headers.Authorization = `Bearer ${accessToken}`
       }
       return config
     },
@@ -25,21 +26,59 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
     }
   )
 
+  // Response Interceptor - Auto refresh jika 401
   instance.interceptors.response.use(
-    (response: AxiosResponse) => {
-      return response
-    },
-    (error) => {
-      if ((error.response && error.response.status === 401) || error.response.status === 403) {
-        const pathname = window.location.pathname
-        if (pathname !== '/signin') {
-          removeCookieToken()
-          window.location.href = '/signin'
+    (response) => response, // Jika sukses, langsung return
+
+    async (error) => {
+      const originalRequest = error.config
+
+      // Jika error 401 dan belum retry
+      if (error.response?.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true
+
+        try {
+          // Ambil refresh token
+          const refreshToken = tokenStorage.getRefreshToken()
+          console.log('🚀 ~ addAuthInterceptor ~ refreshToken:', refreshToken)
+
+          if (!refreshToken) {
+            // Tidak ada refresh token, logout
+            handleLogout()
+            return Promise.reject(error)
+          }
+
+          // Request token baru dengan refresh token
+          const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/refresh`,
+            {
+              refresh_token: refreshToken
+            }
+          )
+
+          const { access_token } = response.data.data
+
+          // Simpan access token baru
+          tokenStorage.setAccessToken(access_token)
+
+          // Update header dengan token baru
+          originalRequest.headers.Authorization = `Bearer ${access_token}`
+
+          // Retry request yang gagal tadi
+          return instance(originalRequest)
+        } catch (refreshError) {
+          // Refresh token juga expired, logout paksa
+          handleLogout()
+          return Promise.reject(refreshError)
         }
       }
 
-      const err = error.response?.data
-      return Promise.reject<AxiosError>(err)
+      function handleLogout() {
+        tokenStorage.removeTokens()
+        window.location.href = '/signin'
+      }
+
+      return Promise.reject(error)
     }
   )
 }
