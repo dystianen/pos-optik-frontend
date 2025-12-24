@@ -1,151 +1,233 @@
 'use client'
 
-import CardCart from '@/components/Common/CardCart'
-import { useOrder } from '@/hooks/useOrder'
-import { formatCurrency, formatDate } from '@/utils/format'
+import { PrescriptionPayload } from '@/types/cart'
 import {
-  Badge,
+  Box,
   Button,
   Card,
-  Collapse,
   Container,
-  Grid,
-  Skeleton,
+  Divider,
+  Group,
   Stack,
+  Stepper,
   Text,
-  Title
+  Textarea,
+  TextInput
 } from '@mantine/core'
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react'
-import { useCallback, useState } from 'react'
+import { useForm } from '@mantine/form'
+import { useRouter } from 'nextjs-toploader/app'
+import { useState } from 'react'
+
+type CheckoutSummary = {
+  address: {
+    recipient_name: string
+    phone: string
+    address: string
+    city: string
+    province: string
+    postal_code: string
+  }
+  items: {
+    product_name: string
+    variant_name: string
+    quantity: number
+    price: number
+    prescription?: PrescriptionPayload
+  }[]
+  shipping: {
+    method: 'Reguler'
+    destination: string
+    cost: number
+    estimated_days: string
+  }
+}
 
 const Orders = () => {
-  const { data: orders, isLoading } = useOrder.orders()
-  const [openedIndex, setOpenedIndex] = useState<number | null>(null)
+  const router = useRouter()
 
-  const toggleCollapse = useCallback((index: number) => {
-    setOpenedIndex((prev) => (prev === index ? null : index))
-  }, [])
-
-  const renderSkeleton = (count = 3) => {
-    return Array.from({ length: count }).map((_, i) => (
-      <Card key={i} withBorder>
-        <Grid align="center">
-          <Grid.Col span={3}>
-            <Skeleton height={16} width="80%" />
-          </Grid.Col>
-          <Grid.Col span={3}>
-            <Skeleton height={16} width="60%" />
-          </Grid.Col>
-          <Grid.Col span={3}>
-            <Skeleton height={16} width="40%" />
-          </Grid.Col>
-          <Grid.Col span={3}>
-            <Skeleton height={32} width="100px" radius="xl" />
-          </Grid.Col>
-        </Grid>
-        <Skeleton height={16} mt="sm" />
-        <Skeleton height={16} mt="xs" />
-      </Card>
-    ))
+  const [active, setActive] = useState(0)
+  const nextStep = () => {
+    setActive((current) => {
+      const step = current < 3 ? current + 1 : current
+      router.push(`?step=${step + 1}`)
+      return step
+    })
+  }
+  const prevStep = () => {
+    setActive((current) => {
+      const step = current > 0 ? current - 1 : current
+      router.push(`?step=${step + 1}`)
+      return step
+    })
   }
 
-  const renderColor = (value: string) => {
-    let color = ''
-    switch (value) {
-      case 'pending':
-        color = 'yellow'
-        break
-      case 'paid':
-        color = 'green'
-        break
-      case 'shipped':
-        color = 'lime'
-        break
-      case 'cancelled':
-        color = 'red'
-        break
-      default:
-        color = 'gray'
-    }
+  const form = useForm({
+    mode: 'uncontrolled',
+    initialValues: {
+      email: '',
+      termsOfService: false
+    },
 
-    return color
+    validate: {
+      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email')
+    }
+  })
+
+  const handleSubmitCheckout = () => {
+    console.log('masuk')
   }
 
   return (
-    <Container size="xl" my={120}>
-      <Title order={2} mb={32}>
-        My Orders
-      </Title>
-      <Stack>
-        <Card bg="primary.0">
-          <Grid>
-            <Grid.Col span={3}>
-              <Title order={5}>Order Date</Title>
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Title order={5}>Grand Total</Title>
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Title order={5}>Status</Title>
-            </Grid.Col>
-            <Grid.Col span={3}>
-              <Title order={5}>Action</Title>
-            </Grid.Col>
-          </Grid>
-        </Card>
+    <Container size={'sm'} my={120}>
+      <Stepper active={active} onStepClick={setActive}>
+        <Stepper.Step label="First step" description="Input Address">
+          <Card shadow="md" radius="lg">
+            <form onSubmit={form.onSubmit((values) => console.log(values))}>
+              <Stack>
+                <TextInput
+                  withAsterisk
+                  label="Recipient Name"
+                  placeholder="eg: Dystian En Yusgiantoro"
+                  key={form.key('recipient_name')}
+                  {...form.getInputProps('recipient_name')}
+                />
+                <TextInput
+                  withAsterisk
+                  label="Phone"
+                  placeholder="eg: +62 813-3647-2725"
+                  key={form.key('phone')}
+                  {...form.getInputProps('phone')}
+                />
+                <Textarea
+                  withAsterisk
+                  label="Address"
+                  placeholder="eg: Tebet Barat Dalam X E No.12, RT.12/RW.5, Tebet Bar., Kec. Tebet, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12810"
+                  key={form.key('address')}
+                  {...form.getInputProps('address')}
+                />
+                <TextInput
+                  withAsterisk
+                  label="City"
+                  placeholder="eg: Jakarta Selatan"
+                  key={form.key('city')}
+                  {...form.getInputProps('city')}
+                />
+                <TextInput
+                  withAsterisk
+                  label="Province"
+                  placeholder="eg: Jakarta"
+                  key={form.key('province')}
+                  {...form.getInputProps('province')}
+                />
+                <TextInput
+                  withAsterisk
+                  label="Postal Code"
+                  placeholder="eg: 12810"
+                  key={form.key('postal_code')}
+                  {...form.getInputProps('postal_code')}
+                />
+              </Stack>
 
-        {isLoading ? (
-          renderSkeleton(3)
-        ) : Number(orders?.length) > 0 ? (
-          orders.map((order: any, index: number) => (
-            <Card key={index} withBorder>
-              <Grid align="center">
-                <Grid.Col span={3}>{formatDate(order.order_date)}</Grid.Col>
-                <Grid.Col span={3}>{formatCurrency(order.grand_total)}</Grid.Col>
-                <Grid.Col span={3}>
-                  <Badge color={renderColor(order.status)}>{order.status}</Badge>
-                  {}
-                </Grid.Col>
-                <Grid.Col span={3}>
-                  <Button
-                    variant="subtle"
-                    onClick={() => toggleCollapse(index)}
-                    rightSection={
-                      openedIndex === index ? (
-                        <IconChevronUp size={16} />
-                      ) : (
-                        <IconChevronDown size={16} />
-                      )
-                    }
-                  >
-                    {openedIndex === index ? 'Hide Items' : 'Show Items'}
-                  </Button>
-                </Grid.Col>
-              </Grid>
+              <Group grow justify="center" mt="xl">
+                <Button variant="default" radius={'xl'} onClick={prevStep}>
+                  Back
+                </Button>
+                <Button onClick={nextStep} radius={'xl'}>
+                  Next step
+                </Button>
+              </Group>
+            </form>
+          </Card>
+        </Stepper.Step>
+        <Stepper.Step label="Second step" description="Detail Orders">
+          <Card shadow="md" radius="lg">
+            <Stack gap="md">
+              {/* 📦 Shipping Address */}
+              <Box>
+                <Text fw={600} mb={4}>
+                  Shipping Address
+                </Text>
+                <Text size="sm">{'checkoutAddress.recipient_name'}</Text>
+                <Text size="sm">{'checkoutAddress.phone'}</Text>
+                <Text size="sm">{'checkoutAddress.address'}</Text>
+              </Box>
 
-              <Collapse in={openedIndex === index}>
-                <Stack mt="sm">
-                  {order.items && order.items.length > 0 ? (
-                    order.items.map((item: any, index: number) => (
-                      <CardCart key={index} item={item} hideAction />
-                    ))
-                  ) : (
-                    <Text c="dimmed" size="sm">
-                      No items found in this order.
-                    </Text>
-                  )}
-                </Stack>
-              </Collapse>
-            </Card>
-          ))
-        ) : (
-          <Card withBorder radius="md">
-            <Stack>
-              <Text>No Orders Found</Text>
+              <Divider />
+
+              {/* 🛒 Items */}
+              <Box>
+                <Text fw={600} mb="sm">
+                  Order Items
+                </Text>
+
+                {/* {cartItems.map((item, index) => (
+                  <Card key={index} withBorder radius="md" mb="sm">
+                    <Group justify="space-between" align="flex-start">
+                      <Box>
+                        <Text fw={500}>{item.product_name}</Text>
+                        <Text size="sm" c="dimmed">
+                          Variant: {item.variant_name}
+                        </Text>
+                        {item.prescription && (
+                          <Text size="xs" c="dimmed">
+                            Resep: R({item.prescription.right}) / L({item.prescription.left})
+                          </Text>
+                        )}
+                      </Box>
+
+                      <Box ta="right">
+                        <Text size="sm">
+                          {item.quantity} × Rp {item.price.toLocaleString('id-ID')}
+                        </Text>
+                        <Text fw={600}>
+                          Rp {(item.quantity * item.price).toLocaleString('id-ID')}
+                        </Text>
+                      </Box>
+                    </Group>
+                  </Card>
+                ))} */}
+              </Box>
+
+              <Divider />
+
+              {/* 🚚 Shipping */}
+              <Box>
+                <Text fw={600}>Shipping</Text>
+                <Text size="sm">Reguler -</Text>
+                <Text size="sm">Destination: -</Text>
+              </Box>
+
+              <Divider />
+
+              {/* 💰 Total */}
+              <Box>
+                <Group justify="space-between">
+                  <Text>Subtotal</Text>
+                  <Text>Rp 0</Text>
+                </Group>
+                <Group justify="space-between">
+                  <Text>Shipping</Text>
+                  <Text>Rp 0</Text>
+                </Group>
+                <Group justify="space-between" mt="xs">
+                  <Text fw={600}>Total</Text>
+                  <Text fw={600}>Rp 0</Text>
+                </Group>
+              </Box>
+
+              <Group grow justify="center" mt="xl">
+                <Button variant="default" radius="xl" onClick={prevStep}>
+                  Back
+                </Button>
+                <Button radius="xl" onClick={handleSubmitCheckout}>
+                  Submit Order
+                </Button>
+              </Group>
             </Stack>
           </Card>
-        )}
-      </Stack>
+        </Stepper.Step>
+        <Stepper.Completed>Completed, click back button to get to previous step</Stepper.Completed>
+      </Stepper>
     </Container>
   )
 }
