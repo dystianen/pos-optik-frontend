@@ -14,3 +14,9 @@ export type TReqRegister = {
   customer_eye_history: string
   customer_preferences: string
 }
+
+export type TUser = {
+  id: string
+  name: string
+  email: string
+}

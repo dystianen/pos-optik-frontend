@@ -9,8 +9,8 @@ import { Poppins } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 
 // Stylesheet
-import { AuthProvider } from '@/contexts/AuthContext'
 import queryClient from '@/lib/reactQueryClient'
+import { getUser } from '@/utils/auth-server'
 import '@mantine/carousel/styles.css'
 import '@mantine/core/styles.css'
 import '@mantine/dates/styles.css'
@@ -48,11 +48,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // const cookieStore = await cookies()
-  // const userCookie = cookieStore.get('user')
-  // const user = userCookie && userCookie.value ? JSON.parse(userCookie.value) : null
-  // const user = tokenStorage.getUser()
-  // console.log('🚀 ~ RootLayout ~ user:', user)
+  const user = await getUser()
 
   return (
     <html lang="en" {...mantineHtmlProps}>
@@ -63,12 +59,10 @@ export default async function RootLayout({
         <NextTopLoader color="#6556FF" showSpinner={false} />
         <QueryClientProvider client={queryClient}>
           <MantineProvider theme={theme}>
-            <AuthProvider>
-              <Header />
-              {children}
-              <Footer />
-              <ScrollToTop />
-            </AuthProvider>
+            <Header user={user} />
+            {children}
+            <Footer />
+            <ScrollToTop />
           </MantineProvider>
         </QueryClientProvider>
         <ToastContainer

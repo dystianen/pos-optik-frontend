@@ -1,4 +1,4 @@
-import { tokenStorage } from '@/utils/auth'
+import { getAccessToken, getRefreshToken, removeTokens, setAccessToken } from '@/utils/auth-server'
 import axios, { AxiosInstance } from 'axios'
 
 const apiClient = axios.create({
@@ -14,10 +14,9 @@ const apiClient = axios.create({
 const addAuthInterceptor = (instance: AxiosInstance) => {
   instance.interceptors.request.use(
     async (config) => {
-      const accessToken = tokenStorage.getAccessToken()
-      console.log('🚀 ~ addAuthInterceptor ~ accessToken:', accessToken)
+      const accessToken = await getAccessToken()
       if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`
+        config.headers.Authorization = `Bearer ${accessToken.value}`
       }
       return config
     },
@@ -39,10 +38,9 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
 
         try {
           // Ambil refresh token
-          const refreshToken = tokenStorage.getRefreshToken()
-          console.log('🚀 ~ addAuthInterceptor ~ refreshToken:', refreshToken)
+          const refreshToken = await getRefreshToken()
 
-          if (!refreshToken) {
+          if (!refreshToken?.value) {
             // Tidak ada refresh token, logout
             handleLogout()
             return Promise.reject(error)
@@ -52,14 +50,14 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
           const response = await axios.post(
             `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/refresh`,
             {
-              refresh_token: refreshToken
+              refresh_token: refreshToken.value
             }
           )
 
           const { access_token } = response.data.data
 
           // Simpan access token baru
-          tokenStorage.setAccessToken(access_token)
+          setAccessToken(access_token)
 
           // Update header dengan token baru
           originalRequest.headers.Authorization = `Bearer ${access_token}`
@@ -74,7 +72,7 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
       }
 
       function handleLogout() {
-        tokenStorage.removeTokens()
+        removeTokens()
         window.location.href = '/signin'
       }
 

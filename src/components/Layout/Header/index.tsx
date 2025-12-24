@@ -1,10 +1,9 @@
 'use client'
 import Cart from '@/components/Common/ShoppingCart'
-import { NavbarSkeleton } from '@/components/Common/Skeleton/NavbarSkeleton'
-import { useAuth } from '@/contexts/AuthContext'
 import { useMenu } from '@/hooks/useMenu'
-import { tokenStorage } from '@/utils/auth'
-import { Group, Menu, Text, UnstyledButton } from '@mantine/core'
+import { TUser } from '@/types/auth'
+import { removeTokens } from '@/utils/auth-server'
+import { Group, Menu, Skeleton, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
@@ -14,21 +13,12 @@ import { headerData } from '../Header/Navigation/menuData'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
 
-type TProps = {
-  user: {
-    id: string
-    name: string
-    email: string
-  }
-}
-
-const Header: React.FC = () => {
+const Header = ({ user }: { user: TUser }) => {
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
 
-  const { data: menu } = useMenu.menu()
-  const { user, loading, logout } = useAuth()
+  const { data: menu, isLoading: isLoadingMenu } = useMenu.menu()
 
   // sticky nav
   const handleScroll = () => {
@@ -43,17 +33,13 @@ const Header: React.FC = () => {
   }, [])
 
   const handleLogout = useCallback(() => {
-    logout()
-    tokenStorage.removeTokens()
+    removeTokens()
   }, [])
 
   const handleRedirectToOrders = useCallback(() => {
     router.push('/orders')
   }, [])
 
-  if (loading) {
-    return <NavbarSkeleton />
-  }
   return (
     <header
       className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
@@ -64,9 +50,20 @@ const Header: React.FC = () => {
         <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between">
           <Logo />
           <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
-            {menu?.map((item, index) => (
-              <HeaderLink key={index} item={item} />
-            ))}
+            {isLoadingMenu ? (
+              <>
+                <Skeleton height={24} width={100} radius="sm" />
+                <Skeleton height={24} width={100} radius="sm" />
+                <Skeleton height={24} width={100} radius="sm" />
+                <Skeleton height={24} width={100} radius="sm" />
+              </>
+            ) : (
+              <>
+                {menu?.map((item, index) => (
+                  <HeaderLink key={index} item={item} />
+                ))}
+              </>
+            )}
           </nav>
 
           <Group>

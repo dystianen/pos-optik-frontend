@@ -2,7 +2,7 @@
 import Logo from '@/components/Layout/Header/Logo'
 import { useAuth } from '@/hooks/useAuth'
 import { TReqLogin } from '@/types/auth'
-import { tokenStorage } from '@/utils/auth'
+import { setAccessToken, setRefreshToken, setUser } from '@/utils/auth-server'
 import { Button, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 
-const SignIn = () => {
+const SignUp = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
@@ -28,11 +28,9 @@ const SignIn = () => {
     setLoading(true)
     submitLogin(values, {
       onSuccess: ({ data }) => {
-        tokenStorage.setAccessToken(data.access_token)
-        tokenStorage.setRefreshToken(data.refresh_token)
-        tokenStorage.setUser(data.user)
-        // setAccessToken(data.access_token)
-        // setRefreshToken(data.refresh_token)
+        setAccessToken(data.access_token)
+        setRefreshToken(data.refresh_token)
+        setUser(JSON.stringify(data.user))
         setLoading(false)
         router.replace('/')
       },
@@ -104,4 +102,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn
+export default SignUp
