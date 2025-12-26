@@ -182,7 +182,7 @@ const Orders = () => {
 
   return (
     <Container size={'sm'} my={120}>
-      <Stepper active={active} onStepClick={setActive}>
+      <Stepper active={active}>
         <Stepper.Step label="First step" description="Delivery">
           <Card shadow="md" radius="lg">
             <Stack gap={'xl'}>
