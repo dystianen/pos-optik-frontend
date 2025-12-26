@@ -416,7 +416,7 @@ const Orders = () => {
 
                   <Stack>
                     {summaryOrder.items.map((item) => (
-                      <CardCart key={item.cart_item_id} item={item} />
+                      <CardCart key={item.cart_item_id} item={item} hideAction />
                     ))}
                   </Stack>
                 </Box>

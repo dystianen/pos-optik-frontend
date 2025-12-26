@@ -29,7 +29,6 @@ export const useCart = {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['cart'] })
         queryClient.invalidateQueries({ queryKey: ['total_cart'] })
-        queryClient.invalidateQueries({ queryKey: ['SUMMARY_ORDERS'] })
       }
     })
   }
