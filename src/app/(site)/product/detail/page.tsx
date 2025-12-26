@@ -40,7 +40,6 @@ const ProductDetail = () => {
   const router = useRouter()
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [loadingCheckout, setLoadingCheckout] = useState(false)
   const [primaryImage, setPrimaryImage] = useState<TImage>({
     url: '',
     alt_text: ''
@@ -122,23 +121,6 @@ const ProductDetail = () => {
     selectedVariant && selectedVariant.variant_name !== product?.product_name
       ? `(${selectedVariant.variant_name})`
       : ''
-
-  const handleCheckout = () => {
-    setLoadingCheckout(true)
-    const payload = {
-      product_id: product!.product_id,
-      variant_id: selectedVariant?.variant_id ?? null,
-      quantity: 1,
-      prescription
-    }
-
-    localStorage.setItem('product', JSON.stringify(payload))
-
-    setTimeout(() => {
-      router.push('/orders')
-      setLoadingCheckout(false)
-    }, 500)
-  }
 
   return (
     <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
@@ -264,20 +246,6 @@ const ProductDetail = () => {
                 <Divider my="sm" />
 
                 <CartLensForm value={prescription} onChange={setPrescription} />
-
-                <Divider my="sm" />
-
-                {/* Checkout Button */}
-                <Button
-                  radius={'xl'}
-                  size="md"
-                  fullWidth
-                  color="red"
-                  loading={loadingCheckout}
-                  onClick={handleCheckout}
-                >
-                  Checkout
-                </Button>
               </Stack>
             </Grid.Col>
           </Grid>

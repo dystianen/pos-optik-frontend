@@ -1,7 +1,11 @@
 import apiClient from '@/lib/apiClient'
-import type { TReqCheckout } from '@/types/order'
+import type { TReqCheckout, TResSummaryOrders } from '@/types/order'
 
 const orderService = {
+  async summaryOrders(id: string) {
+    const response = await apiClient.get<TResSummaryOrders>(`/orders/summary-orders/${id}`)
+    return response.data.data
+  },
   async orders() {
     const response = await apiClient.get('/orders')
     return response.data.data

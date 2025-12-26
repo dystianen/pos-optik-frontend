@@ -1,4 +1,5 @@
 import { GeneralResponse } from './general'
+import { TItemCart } from './order'
 
 export type PrescriptionPayload = {
   type: 'none' | 'manual'
@@ -7,12 +8,14 @@ export type PrescriptionPayload = {
     cyl?: string
     axis?: string
     pd?: string
+    add?: string
   }
   left?: {
     sph?: string
     cyl?: string
     axis?: string
     pd?: string
+    add?: string
   }
 }
 
@@ -37,13 +40,14 @@ export type TCartItem = {
   product_name: string
   variant_name: string | null
   image: string | null
-  price: string
+  price: string | number
   quantity: number
   subtotal: string
+  prescription: PrescriptionPayload
 }
 
 export type TCart = {
-  items: TCartItem[]
+  items: TItemCart[]
   summary: {
     total_qty: number
     total_price: string

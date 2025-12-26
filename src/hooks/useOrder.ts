@@ -3,6 +3,12 @@ import orderService from '@/services/orderService'
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useOrder = {
+  summaryOrders() {
+    return useMutation({
+      mutationKey: ['SUMMARY_ORDERS'],
+      mutationFn: (id: string) => orderService.summaryOrders(id)
+    })
+  },
   orders() {
     return useQuery({
       queryKey: ['orders'],
