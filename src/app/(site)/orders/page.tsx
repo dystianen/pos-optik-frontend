@@ -192,7 +192,7 @@ const Orders = () => {
   return (
     <Container my={120}>
       <Stepper active={active} size="sm">
-        <Stepper.Step label="Delivery">
+        <Stepper.Step label="Shipping">
           <Card shadow="md" radius="lg" p="xl">
             <Stack gap={'xl'}>
               <Alert
@@ -379,7 +379,7 @@ const Orders = () => {
             </Stack>
           </Card>
         </Stepper.Step>
-        <Stepper.Step label="Summary Orders">
+        <Stepper.Step label="Order Summary">
           <StepSummaryOrder
             isLoadingSummary={isLoadingSummary}
             summaryOrder={summaryOrder}
@@ -390,7 +390,7 @@ const Orders = () => {
         <Stepper.Step label="Payment">
           <StepPayment prevStep={prevStep} />
         </Stepper.Step>
-        <Stepper.Step label="Payment Confirmation">
+        <Stepper.Step label="Confirmation">
           <StepPaymentConfirmation nextStep={nextStep} />
         </Stepper.Step>
         <Stepper.Completed>
