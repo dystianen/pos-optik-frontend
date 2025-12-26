@@ -1,17 +1,17 @@
 'use client'
-import { Button, Container, Image, Stack, Text, Title } from '@mantine/core'
+import { Button, Card, Image, Stack, Text, Title } from '@mantine/core'
 import { useRouter } from 'nextjs-toploader/app'
 
-const OrderSuccess = () => {
+const StepSuccessPayment = () => {
   const router = useRouter()
 
   return (
-    <Container size="xl" my={120}>
+    <Card shadow="md" radius="lg" p="xl">
       <Stack align="center" gap="lg">
         <Image
           src="/images/payment-success.png"
-          h={200}
-          w={200}
+          h={150}
+          w={150}
           fit="contain"
           alt="Order Confirmed"
         />
@@ -26,8 +26,8 @@ const OrderSuccess = () => {
           View My Order
         </Button>
       </Stack>
-    </Container>
+    </Card>
   )
 }
 
-export default OrderSuccess
+export default StepSuccessPayment

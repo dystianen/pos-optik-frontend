@@ -1,18 +1,19 @@
 'use client'
 
-import CardCart from '@/components/Common/CardCart'
+import StepPayment from '@/components/Order/StepPayment'
+import StepPaymentConfirmation from '@/components/Order/StepPaymentConfirmation'
+import StepSuccessPayment from '@/components/Order/StepSuccessPayment'
+import StepSummaryOrder from '@/components/Order/StepSummaryOrder'
 import { useOrder } from '@/hooks/useOrder'
 import { useShipping } from '@/hooks/useShipping'
 import { TSummaryOrders } from '@/types/order'
 import { TCustomerShipping, TReqCustomerShipping } from '@/types/shipping'
-import { formatCurrency } from '@/utils/format'
 import {
   Alert,
   Box,
   Button,
   Card,
   Container,
-  Divider,
   Group,
   LoadingOverlay,
   Radio,
@@ -60,6 +61,10 @@ const Orders = () => {
   const [showForm, setShowForm] = useState(false)
   const [summaryOrder, setSummaryOrder] = useState<TSummaryOrders | null>(null)
 
+  const [loading, setLoading] = useState(false)
+
+  const { mutate: payment } = useOrder.payment()
+
   const hasAddress = (shippingAddresses?.length ?? 0) > 0
 
   useEffect(() => {
@@ -100,6 +105,10 @@ const Orders = () => {
     }
   }, [stepParam, csaId])
 
+  useEffect(() => {
+    setActive(Number(stepParam) || 0)
+  }, [stepParam])
+
   const handleSaveAddress = (values: TReqCustomerShipping) => {
     const payload = selectedAddressId ? { ...values, id: selectedAddressId } : { ...values }
 
@@ -116,33 +125,33 @@ const Orders = () => {
     })
   }
 
+  const goToStep = (step: number) => {
+    router.push(`?step=${step}${csaId ? `&id=${csaId}` : ''}`)
+  }
+
   const prevStep = () => {
-    setActive((current) => {
-      const step = current > 0 ? current - 1 : current
-      return step
-    })
-    router.push(`?step=0&id=${csaId}`)
+    const current = Number(stepParam) || 0
+    const prev = Math.max(current - 1, 0)
+
+    goToStep(prev)
   }
 
   const nextStep = () => {
+    const next = (Number(stepParam) || 0) + 1
+    goToStep(next)
+  }
+
+  const nextToSummaryOrder = () => {
     const id = selectedAddressId
 
     if (id) {
       summary(id, {
         onSuccess: (res) => {
           setSummaryOrder(res)
-          setActive((current) => {
-            const step = current < 3 ? current + 1 : current
-            return step
-          })
-          router.push(`?step=1&id=${id}`)
+          nextStep()
         }
       })
     }
-  }
-
-  const handleSubmitCheckout = () => {
-    console.log('masuk')
   }
 
   const handleSelectAddress = (address: TCustomerShipping | null) => {
@@ -165,7 +174,7 @@ const Orders = () => {
     setSelectedAddressId(address.csa_id)
     form.setValues(address)
     setShowForm(true)
-    router.replace(`?step=1&id=${address.csa_id}`)
+    router.replace(`?step=0&id=${address.csa_id}`)
   }
 
   const handleBackOrCancel = () => {
@@ -181,10 +190,10 @@ const Orders = () => {
   }
 
   return (
-    <Container size={'sm'} my={120}>
-      <Stepper active={active}>
-        <Stepper.Step label="First step" description="Delivery">
-          <Card shadow="md" radius="lg">
+    <Container my={120}>
+      <Stepper active={active} size="sm">
+        <Stepper.Step label="Delivery">
+          <Card shadow="md" radius="lg" p="xl">
             <Stack gap={'xl'}>
               <Alert
                 variant="light"
@@ -197,7 +206,7 @@ const Orders = () => {
                 time and shipping costs will follow the regular service terms.
               </Alert>
 
-              <Card withBorder radius="lg">
+              <Card withBorder radius="lg" p="xl">
                 <LoadingOverlay
                   visible={isLoadingShippingAddresses}
                   zIndex={1000}
@@ -289,15 +298,16 @@ const Orders = () => {
                     </Text>
 
                     <Group grow justify="center" mt="xl">
-                      <Button variant="default" radius="xl" onClick={handleBackOrCancel}>
+                      <Button variant="default" radius="xl" size="lg" onClick={handleBackOrCancel}>
                         Back
                       </Button>
 
                       <Button
                         type="submit"
                         radius="xl"
+                        size="lg"
                         loading={isLoadingSummary}
-                        onClick={nextStep}
+                        onClick={nextToSummaryOrder}
                       >
                         Next
                       </Button>
@@ -355,11 +365,11 @@ const Orders = () => {
                     </Stack>
 
                     <Group grow justify="center" mt="xl">
-                      <Button variant="default" radius="xl" onClick={handleBackOrCancel}>
+                      <Button variant="default" radius="xl" size="lg" onClick={handleBackOrCancel}>
                         {hasAddress ? 'Cancel' : 'Back'}
                       </Button>
 
-                      <Button type="submit" radius="xl" loading={isLoadingSave}>
+                      <Button type="submit" radius="xl" size="lg" loading={isLoadingSave}>
                         {selectedAddressId ? 'Update Address' : 'Save Address'}
                       </Button>
                     </Group>
@@ -369,128 +379,23 @@ const Orders = () => {
             </Stack>
           </Card>
         </Stepper.Step>
-        <Stepper.Step label="Second step" description="Detail Orders">
-          <Card shadow="md" radius="lg" mih={400}>
-            <LoadingOverlay
-              visible={isLoadingSummary}
-              zIndex={1000}
-              overlayProps={{ radius: 'lg', blur: 5 }}
-              loaderProps={{ type: 'bars' }}
-            />
-            {summaryOrder && (
-              <Stack gap="md">
-                {/* 📦 Shipping Address */}
-                <Box>
-                  <Text fw={600} mb={6}>
-                    Shipping Address
-                  </Text>
-
-                  <Text size="sm" fw={500}>
-                    {summaryOrder.shipping_address.recipient_name}
-                  </Text>
-
-                  <Text size="sm" c="dimmed">
-                    {summaryOrder.shipping_address.phone}
-                  </Text>
-
-                  <Text size="sm" c="gray.7">
-                    {summaryOrder.shipping_address.address}
-                  </Text>
-
-                  <Text size="sm" c="gray.6">
-                    {summaryOrder.shipping_address.city}, {summaryOrder.shipping_address.province}{' '}
-                    {summaryOrder.shipping_address.postal_code}
-                  </Text>
-                </Box>
-
-                <Divider />
-
-                {/* 🛒 Items */}
-                <Box>
-                  <Group justify="space-between" mb="sm">
-                    <Text fw={600}>Order Items</Text>
-                    <Text size="xs" c="dimmed">
-                      {summaryOrder.items.length} items
-                    </Text>
-                  </Group>
-
-                  <Stack>
-                    {summaryOrder.items.map((item) => (
-                      <CardCart key={item.cart_item_id} item={item} hideAction />
-                    ))}
-                  </Stack>
-                </Box>
-
-                <Divider />
-
-                {/* 🚚 Shipping */}
-                <Box>
-                  <Text fw={600} mb={4}>
-                    Shipping
-                  </Text>
-
-                  <Group gap={6}>
-                    <Text size="sm" c="dimmed">
-                      Service:
-                    </Text>
-                    <Text size="sm" fw={500}>
-                      {summaryOrder.shipping.service}
-                    </Text>
-                  </Group>
-
-                  <Group gap={6}>
-                    <Text size="sm" c="dimmed">
-                      Destination:
-                    </Text>
-                    <Text size="sm" fw={500}>
-                      {summaryOrder.shipping.destination}
-                    </Text>
-                  </Group>
-                </Box>
-
-                <Divider />
-
-                {/* 💰 Total */}
-                <Box>
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      Subtotal
-                    </Text>
-                    <Text size="sm">{formatCurrency(summaryOrder.summary.subtotal)}</Text>
-                  </Group>
-
-                  <Group justify="space-between">
-                    <Text size="sm" c="dimmed">
-                      Shipping
-                    </Text>
-                    <Text size="sm">{formatCurrency(summaryOrder.summary.shipping_cost)}</Text>
-                  </Group>
-
-                  <Divider my="xs" />
-
-                  <Group justify="space-between">
-                    <Text fw={600} size="lg">
-                      Total
-                    </Text>
-                    <Text fw={700} size="lg">
-                      {formatCurrency(summaryOrder.summary.total)}
-                    </Text>
-                  </Group>
-                </Box>
-
-                <Group grow justify="center" mt="xl">
-                  <Button variant="default" radius="xl" onClick={prevStep}>
-                    Back
-                  </Button>
-                  <Button radius="xl" onClick={handleSubmitCheckout}>
-                    Submit Order
-                  </Button>
-                </Group>
-              </Stack>
-            )}
-          </Card>
+        <Stepper.Step label="Summary Orders">
+          <StepSummaryOrder
+            isLoadingSummary={isLoadingSummary}
+            summaryOrder={summaryOrder}
+            prevStep={prevStep}
+            nextStep={nextStep}
+          />
         </Stepper.Step>
-        <Stepper.Completed>Completed, click back button to get to previous step</Stepper.Completed>
+        <Stepper.Step label="Payment">
+          <StepPayment prevStep={prevStep} />
+        </Stepper.Step>
+        <Stepper.Step label="Payment Confirmation">
+          <StepPaymentConfirmation nextStep={nextStep} />
+        </Stepper.Step>
+        <Stepper.Completed>
+          <StepSuccessPayment />
+        </Stepper.Completed>
       </Stepper>
     </Container>
   )

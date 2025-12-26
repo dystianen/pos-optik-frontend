@@ -4,7 +4,7 @@ import { useOrder } from '@/hooks/useOrder'
 import {
   ActionIcon,
   Button,
-  Container,
+  Card,
   FileInput,
   Group,
   Image,
@@ -19,7 +19,7 @@ import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-const Payment = () => {
+const StepPayment = ({ prevStep }: { prevStep: () => void }) => {
   const router = useRouter()
   const form = useForm()
   const clipboard = useClipboard({ timeout: 1500 })
@@ -49,9 +49,9 @@ const Payment = () => {
   const bankLabel = 'BCA'
 
   return (
-    <Container size="sm" my={80}>
+    <Card shadow="md" radius="lg" p="xl">
       <Stack align="center" gap="lg">
-        <Image src="/images/payment.svg" height={300} fit="contain" />
+        <Image src="/images/payment.svg" h={400} fit="contain" />
 
         <Group gap="xs" align="center">
           <Text fw={500} size="lg">
@@ -69,7 +69,7 @@ const Payment = () => {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)} style={{ width: '100%' }}>
-          <Stack gap="md" align="center" w="100%">
+          <Stack gap="md" w="100%">
             <FileInput
               label="Upload Proof of Payment"
               placeholder="Select file"
@@ -78,14 +78,19 @@ const Payment = () => {
               key={form.key('proof_of_payment')}
               {...form.getInputProps('proof_of_payment')}
             />
-            <Button fullWidth radius="xl" type="submit" loading={loading}>
-              Submit Payment
-            </Button>
+            <Group grow justify="center" mt="xl">
+              <Button variant="default" radius="xl" size="lg" onClick={prevStep}>
+                Back
+              </Button>
+              <Button radius="xl" size="lg" loading={loading} onClick={handleSubmit}>
+                Submit Payment
+              </Button>
+            </Group>
           </Stack>
         </form>
       </Stack>
-    </Container>
+    </Card>
   )
 }
 
-export default Payment
+export default StepPayment

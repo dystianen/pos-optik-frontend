@@ -1,10 +1,10 @@
 'use client'
 import { useOrder } from '@/hooks/useOrder'
-import { Container, Image, Stack, Text, Title } from '@mantine/core'
+import { Card, Image, Stack, Text, Title } from '@mantine/core'
 import { useRouter } from 'nextjs-toploader/app'
 import { useEffect } from 'react'
 
-const WaitingConfirmation = () => {
+const StepPaymentConfirmation = ({ nextStep }: { nextStep: () => void }) => {
   const router = useRouter()
 
   const { data, refetch } = useOrder.checkStatus()
@@ -19,14 +19,14 @@ const WaitingConfirmation = () => {
 
   useEffect(() => {
     if (data?.data?.isShipped === true) {
-      router.push('/orders/success')
+      nextStep()
     }
   }, [data, router])
 
   return (
-    <Container size="xl" my={120}>
+    <Card shadow="md" radius="lg" p="xl">
       <Stack align="center" gap="lg">
-        <Image src="/images/waiting.svg" h={400} w={600} fit="contain" alt="Waiting Confirmation" />
+        <Image src="/images/waiting.svg" h={300} w={400} fit="contain" alt="Waiting Confirmation" />
         <Title order={2} ta="center">
           Payment Received. Waiting for Admin Confirmation.
         </Title>
@@ -36,8 +36,8 @@ const WaitingConfirmation = () => {
           Please wait a moment.
         </Text>
       </Stack>
-    </Container>
+    </Card>
   )
 }
 
-export default WaitingConfirmation
+export default StepPaymentConfirmation
