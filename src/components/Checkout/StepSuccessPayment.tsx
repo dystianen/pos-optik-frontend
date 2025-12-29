@@ -22,7 +22,7 @@ const StepSuccessPayment = () => {
           Your payment has been successfully confirmed by our admin. Your order is now being
           processed and will be shipped shortly. Thank you for your trust and purchase!
         </Text>
-        <Button radius={'xl'} onClick={() => router.push('/orders')}>
+        <Button radius={'xl'} onClick={() => router.push('/my-orders')}>
           View My Order
         </Button>
       </Stack>

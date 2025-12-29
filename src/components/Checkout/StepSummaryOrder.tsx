@@ -1,6 +1,9 @@
+import { useOrder } from '@/hooks/useOrder'
 import { TSummaryOrders } from '@/types/order'
 import { formatCurrency } from '@/utils/format'
 import { Box, Button, Card, Divider, Group, LoadingOverlay, Stack, Text } from '@mantine/core'
+import { readLocalStorageValue, useLocalStorage } from '@mantine/hooks'
+import { toast } from 'react-toastify'
 import CardCart from '../Common/CardCart'
 
 const StepSummaryOrder = ({
@@ -14,8 +17,26 @@ const StepSummaryOrder = ({
   prevStep: () => void
   nextStep: () => void
 }) => {
+  const csaId = readLocalStorageValue<string>({ key: 'csaId' })
+  const [, setCheckoutOrder] = useLocalStorage({ key: 'checkout_order' })
+  const { mutate: submitOrder, isPending: isLoadingSubmit } = useOrder.submit()
+
   const handleSubmitOrders = () => {
-    nextStep()
+    submitOrder(csaId, {
+      onSuccess: (res) => {
+        const payload = {
+          order_id: res.order_id,
+          grand_total: res.grand_total,
+          created_at: Date.now()
+        }
+
+        setCheckoutOrder(JSON.stringify(payload))
+        nextStep()
+      },
+      onError: (err) => {
+        toast.error(err.message)
+      }
+    })
   }
 
   return (
@@ -131,7 +152,7 @@ const StepSummaryOrder = ({
             <Button variant="default" radius="xl" size="lg" onClick={prevStep}>
               Back
             </Button>
-            <Button radius="xl" size="lg" onClick={handleSubmitOrders}>
+            <Button radius="xl" size="lg" onClick={handleSubmitOrders} loading={isLoadingSubmit}>
               Submit Order
             </Button>
           </Group>

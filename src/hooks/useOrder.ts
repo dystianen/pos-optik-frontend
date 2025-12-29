@@ -15,9 +15,9 @@ export const useOrder = {
       queryFn: orderService.orders
     })
   },
-  checkout() {
+  submit() {
     return useMutation({
-      mutationFn: orderService.checkout,
+      mutationFn: orderService.submit,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['total_cart'] })
       }
@@ -28,10 +28,11 @@ export const useOrder = {
       mutationFn: orderService.payment
     })
   },
-  checkStatus() {
+  checkStatus(orderId: string) {
     return useQuery({
       queryKey: ['check_status'],
-      queryFn: orderService.checkStatus
+      queryFn: () => orderService.checkStatus(orderId),
+      enabled: !!orderId
     })
   }
 }
