@@ -13,7 +13,7 @@ const Cart = () => {
   const { data: cart, isLoading } = useCart.cart()
 
   const handleCheckout = useCallback(() => {
-    router.push('/orders')
+    router.push('/checkout')
   }, [router])
 
   return (
