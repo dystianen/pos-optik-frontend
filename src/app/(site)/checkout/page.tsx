@@ -150,7 +150,7 @@ const Orders = () => {
   }
 
   const handleBackOrCancel = () => {
-    if (!hasAddress) {
+    if (!showForm) {
       // 🔙 User belum punya alamat → balik ke halaman sebelumnya
       router.back()
       return
