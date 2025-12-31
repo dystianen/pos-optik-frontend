@@ -49,7 +49,7 @@ const Products = () => {
 
       {isLoading ? (
         <Grid>
-          {Array.from({ length: 8 }).map((_, i) => (
+          {Array.from({ length: 12 }).map((_, i) => (
             <Grid.Col key={i} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
               <CardProductSkeleton />
             </Grid.Col>
