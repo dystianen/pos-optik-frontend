@@ -48,8 +48,8 @@ export function OrderCard({ order }: OrderCardProps) {
               <Image
                 src={item.image}
                 alt={item.product_name}
-                w={60}
-                h={60}
+                w={120}
+                h={80}
                 radius="md"
                 fit="cover"
               />
