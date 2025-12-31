@@ -37,7 +37,7 @@ const Header = ({ user }: { user: TUser }) => {
   }, [])
 
   const handleRedirectToOrders = useCallback(() => {
-    router.push('/orders')
+    router.push('/my-orders')
   }, [])
 
   return (

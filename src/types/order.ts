@@ -50,3 +50,46 @@ export interface Summary {
   shipping_cost: number
   total: number
 }
+
+export interface OrderItem {
+  order_item_id: string
+  product_id: string
+  product_name: string
+  variant_name: string | null
+  image: string
+  price: number
+  quantity: number
+  subtotal: number
+}
+
+export interface Order {
+  order_id: string
+  order_date: string
+  status: string
+  items: OrderItem[]
+  summary: {
+    grand_total: number
+    shipping_cost: number
+    total_items: number
+  }
+  shipping: {
+    method: string | null
+    rate: number
+    estimated_days: string | null
+    address: {
+      recipient_name: string
+      phone: string
+      address: string
+      city: string
+      province: string
+      postal_code: string
+    }
+  }
+  payment: {
+    method: string | null
+    date: string | null
+  }
+}
+
+export type TResOrder = GeneralResponse<Order[]>
+export type TResOrderDetail = GeneralResponse<Order>

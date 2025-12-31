@@ -9,10 +9,16 @@ export const useOrder = {
       mutationFn: (id: string) => orderService.summaryOrders(id)
     })
   },
-  orders() {
+  orders(payload: { statusId: string | null }) {
     return useQuery({
-      queryKey: ['orders'],
-      queryFn: orderService.orders
+      queryKey: ['orders', payload],
+      queryFn: () => orderService.getOrders(payload)
+    })
+  },
+  detailOrder(id: string) {
+    return useQuery({
+      queryKey: ['DETAIL_ORDER'],
+      queryFn: () => orderService.getDetailOrder(id)
     })
   },
   submit() {
