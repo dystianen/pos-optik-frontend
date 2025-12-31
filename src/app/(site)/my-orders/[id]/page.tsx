@@ -5,7 +5,6 @@ import { formatCurrency, formatDate } from '@/utils/format'
 import {
   Badge,
   Box,
-  Button,
   Card,
   Container,
   Divider,
@@ -15,7 +14,8 @@ import {
   LoadingOverlay,
   Stack,
   Text,
-  Title
+  Title,
+  UnstyledButton
 } from '@mantine/core'
 import {
   IconArrowLeft,
@@ -50,13 +50,11 @@ export default function OrderDetailPage() {
       <Stack gap="lg">
         {/* Header */}
         <Group>
-          <Button
-            variant="transparent"
-            leftSection={<IconArrowLeft size={24} />}
-            onClick={() => router.back()}
-          >
-            Back
-          </Button>
+          <UnstyledButton size="md" onClick={() => router.back()}>
+            <Group gap={'xs'} c={'primary'}>
+              <IconArrowLeft size={24} /> Back
+            </Group>
+          </UnstyledButton>
         </Group>
 
         <Box pos={'relative'} mih={400}>
@@ -135,7 +133,7 @@ export default function OrderDetailPage() {
                             {order.shipping.address.phone}
                           </Text>
                           <Text size="sm">{order.shipping.address.address}</Text>
-                          <Text size="sm">
+                          <Text size="sm" c="dimmed">
                             {order.shipping.address.city}, {order.shipping.address.province}{' '}
                             {order.shipping.address.postal_code}
                           </Text>

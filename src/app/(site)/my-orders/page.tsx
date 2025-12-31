@@ -28,7 +28,7 @@ export default function OrdersPage() {
 
   return (
     <Container size="xl" py="xl" mt={60}>
-      <Stack gap="xl">
+      <Stack gap="lg">
         {/* Header */}
         <Title order={2}>My Orders</Title>
 
@@ -62,7 +62,7 @@ export default function OrdersPage() {
 
           {/* SHIPPING */}
           <Tabs.Panel value={`${activeTab}`}>
-            <Box pos="relative" mih={400} mt={'xl'}>
+            <Box pos="relative" mih={400} mt={'lg'}>
               <LoadingOverlay visible={isLoading} loaderProps={{ type: 'bars' }} />
 
               {data?.length === 0 ? (
