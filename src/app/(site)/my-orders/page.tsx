@@ -83,27 +83,6 @@ export default function OrdersPage() {
               )}
             </Box>
           </Tabs.Panel>
-
-          {/* DELIVERED */}
-          <Tabs.Panel value="delivered">
-            <Box pos="relative" mih={400}>
-              <Text c="dimmed">Delivered orders will appear here.</Text>
-            </Box>
-          </Tabs.Panel>
-
-          {/* CANCELLED */}
-          <Tabs.Panel value="cancelled">
-            <Box pos="relative" mih={400}>
-              <Text c="dimmed">Cancelled orders will appear here.</Text>
-            </Box>
-          </Tabs.Panel>
-
-          {/* COMPLETED */}
-          <Tabs.Panel value="completed">
-            <Box pos="relative" mih={400}>
-              <Text c="dimmed">Completed orders will appear here.</Text>
-            </Box>
-          </Tabs.Panel>
         </Tabs>
       </Stack>
     </Container>

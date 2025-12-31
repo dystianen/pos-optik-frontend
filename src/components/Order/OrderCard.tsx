@@ -24,7 +24,7 @@ export function OrderCard({ order }: OrderCardProps) {
   const router = useRouter()
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card withBorder padding="lg" radius="lg">
       <Stack gap="md">
         {/* Header */}
         <Group justify="space-between">

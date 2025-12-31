@@ -163,7 +163,7 @@ const Cart = () => {
             <Paper
               radius="xl"
               p="xl"
-              shadow="sm"
+              withBorder
               style={{
                 position: 'sticky',
                 top: rem(20)
@@ -213,7 +213,7 @@ const Cart = () => {
                     <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                       Total Price
                     </Text>
-                    <Text fw={700} size="xl" c="primary" mt={4}>
+                    <Text fw={700} size="xl" c="primary.4" mt={4}>
                       {formatCurrency(cart?.summary.total_price || '0')}
                     </Text>
                   </Box>

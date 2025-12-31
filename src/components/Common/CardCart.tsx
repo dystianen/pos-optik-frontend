@@ -42,7 +42,7 @@ const CardCart = ({ item, hideAction = false }: TCardCart) => {
   return (
     <Card
       radius="lg"
-      shadow="sm"
+      withBorder
       style={{
         transition: 'all 0.3s ease'
       }}
@@ -194,7 +194,7 @@ const CardCart = ({ item, hideAction = false }: TCardCart) => {
             <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
               Subtotal
             </Text>
-            <Text fw={700} size="xl" c="blue">
+            <Text fw={700} size="lg" c="primary.4">
               {formatCurrency(item.subtotal)}
             </Text>
           </Stack>
