@@ -1,7 +1,7 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
 import { useAuth } from '@/hooks/useAuth'
-import { Box, Button, Divider, Group, NumberInput, Select, Stack, TextInput } from '@mantine/core'
+import { Button, Group, Select, Stack, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
 import Link from 'next/link'
@@ -22,19 +22,7 @@ const SignUp = () => {
       customer_email: '',
       customer_phone: '',
       customer_dob: '',
-      customer_gender: '',
-      customer_occupation: '',
-      customer_preferences: {
-        color: '',
-        material: '',
-        frame_style: ''
-      },
-      customer_eye_history: {
-        left_eye: { axis: 0, sphere: 0, cylinder: 0 },
-        right_eye: { axis: 0, sphere: 0, cylinder: 0 },
-        condition: '',
-        last_checkup: ''
-      }
+      customer_gender: ''
     }
   })
 
@@ -110,95 +98,6 @@ const SignUp = () => {
               key={form.key('customer_gender')}
               {...form.getInputProps('customer_gender')}
             />
-            <TextInput
-              withAsterisk
-              label="Occupation"
-              placeholder="e.g., Researcher"
-              key={form.key('customer_occupation')}
-              {...form.getInputProps('customer_occupation')}
-            />
-
-            <Divider my="md" label="Preferences" />
-            {/* Preferences */}
-            <TextInput
-              label="Color Preference"
-              placeholder="e.g., Hijau Neon"
-              key={form.key('customer_preferences.color')}
-              {...form.getInputProps('customer_preferences.color')}
-            />
-            <TextInput
-              label="Material Preference"
-              placeholder="e.g., Acetate"
-              key={form.key('customer_preferences.material')}
-              {...form.getInputProps('customer_preferences.material')}
-            />
-            <TextInput
-              label="Frame Style"
-              placeholder="e.g., Half-rim"
-              key={form.key('customer_preferences.frame_style')}
-              {...form.getInputProps('customer_preferences.frame_style')}
-            />
-
-            <Divider my="md" label="Eye History" />
-            {/* Eye History */}
-            <TextInput
-              label="Condition"
-              placeholder="e.g., Hipermetropi"
-              key={form.key('customer_eye_history.condition')}
-              {...form.getInputProps('customer_eye_history.condition')}
-            />
-            <DateInput
-              label="Last Checkup"
-              placeholder="e.g., 11/03/2024"
-              key={form.key('customer_eye_history.last_checkup')}
-              {...form.getInputProps('customer_eye_history.last_checkup')}
-            />
-            {/* Left Eye */}
-            <Box>
-              <strong>Left Eye:</strong>
-              <Group grow>
-                <NumberInput
-                  label="Axis"
-                  key={form.key('customer_eye_history.left_eye.axis')}
-                  {...form.getInputProps('customer_eye_history.left_eye.axis')}
-                />
-                <NumberInput
-                  label="Sphere"
-                  step={0.25}
-                  key={form.key('customer_eye_history.left_eye.sphere')}
-                  {...form.getInputProps('customer_eye_history.left_eye.sphere')}
-                />
-                <NumberInput
-                  label="Cylinder"
-                  step={0.25}
-                  key={form.key('customer_eye_history.left_eye.cylinder')}
-                  {...form.getInputProps('customer_eye_history.left_eye.cylinder')}
-                />
-              </Group>
-            </Box>
-            {/* Right Eye */}
-            <Box>
-              <strong>Right Eye:</strong>
-              <Group grow>
-                <NumberInput
-                  label="Axis"
-                  key={form.key('customer_eye_history.right_eye.axis')}
-                  {...form.getInputProps('customer_eye_history.right_eye.axis')}
-                />
-                <NumberInput
-                  label="Sphere"
-                  step={0.25}
-                  key={form.key('customer_eye_history.right_eye.sphere')}
-                  {...form.getInputProps('customer_eye_history.right_eye.sphere')}
-                />
-                <NumberInput
-                  label="Cylinder"
-                  step={0.25}
-                  key={form.key('customer_eye_history.right_eye.cylinder')}
-                  {...form.getInputProps('customer_eye_history.right_eye.cylinder')}
-                />
-              </Group>
-            </Box>
 
             {/* Submit Button */}
             <Group justify="center" mt="md">
