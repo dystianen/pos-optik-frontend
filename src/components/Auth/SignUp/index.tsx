@@ -94,7 +94,7 @@ const SignUp = () => {
               withAsterisk
               label="Gender"
               placeholder="Select gender"
-              data={['Male', 'Female']}
+              data={['male', 'female']}
               key={form.key('customer_gender')}
               {...form.getInputProps('customer_gender')}
             />
