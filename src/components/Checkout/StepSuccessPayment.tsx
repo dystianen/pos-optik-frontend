@@ -11,10 +11,12 @@ const StepSuccessPayment = () => {
   const [, , removeCheckoutOrder] = useLocalStorage({ key: 'checkout_order' })
 
   const handleViewMyOrder = () => {
-    removeStep()
-    removeCsaId()
-    removeCheckoutOrder()
     router.push('/my-orders')
+    setTimeout(() => {
+      removeStep()
+      removeCsaId()
+      removeCheckoutOrder()
+    }, 300)
   }
 
   return (
