@@ -34,16 +34,16 @@ export default function OrdersPage() {
 
         <Tabs value={activeTab} onChange={setActiveTab}>
           <Tabs.List grow>
-            <Tabs.Tab value="4d609622-8392-469b-acd1-c7859424633a">
+            <Tabs.Tab value="cc46d2a8-436c-42fc-96a1-ffb537dbabed">
               <Group justify="center">
                 <IconTruck size={20} />
                 <Text>Shipping</Text>
               </Group>
             </Tabs.Tab>
-            <Tabs.Tab value="cc46d2a8-436c-42fc-96a1-ffb537dbabed">
+            <Tabs.Tab value="4d609622-8392-469b-acd1-c7859424633a">
               <Group justify="center">
                 <IconPackage size={20} />
-                <Text>Delivered</Text>
+                <Text>Delivery</Text>
               </Group>
             </Tabs.Tab>
             <Tabs.Tab value="0ab780fe-49da-4a95-ad73-56c3c74f2416">
@@ -76,9 +76,7 @@ export default function OrdersPage() {
                 </Center>
               ) : (
                 <Stack gap="md">
-                  {data?.map((order) => (
-                    <OrderCard key={order.order_id} order={order} />
-                  ))}
+                  {data?.map((order) => <OrderCard key={order.order_id} order={order} />)}
                 </Stack>
               )}
             </Box>
