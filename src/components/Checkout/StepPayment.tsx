@@ -50,7 +50,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
 
       const formData = new FormData()
       formData.append('order_id', order_id)
-      formData.append('payment_method_id', 'e2914263-7e0f-4e3c-9425-0958c9581215')
+      formData.append('payment_method_id', 'e2914263-7e0f-4e3c-9425-0958c9581215') // MANUAL TRANSFER
       formData.append('amount', String(grand_total))
       formData.append('proof', values.proof)
 
