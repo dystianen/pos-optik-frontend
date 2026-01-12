@@ -75,6 +75,8 @@ export interface Order {
   shipping: {
     method: string | null
     rate: number
+    courier: string | null
+    tracking_number: string | null
     estimated_days: string | null
     address: {
       recipient_name: string

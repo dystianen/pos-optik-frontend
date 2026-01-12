@@ -3,6 +3,8 @@
 import { useOrder } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
+  ActionIcon,
+  Anchor,
   Badge,
   Box,
   Card,
@@ -15,10 +17,14 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
   UnstyledButton
 } from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
 import {
   IconArrowLeft,
+  IconCheck,
+  IconClipboard,
   IconCreditCard,
   IconMapPin,
   IconPackage,
@@ -42,11 +48,12 @@ const getStatusColor = (status: string) => {
 export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
+  const clipboard = useClipboard({ timeout: 1500 })
 
   const { data: order, isLoading } = useOrder.detailOrder(id)
 
   return (
-    <Container size="xl" mt={100} mih={900} pos={'relative'}>
+    <Container size="xl" my={100} mih={900} pos={'relative'}>
       <Stack gap="lg">
         {/* Header */}
         <Group>
@@ -150,6 +157,7 @@ export default function OrderDetailPage() {
                             <Text fw={600}>Shipping Method</Text>
                           </Group>
                           <Divider />
+
                           <Group justify="space-between">
                             <div>
                               <Text size="sm" fw={500}>
@@ -165,6 +173,54 @@ export default function OrderDetailPage() {
                               {formatCurrency(order.shipping.rate)}
                             </Text>
                           </Group>
+
+                          {order.shipping.courier && (
+                            <Stack gap={0}>
+                              <Text size="sm" fw={500}>
+                                Courier
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {order.shipping.courier}
+                              </Text>
+                            </Stack>
+                          )}
+
+                          {order.shipping.tracking_number && (
+                            <>
+                              <Stack gap={0}>
+                                <Text size="sm" fw={500}>
+                                  Tracking Number
+                                </Text>
+                                <Group gap={'xs'}>
+                                  <Text size="xs" c="dimmed">
+                                    {order.shipping.tracking_number}
+                                  </Text>
+                                  <Tooltip label={clipboard.copied ? 'Copied!' : 'Copy'}>
+                                    <ActionIcon
+                                      variant="subtle"
+                                      color={clipboard.copied ? 'teal' : 'blue'}
+                                      onClick={() => clipboard.copy(order.shipping.tracking_number)}
+                                    >
+                                      {clipboard.copied ? (
+                                        <IconCheck size={14} />
+                                      ) : (
+                                        <IconClipboard size={14} />
+                                      )}
+                                    </ActionIcon>
+                                  </Tooltip>
+                                </Group>
+                              </Stack>
+
+                              <Stack gap={0}>
+                                <Text size="sm" fw={500}>
+                                  Tracking Link
+                                </Text>
+                                <Anchor href="https://cekresi.com/" target="_blank" size="xs">
+                                  https://cekresi.com/
+                                </Anchor>
+                              </Stack>
+                            </>
+                          )}
                         </Stack>
                       </Card>
                     )}

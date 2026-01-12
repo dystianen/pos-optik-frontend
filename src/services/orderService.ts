@@ -3,7 +3,7 @@ import type { TResOrder, TResOrderDetail, TResSummaryOrders } from '@/types/orde
 
 const orderService = {
   async summaryOrders(id: string) {
-    const response = await apiClient.get<TResSummaryOrders>(`/orders/summary-orders/${id}`)
+    const response = await apiClient.get<TResSummaryOrders>(`/orders/summary/${id}`)
     return response.data.data
   },
   async getOrders(paylod: { statusId: string | null }) {
