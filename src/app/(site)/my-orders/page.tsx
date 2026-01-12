@@ -12,6 +12,7 @@ import {
   Text,
   Title
 } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
 import {
   IconAlertCircle,
   IconCircleCheck,
@@ -19,12 +20,14 @@ import {
   IconTruck,
   IconX
 } from '@tabler/icons-react'
-import { useState } from 'react'
 
 export default function OrdersPage() {
-  const [activeTab, setActiveTab] = useState<string | null>('cc46d2a8-436c-42fc-96a1-ffb537dbabed')
+  const [orderTab, setOrderTab] = useLocalStorage<string | null>({
+    key: 'orderTab',
+    defaultValue: 'cc46d2a8-436c-42fc-96a1-ffb537dbabed'
+  })
 
-  const { data, isLoading } = useOrder.orders({ statusId: activeTab })
+  const { data, isLoading } = useOrder.orders({ statusId: orderTab })
 
   return (
     <Container size="xl" py="xl" mt={60}>
@@ -32,7 +35,7 @@ export default function OrdersPage() {
         {/* Header */}
         <Title order={2}>My Orders</Title>
 
-        <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs value={orderTab} onChange={setOrderTab}>
           <Tabs.List grow>
             <Tabs.Tab value="cc46d2a8-436c-42fc-96a1-ffb537dbabed">
               <Group justify="center">
@@ -61,7 +64,7 @@ export default function OrdersPage() {
           </Tabs.List>
 
           {/* SHIPPING */}
-          <Tabs.Panel value={`${activeTab}`}>
+          <Tabs.Panel value={`${orderTab}`}>
             <Box pos="relative" mih={400} mt={'lg'}>
               <LoadingOverlay visible={isLoading} loaderProps={{ type: 'bars' }} />
 
