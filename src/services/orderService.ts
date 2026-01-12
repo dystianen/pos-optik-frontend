@@ -28,8 +28,12 @@ const orderService = {
     })
     return response.data.data
   },
-  async checkStatus(orderId: string | null) {
+  async checkStatus(orderId: string) {
     const response = await apiClient.get(`/orders/check-payment-status/${orderId}`)
+    return response.data.data
+  },
+  async updateStatus(orderId: string, payload: { status_id: string }) {
+    const response = await apiClient.post(`/orders/${orderId}/status`, payload)
     return response.data.data
   }
 }

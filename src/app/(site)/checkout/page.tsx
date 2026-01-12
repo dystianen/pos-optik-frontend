@@ -1,7 +1,7 @@
 'use client'
 import StepPayment from '@/components/Checkout/StepPayment'
 import StepPaymentConfirmation from '@/components/Checkout/StepPaymentConfirmation'
-import StepSuccessPayment from '@/components/Checkout/StepSuccessPayment'
+import StepResultPayment from '@/components/Checkout/StepResultPayment'
 import StepSummaryOrder from '@/components/Checkout/StepSummaryOrder'
 import { useOrder } from '@/hooks/useOrder'
 import { useShipping } from '@/hooks/useShipping'
@@ -48,6 +48,7 @@ const Orders = () => {
     key: 'step',
     defaultValue: 0
   })
+
   const [csaId, setCsaId] = useLocalStorage({
     key: 'csaId',
     defaultValue: ''
@@ -268,14 +269,13 @@ const Orders = () => {
                     </Text>
 
                     <Group grow justify="center" mt="xl">
-                      <Button variant="default" radius="xl" size="lg" onClick={handleBackOrCancel}>
+                      <Button variant="default" radius="xl" onClick={handleBackOrCancel}>
                         Back
                       </Button>
 
                       <Button
                         type="submit"
                         radius="xl"
-                        size="lg"
                         loading={isLoadingSummary}
                         onClick={nextToSummaryOrder}
                       >
@@ -364,7 +364,7 @@ const Orders = () => {
           <StepPaymentConfirmation nextStep={nextStep} />
         </Stepper.Step>
         <Stepper.Completed>
-          <StepSuccessPayment />
+          <StepResultPayment />
         </Stepper.Completed>
       </Stepper>
     </Container>

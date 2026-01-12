@@ -36,9 +36,18 @@ export const useOrder = {
   },
   checkStatus(orderId: string) {
     return useQuery({
-      queryKey: ['check_status'],
+      queryKey: ['CHECK_STATUS'],
       queryFn: () => orderService.checkStatus(orderId),
       enabled: !!orderId
+    })
+  },
+  updateStatus() {
+    return useMutation({
+      mutationFn: ({ orderId, payload }: { orderId: string; payload: { status_id: string } }) =>
+        orderService.updateStatus(orderId, payload),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS'] })
+      }
     })
   }
 }

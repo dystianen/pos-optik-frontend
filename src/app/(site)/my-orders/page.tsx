@@ -76,7 +76,9 @@ export default function OrdersPage() {
                 </Center>
               ) : (
                 <Stack gap="md">
-                  {data?.map((order) => <OrderCard key={order.order_id} order={order} />)}
+                  {data?.map((order, index) => (
+                    <OrderCard key={index} order={order} />
+                  ))}
                 </Stack>
               )}
             </Box>

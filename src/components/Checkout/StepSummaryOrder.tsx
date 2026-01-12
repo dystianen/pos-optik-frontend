@@ -149,10 +149,10 @@ const StepSummaryOrder = ({
           </Box>
 
           <Group grow justify="center" mt="xl">
-            <Button variant="default" radius="xl" size="lg" onClick={prevStep}>
+            <Button variant="default" radius="xl" onClick={prevStep}>
               Back
             </Button>
-            <Button radius="xl" size="lg" onClick={handleSubmitOrders} loading={isLoadingSubmit}>
+            <Button radius="xl" onClick={handleSubmitOrders} loading={isLoadingSubmit}>
               Submit Order
             </Button>
           </Group>

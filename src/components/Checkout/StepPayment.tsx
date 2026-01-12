@@ -100,8 +100,8 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
               {...form.getInputProps('proof')}
             />
 
-            <Group grow mt="xl">
-              <Button type="submit" radius="xl" size="xl" loading={isLoadingSubmit}>
+            <Group>
+              <Button type="submit" radius="xl" loading={isLoadingSubmit}>
                 Submit Payment
               </Button>
             </Group>
