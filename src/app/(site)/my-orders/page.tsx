@@ -22,7 +22,7 @@ import {
 import { useState } from 'react'
 
 export default function OrdersPage() {
-  const [activeTab, setActiveTab] = useState<string | null>('4d609622-8392-469b-acd1-c7859424633a')
+  const [activeTab, setActiveTab] = useState<string | null>('cc46d2a8-436c-42fc-96a1-ffb537dbabed')
 
   const { data, isLoading } = useOrder.orders({ statusId: activeTab })
 
