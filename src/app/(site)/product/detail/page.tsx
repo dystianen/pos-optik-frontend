@@ -9,6 +9,7 @@ import type { PrescriptionPayload } from '@/types/cart'
 import { TGalleryDetail, Variant } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -22,6 +23,7 @@ import {
   Text,
   UnstyledButton
 } from '@mantine/core'
+import { IconCircleX } from '@tabler/icons-react'
 import { clsx } from 'clsx'
 import { hasCookie } from 'cookies-next/client'
 import { useSearchParams } from 'next/navigation'
@@ -211,35 +213,59 @@ const ProductDetail = () => {
                     Product Variants
                   </Text>
                   <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
-                    {variants.map((item, index) => (
-                      <UnstyledButton
-                        key={index}
-                        className="card-hover"
-                        onClick={() => handleSelectVariant(item)}
-                      >
-                        <Card
-                          shadow="sm"
-                          p={'xs'}
-                          className={clsx(
-                            'card-hover',
-                            primaryImage?.url === item.image.url && 'border-primary'
-                          )}
+                    {variants.map((item, index) => {
+                      const renderProps =
+                        Number(item.stock) === 0
+                          ? {
+                              cardClass: 'opacity-50 cursor-not-allowed',
+                              badge: (
+                                <Badge
+                                  color="red"
+                                  variant="light"
+                                  leftSection={<IconCircleX size={14} />}
+                                >
+                                  Out of Stock
+                                </Badge>
+                              ),
+                              onClick: undefined
+                            }
+                          : {
+                              cardClass: clsx(
+                                'card-hover',
+                                primaryImage?.url === item.image.url && 'border-primary'
+                              ),
+                              badge: (
+                                <Badge color="green" variant="light">
+                                  Stok: {item.stock}
+                                </Badge>
+                              ),
+                              onClick: () => handleSelectVariant(item)
+                            }
+
+                      return (
+                        <UnstyledButton
+                          key={index}
+                          className="card-hover"
+                          onClick={renderProps.onClick}
                         >
-                          <Image
-                            src={item.image.url}
-                            alt={item.image.alt_text}
-                            h={80}
-                            fit="contain"
-                          />
-                          <Text fz={'10'} lineClamp={2}>
-                            {item.variant_name}
-                          </Text>
-                          <Text fz={'10'} c="primary" mt={'xs'}>
-                            {formatCurrency(item.price)}
-                          </Text>
-                        </Card>
-                      </UnstyledButton>
-                    ))}
+                          <Card shadow="sm" p={'xs'} className={renderProps.cardClass}>
+                            <Image
+                              src={item.image.url}
+                              alt={item.image.alt_text}
+                              h={80}
+                              fit="contain"
+                            />
+                            <Text fz={'10'} lineClamp={2}>
+                              {item.variant_name}
+                            </Text>
+                            <Text fz={'10'} c="primary" mt={'xs'}>
+                              {formatCurrency(item.price)}
+                            </Text>
+                            <Box mt="xs">{renderProps.badge}</Box>
+                          </Card>
+                        </UnstyledButton>
+                      )
+                    })}
                   </SimpleGrid>
                 </Card>
 
