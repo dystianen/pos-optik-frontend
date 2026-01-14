@@ -63,7 +63,7 @@ export default function Home() {
         />
         <SectionCarousel
           title="Best Seller"
-          exploreTo="/new-eyewear"
+          exploreTo="/best-seller"
           data={bestSeller ?? []}
           isLoading={isLoadingBestSeller}
         />
