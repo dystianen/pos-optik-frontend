@@ -5,7 +5,7 @@ import { ColorSchemeScript, MantineProvider, createTheme, mantineHtmlProps } fro
 import { QueryClientProvider } from '@tanstack/react-query'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { Poppins } from 'next/font/google'
+import { Funnel_Display } from 'next/font/google'
 import NextTopLoader from 'nextjs-toploader'
 
 // Stylesheet
@@ -19,7 +19,7 @@ import './globals.css'
 
 dayjs.extend(customParseFormat)
 
-const font = Poppins({
+const font = Funnel_Display({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700']
 })

@@ -15,12 +15,13 @@ export interface Gallery {
 }
 
 export type TProduct = {
-  product_id: number
+  product_id: string
   category_id: string
   product_name: string
   product_price: string
   product_stock: string
   product_brand: string
+  total_sold: string
   gallery: Gallery[]
   variant_image: Gallery[]
   product_image_url: string
@@ -37,6 +38,7 @@ export type TProduct = {
   created_at: Date
   updated_at: Date
   score: number
+  is_wishlist: string
 }
 
 export type TResProducts = GeneralResponse<TProduct[]>

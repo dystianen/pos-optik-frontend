@@ -8,7 +8,7 @@ const apiClient = axios.create({
     Accept: 'application/json'
   },
   responseType: 'json',
-  timeout: 3000000
+  timeout: 30000
 })
 
 const addAuthInterceptor = (instance: AxiosInstance) => {

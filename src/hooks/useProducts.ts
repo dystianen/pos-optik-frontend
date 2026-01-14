@@ -1,7 +1,14 @@
+import queryClient from '@/lib/reactQueryClient'
 import productService from '@/services/productService'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useProducts = {
+  getSearchProduct({ q }: { q: string }) {
+    return useQuery({
+      queryKey: ['search-product', q],
+      queryFn: () => productService.getSearchProduct({ q })
+    })
+  },
   getProduct({
     limit,
     search,
@@ -43,6 +50,12 @@ export const useProducts = {
       queryFn: () => productService.getNewEyeWear({ limit, search })
     })
   },
+  getBestSeller({ limit, search }: { limit?: number; search?: string }) {
+    return useQuery({
+      queryKey: ['best-seller', limit, search],
+      queryFn: () => productService.getBestSeller({ limit, search })
+    })
+  },
   getProductCategory() {
     return useQuery({
       queryKey: ['categories'],
@@ -53,6 +66,29 @@ export const useProducts = {
     return useQuery({
       queryKey: ['attributes'],
       queryFn: () => productService.getProductAttribute(id)
+    })
+  },
+  getListWishlist({ search }: { search?: string }) {
+    return useQuery({
+      queryKey: ['wishlist', search],
+      queryFn: () => productService.getListWishlist({ search })
+    })
+  },
+  toggleWishlist() {
+    return useMutation({
+      mutationFn: (product_id: string) => productService.toggleWishlist(product_id),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['products'] })
+        queryClient.invalidateQueries({ queryKey: ['best-seller'] })
+        queryClient.invalidateQueries({ queryKey: ['new-eyewear'] })
+        queryClient.invalidateQueries({ queryKey: ['count-wishlist'] })
+      }
+    })
+  },
+  getTotalWishlist() {
+    return useQuery({
+      queryKey: ['count-wishlist'],
+      queryFn: () => productService.getTotalWishlist()
     })
   }
 }

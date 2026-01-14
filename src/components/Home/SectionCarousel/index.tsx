@@ -14,7 +14,7 @@ type TSectionCarousel = {
 }
 
 const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel) => {
-  const skeletonCount = 4
+  const skeletonCount = 5
 
   return (
     <Container size={'xl'} mt={'xl'} w="100%">

@@ -1,23 +1,22 @@
-'use client'
-import { useCart } from '@/hooks/useCart'
+import { useProducts } from '@/hooks/useProducts'
 import { ActionIcon, Indicator } from '@mantine/core'
-import { IconShoppingCart } from '@tabler/icons-react'
+import { IconHeart } from '@tabler/icons-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useMemo } from 'react'
 
-export default function Cart() {
+const Wishlist = () => {
   const router = useRouter()
-  const { data: cart } = useCart.totalCart()
-  const isCart = useMemo(() => Number(cart?.total_items) > 0, [cart])
+  const { data: wishlist } = useProducts.getTotalWishlist()
+  const isWishlist = useMemo(() => Number(wishlist?.total) > 0, [wishlist])
 
   const handleRedirectToCart = useCallback(() => {
-    router.push('/cart')
+    router.push('/wishlist')
   }, [])
 
   return (
-    <Link href={'/cart'}>
-      <Indicator disabled={!isCart} color="red" label={cart?.total_items} offset={8} size={18}>
+    <Link href={'/wishlist'}>
+      <Indicator disabled={!isWishlist} color="red" label={wishlist?.total} offset={8} size={18}>
         <ActionIcon
           onClick={handleRedirectToCart}
           variant="transparent"
@@ -26,9 +25,11 @@ export default function Cart() {
           radius={999}
           aria-label="Settings"
         >
-          <IconShoppingCart size={24} />
+          <IconHeart size={24} />
         </ActionIcon>
       </Indicator>
     </Link>
   )
 }
+
+export default Wishlist

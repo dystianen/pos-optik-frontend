@@ -13,19 +13,19 @@ const NewEyewear = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: products, isLoading } = useProducts.getNewEyeWear({ search: debouncedSearch })
+  const { data: wishlist, isLoading } = useProducts.getListWishlist({ search: debouncedSearch })
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">
       <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">New Eyewear</h2>
+        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">Wishlist</h2>
         <TextInput
           placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
+          leftSection={<IconSearch size={18} />}
           className="sm:w-72"
           radius="md"
-          leftSection={<IconSearch size={18} />}
         />
       </div>
 
@@ -37,9 +37,9 @@ const NewEyewear = () => {
             </Grid.Col>
           ))}
         </Grid>
-      ) : products && products.length > 0 ? (
+      ) : wishlist && wishlist.length > 0 ? (
         <Grid>
-          {products.map((item, index: number) => (
+          {wishlist.map((item, index: number) => (
             <Grid.Col key={index} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
               <CardProduct item={item} />
             </Grid.Col>

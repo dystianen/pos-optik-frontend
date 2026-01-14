@@ -1,6 +1,4 @@
 'use client'
-import Mentor from '@/components/Home/Mentor'
-import Newsletter from '@/components/Home/Newsletter'
 import SectionCarousel from '@/components/Home/SectionCarousel'
 import { useProducts } from '@/hooks/useProducts'
 import { Carousel } from '@mantine/carousel'
@@ -11,6 +9,9 @@ import { useRef } from 'react'
 export default function Home() {
   const autoplay = useRef(Autoplay({ delay: 3000 }))
   const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear({
+    limit: 10
+  })
+  const { data: bestSeller, isLoading: isLoadingBestSeller } = useProducts.getBestSeller({
     limit: 10
   })
 
@@ -60,9 +61,12 @@ export default function Home() {
           data={newEyeWear ?? []}
           isLoading={isLoadingNewEyeWear}
         />
-        <Mentor />
-        {/* <Testimonial /> */}
-        <Newsletter />
+        <SectionCarousel
+          title="Best Seller"
+          exploreTo="/new-eyewear"
+          data={bestSeller ?? []}
+          isLoading={isLoadingBestSeller}
+        />
       </Stack>
     </main>
   )

@@ -6,9 +6,10 @@ import { useProducts } from '@/hooks/useProducts'
 import { formatLabel } from '@/utils/format'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
+import { IconSearch } from '@tabler/icons-react'
 import Image from 'next/image'
-import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 function formatCategoryName(slug: string) {
   return slug
@@ -18,14 +19,36 @@ function formatCategoryName(slug: string) {
 }
 
 const Products = () => {
+  const router = useRouter()
   const params = useParams()
+  const searchParams = useSearchParams()
+
   const slug = params.slug as string
+  const querySearch = searchParams.get('search') ?? ''
 
   const { data: menu } = useMenu.menu()
-  const category = menu?.find((item) => item.category_name.includes(formatLabel(slug)))
+  const category = menu?.find((item) =>
+    item.category_name.toLowerCase().includes(formatLabel(slug).toLowerCase())
+  )
 
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
+
+  useEffect(() => {
+    setSearch(querySearch)
+  }, [querySearch])
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString())
+
+    if (!search) {
+      params.delete('search')
+    } else {
+      params.set('search', search)
+    }
+
+    router.replace(`?${params.toString()}`, { scroll: false })
+  }, [search])
 
   const { data: products, isLoading } = useProducts.getProduct({
     category: category?.category_id || '',
@@ -39,11 +62,12 @@ const Products = () => {
           {formatCategoryName(slug)}
         </h2>
         <TextInput
-          placeholder="Search..."
+          placeholder={`Search ${formatCategoryName(slug)} ...`}
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           className="sm:w-72"
-          radius="xl"
+          radius={'md'}
+          leftSection={<IconSearch size={18} />}
         />
       </div>
 

@@ -1,5 +1,7 @@
 'use client'
+import Search from '@/components/Common/Search'
 import Cart from '@/components/Common/ShoppingCart'
+import Wishlist from '@/components/Common/Wishlist'
 import { useMenu } from '@/hooks/useMenu'
 import { TUser } from '@/types/auth'
 import { removeTokens } from '@/utils/auth-server'
@@ -13,7 +15,7 @@ import { headerData } from '../Header/Navigation/menuData'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
 
-const Header = ({ user }: { user: TUser }) => {
+const Header = ({ user }: { user: TUser | null }) => {
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
@@ -69,7 +71,11 @@ const Header = ({ user }: { user: TUser }) => {
           <Group>
             {user?.name ? (
               <>
-                <Cart />
+                <Group gap={0}>
+                  <Search />
+                  <Wishlist />
+                  <Cart />
+                </Group>
                 <Menu width={200} position="bottom-start">
                   <Menu.Target>
                     <UnstyledButton>

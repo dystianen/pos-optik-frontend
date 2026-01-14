@@ -217,9 +217,11 @@ const ProductDetail = () => {
                       const renderProps =
                         Number(item.stock) === 0
                           ? {
+                              className: '',
                               cardClass: 'opacity-50 cursor-not-allowed',
                               badge: (
                                 <Badge
+                                  size="sm"
                                   color="red"
                                   variant="light"
                                   leftSection={<IconCircleX size={14} />}
@@ -230,12 +232,13 @@ const ProductDetail = () => {
                               onClick: undefined
                             }
                           : {
+                              className: 'card-hover',
                               cardClass: clsx(
                                 'card-hover',
                                 primaryImage?.url === item.image.url && 'border-primary'
                               ),
                               badge: (
-                                <Badge color="green" variant="light">
+                                <Badge size="sm" color="green" variant="light">
                                   Stok: {item.stock}
                                 </Badge>
                               ),
@@ -245,23 +248,27 @@ const ProductDetail = () => {
                       return (
                         <UnstyledButton
                           key={index}
-                          className="card-hover"
+                          className={renderProps.className}
                           onClick={renderProps.onClick}
                         >
-                          <Card shadow="sm" p={'xs'} className={renderProps.cardClass}>
-                            <Image
-                              src={item.image.url}
-                              alt={item.image.alt_text}
-                              h={80}
-                              fit="contain"
-                            />
-                            <Text fz={'10'} lineClamp={2}>
-                              {item.variant_name}
-                            </Text>
-                            <Text fz={'10'} c="primary" mt={'xs'}>
-                              {formatCurrency(item.price)}
-                            </Text>
-                            <Box mt="xs">{renderProps.badge}</Box>
+                          <Card
+                            radius={'md'}
+                            shadow="sm"
+                            p={'xs'}
+                            className={renderProps.cardClass}
+                          >
+                            <Card.Section bg="primary.0" p="md">
+                              <Image src={item.image.url} alt={item.image.alt_text} h={50} />
+                            </Card.Section>
+                            <Stack gap={2}>
+                              <Text fz={'10'} lineClamp={2} mt={'xs'}>
+                                {item.variant_name}
+                              </Text>
+                              <Text fz={'10'} c="primary">
+                                {formatCurrency(item.price)}
+                              </Text>
+                              <Box>{renderProps.badge}</Box>
+                            </Stack>
                           </Card>
                         </UnstyledButton>
                       )

@@ -1,4 +1,4 @@
-import { Card, Skeleton } from '@mantine/core'
+import { Card, Group, Skeleton } from '@mantine/core'
 
 const CardProductSkeleton = () => {
   return (
@@ -8,6 +8,10 @@ const CardProductSkeleton = () => {
       </Card.Section>
       <Skeleton height={16} mt="md" width="60%" />
       <Skeleton height={16} mt="xs" width="80%" />
+      <Group mt="xs" wrap="nowrap">
+        <Skeleton height={16} width="50%" />
+        <Skeleton height={16} width="50%" />
+      </Group>
     </Card>
   )
 }
