@@ -59,6 +59,7 @@ const Search = () => {
 
   return (
     <Autocomplete
+      w={{ lg: 300 }}
       value={search}
       onChange={setSearch}
       data={autocompleteData}

@@ -208,75 +208,79 @@ const ProductDetail = () => {
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
               <Stack gap={'md'}>
-                <Card shadow="sm">
-                  <Text fw={600} fz="lg" mb="sm">
-                    Product Variants
-                  </Text>
-                  <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
-                    {variants.map((item, index) => {
-                      const renderProps =
-                        Number(item.stock) === 0
-                          ? {
-                              className: '',
-                              cardClass: 'opacity-50 cursor-not-allowed',
-                              badge: (
-                                <Badge
-                                  size="sm"
-                                  color="red"
-                                  variant="light"
-                                  leftSection={<IconCircleX size={14} />}
-                                >
-                                  Out of Stock
-                                </Badge>
-                              ),
-                              onClick: undefined
-                            }
-                          : {
-                              className: 'card-hover',
-                              cardClass: clsx(
-                                'card-hover',
-                                primaryImage?.url === item.image.url && 'border-primary'
-                              ),
-                              badge: (
-                                <Badge size="sm" color="green" variant="light">
-                                  Stok: {item.stock}
-                                </Badge>
-                              ),
-                              onClick: () => handleSelectVariant(item)
-                            }
+                {variants.length > 0 ? (
+                  <>
+                    <Card shadow="sm">
+                      <Text fw={600} fz="lg" mb="sm">
+                        Product Variants
+                      </Text>
+                      <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
+                        {variants.map((item, index) => {
+                          const renderProps =
+                            Number(item.stock) === 0
+                              ? {
+                                  className: '',
+                                  cardClass: 'opacity-50 cursor-not-allowed',
+                                  badge: (
+                                    <Badge
+                                      size="sm"
+                                      color="red"
+                                      variant="light"
+                                      leftSection={<IconCircleX size={14} />}
+                                    >
+                                      Out of Stock
+                                    </Badge>
+                                  ),
+                                  onClick: undefined
+                                }
+                              : {
+                                  className: 'card-hover',
+                                  cardClass: clsx(
+                                    'card-hover',
+                                    primaryImage?.url === item.image.url && 'border-primary'
+                                  ),
+                                  badge: (
+                                    <Badge size="sm" color="green" variant="light">
+                                      Stok: {item.stock}
+                                    </Badge>
+                                  ),
+                                  onClick: () => handleSelectVariant(item)
+                                }
 
-                      return (
-                        <UnstyledButton
-                          key={index}
-                          className={renderProps.className}
-                          onClick={renderProps.onClick}
-                        >
-                          <Card
-                            radius={'md'}
-                            shadow="sm"
-                            p={'xs'}
-                            className={renderProps.cardClass}
-                          >
-                            <Card.Section bg="primary.0" p="md">
-                              <Image src={item.image.url} alt={item.image.alt_text} h={50} />
-                            </Card.Section>
-                            <Stack gap={2}>
-                              <Text fz={'10'} lineClamp={2} mt={'xs'}>
-                                {item.variant_name}
-                              </Text>
-                              <Text fz={'10'} c="primary">
-                                {formatCurrency(item.price)}
-                              </Text>
-                              <Box>{renderProps.badge}</Box>
-                            </Stack>
-                          </Card>
-                        </UnstyledButton>
-                      )
-                    })}
-                  </SimpleGrid>
-                </Card>
+                          return (
+                            <UnstyledButton
+                              key={index}
+                              className={renderProps.className}
+                              onClick={renderProps.onClick}
+                            >
+                              <Card
+                                radius={'md'}
+                                shadow="sm"
+                                p={'xs'}
+                                className={renderProps.cardClass}
+                              >
+                                <Card.Section bg="primary.0" p="md">
+                                  <Image src={item.image.url} alt={item.image.alt_text} h={50} />
+                                </Card.Section>
+                                <Stack gap={2}>
+                                  <Text fz={'10'} lineClamp={2} mt={'xs'}>
+                                    {item.variant_name}
+                                  </Text>
+                                  <Text fz={'10'} c="primary">
+                                    {formatCurrency(item.price)}
+                                  </Text>
+                                  <Box>{renderProps.badge}</Box>
+                                </Stack>
+                              </Card>
+                            </UnstyledButton>
+                          )
+                        })}
+                      </SimpleGrid>
+                    </Card>
 
-                <Divider my="sm" />
+                    <Divider my="sm" />
+                  </>
+                ) : null}
 
                 <CartLensForm value={prescription} onChange={setPrescription} />
               </Stack>
