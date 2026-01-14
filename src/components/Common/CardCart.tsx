@@ -50,13 +50,13 @@ const CardCart = ({ item, hideAction = false }: TCardCart) => {
       <Grid align="center" gutter="lg">
         {/* LEFT - Product Info */}
         <Grid.Col span={{ base: 12, sm: 8 }}>
-          <Group align="flex-start" gap="lg" wrap="nowrap">
+          <Group align="center" gap="lg" wrap="nowrap">
             {/* Product Image */}
             <Image
               src={item.image || '/images/placeholder.png'}
               alt={item.product_name}
               w={120}
-              h={120}
+              h={80}
               radius="md"
               fit="cover"
             />
