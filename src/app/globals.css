@@ -6,10 +6,6 @@ html {
   scroll-behavior: smooth;
 }
 
-section {
-  @apply py-20;
-}
-
 .slick-dots {
   color: #1a21bc;
 }
@@ -36,4 +32,8 @@ object {
 
 .Toastify {
   position: absolute;
+}
+
+.m_615af6c9 {
+  font-weight: 600 !important;
 }

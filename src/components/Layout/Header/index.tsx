@@ -116,6 +116,7 @@ const Header = ({ user }: { user: TUser | null }) => {
               </>
             ) : (
               <div className="flex items-center gap-4">
+                <Search />
                 <Link
                   href="/signin"
                   className="hidden lg:block bg-primary text-white hover:bg-primary/15 hover:text-primary px-8 py-3 rounded-full text-lg font-medium"

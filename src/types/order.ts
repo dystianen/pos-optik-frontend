@@ -95,3 +95,16 @@ export interface Order {
 
 export type TResOrder = GeneralResponse<Order[]>
 export type TResOrderDetail = GeneralResponse<Order>
+
+export interface RefundAccount {
+  user_refund_account_id: string
+  customer_id: string
+  account_name: string
+  bank_name: string
+  account_number: string
+  is_default: string
+  created_at: Date
+  updated_at: Date
+  deleted_at: null
+}
+export type TResRefundAccount = GeneralResponse<RefundAccount>

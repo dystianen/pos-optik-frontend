@@ -49,5 +49,19 @@ export const useOrder = {
         queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS'] })
       }
     })
+  },
+  refundAccount() {
+    return useQuery({
+      queryKey: ['REFUND_ACCOUNT'],
+      queryFn: orderService.refundAccount
+    })
+  },
+  updateRefundAccount() {
+    return useMutation({
+      mutationFn: orderService.updateRefundAccount,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['REFUND_ACCOUNT'] })
+      }
+    })
   }
 }

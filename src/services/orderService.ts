@@ -1,5 +1,11 @@
+import { FormValuesUpdate } from '@/components/Checkout/StepPayment'
 import apiClient from '@/lib/apiClient'
-import type { TResOrder, TResOrderDetail, TResSummaryOrders } from '@/types/order'
+import type {
+  TResOrder,
+  TResOrderDetail,
+  TResRefundAccount,
+  TResSummaryOrders
+} from '@/types/order'
 
 const orderService = {
   async summaryOrders(id: string) {
@@ -34,6 +40,14 @@ const orderService = {
   },
   async updateStatus(orderId: string, payload: { status_id: string }) {
     const response = await apiClient.post(`/orders/${orderId}/status`, payload)
+    return response.data.data
+  },
+  async refundAccount() {
+    const response = await apiClient.get<TResRefundAccount>(`/refund-accounts`)
+    return response.data.data
+  },
+  async updateRefundAccount(payload: FormValuesUpdate) {
+    const response = await apiClient.post<TResRefundAccount>(`/refund-accounts/save`, payload)
     return response.data.data
   }
 }
