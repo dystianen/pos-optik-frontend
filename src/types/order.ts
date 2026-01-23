@@ -108,3 +108,10 @@ export interface RefundAccount {
   deleted_at: null
 }
 export type TResRefundAccount = GeneralResponse<RefundAccount>
+
+export type CancelOrder = {
+  order_id: string
+  reason: string
+  additional_note: string
+}
+export type TResCancelOrder = GeneralResponse<CancelOrder>

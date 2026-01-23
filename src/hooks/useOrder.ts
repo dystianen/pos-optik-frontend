@@ -63,5 +63,13 @@ export const useOrder = {
         queryClient.invalidateQueries({ queryKey: ['REFUND_ACCOUNT'] })
       }
     })
+  },
+  cancelOrder() {
+    return useMutation({
+      mutationFn: orderService.cancelOrder,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
+      }
+    })
   }
 }

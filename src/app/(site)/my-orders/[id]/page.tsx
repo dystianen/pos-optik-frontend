@@ -1,5 +1,6 @@
 'use client'
 
+import { CancelOrderModal } from '@/components/Order/CancelOrderModal'
 import { useOrder } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
@@ -7,6 +8,7 @@ import {
   Anchor,
   Badge,
   Box,
+  Button,
   Card,
   Container,
   Divider,
@@ -32,6 +34,8 @@ import {
 } from '@tabler/icons-react'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const getStatusColor = (status: string) => {
   const statusColors: Record<string, string> = {
@@ -49,8 +53,23 @@ export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const clipboard = useClipboard({ timeout: 1500 })
+  const [opened, setOpened] = useState(false)
 
   const { data: order, isLoading } = useOrder.detailOrder(id)
+  const { mutate: cancelOrder, isPending: isLoadingCancelOrder } = useOrder.cancelOrder()
+
+  const handleCancelOrder = async (payload: any) => {
+    console.log('Cancel request payload:', payload)
+    cancelOrder(payload, {
+      onSuccess: () => {
+        toast.success('Cancel order submitted')
+      },
+      onError: (err) => {
+        toast.error(err.message)
+      }
+    })
+    // await api.requestCancelOrder(payload);
+  }
 
   return (
     <Container size="xl" my={100} mih={900} pos={'relative'}>
@@ -297,6 +316,12 @@ export default function OrderDetailPage() {
                         </Group>
                       </Stack>
                     </Card>
+
+                    {order.status.includes('Order Processing') && (
+                      <Button fullWidth color="red" radius="xl" onClick={() => setOpened(true)}>
+                        Cancel Order
+                      </Button>
+                    )}
                   </Stack>
                 </Grid.Col>
               </Grid>
@@ -304,6 +329,13 @@ export default function OrderDetailPage() {
           )}
         </Box>
       </Stack>
+
+      <CancelOrderModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        orderId={id}
+        onSubmit={handleCancelOrder}
+      />
     </Container>
   )
 }
