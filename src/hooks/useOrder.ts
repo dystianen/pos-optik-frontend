@@ -69,7 +69,14 @@ export const useOrder = {
       mutationFn: orderService.cancelOrder,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
+        queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS_CANCEL'] })
       }
+    })
+  },
+  checkCancelStatus(id: string) {
+    return useQuery({
+      queryKey: ['CHECK_STATUS_CANCEL'],
+      queryFn: () => orderService.checkCancelStatus(id)
     })
   }
 }

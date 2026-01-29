@@ -66,6 +66,7 @@ export interface Order {
   order_id: string
   order_date: string
   status: string
+  status_code: string
   items: OrderItem[]
   summary: {
     grand_total: number
@@ -115,3 +116,12 @@ export type CancelOrder = {
   additional_note: string
 }
 export type TResCancelOrder = GeneralResponse<CancelOrder>
+
+export type CancelOrderStatus = {
+  order_id: string
+  has_cancel_request: boolean
+  cancel_status: string
+  refund_amount: string
+  requested_at: string
+}
+export type TResCancelOrderStatus = GeneralResponse<CancelOrderStatus>

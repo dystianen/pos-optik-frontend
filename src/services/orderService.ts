@@ -3,6 +3,7 @@ import apiClient from '@/lib/apiClient'
 import type {
   CancelOrder,
   TResCancelOrder,
+  TResCancelOrderStatus,
   TResOrder,
   TResOrderDetail,
   TResRefundAccount,
@@ -54,6 +55,10 @@ const orderService = {
   },
   async cancelOrder(payload: CancelOrder) {
     const response = await apiClient.post<TResCancelOrder>(`/cancel`, payload)
+    return response.data.data
+  },
+  async checkCancelStatus(id: string) {
+    const response = await apiClient.get<TResCancelOrderStatus>(`/cancel/${id}/cancel-status`)
     return response.data.data
   }
 }

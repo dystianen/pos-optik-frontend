@@ -39,12 +39,12 @@ import { toast } from 'react-toastify'
 
 const getStatusColor = (status: string) => {
   const statusColors: Record<string, string> = {
-    Paid: 'green',
-    Processing: 'blue',
-    'Waiting Confirmation': 'orange',
-    Shipped: 'cyan',
-    Delivered: 'teal',
-    Cancelled: 'red'
+    paid: 'green',
+    processing: 'blue',
+    waiting_confirmation: 'orange',
+    shipped: 'cyan',
+    delivered: 'teal',
+    cancelled: 'red'
   }
   return statusColors[status] || 'gray'
 }
@@ -56,11 +56,13 @@ export default function OrderDetailPage() {
   const [opened, setOpened] = useState(false)
 
   const { data: order, isLoading } = useOrder.detailOrder(id)
-  const { mutate: cancelOrder, isPending: isLoadingCancelOrder } = useOrder.cancelOrder()
+  const { mutate: cancelOrder } = useOrder.cancelOrder()
+  const { data: cancelOrderStatus } = useOrder.checkCancelStatus(id)
+  console.log('🚀 ~ OrderDetailPage ~ cancelOrderStatus:', cancelOrderStatus)
 
   const handleCancelOrder = async (payload: any) => {
     console.log('Cancel request payload:', payload)
-    cancelOrder(payload, {
+    await cancelOrder(payload, {
       onSuccess: () => {
         toast.success('Cancel order submitted')
       },
@@ -68,8 +70,49 @@ export default function OrderDetailPage() {
         toast.error(err.message)
       }
     })
-    // await api.requestCancelOrder(payload);
   }
+
+  const cancelInfo = (() => {
+    if (!cancelOrderStatus) return null
+
+    if (!cancelOrderStatus.has_cancel_request) {
+      return {
+        disabled: false,
+        label: 'Cancel Order',
+        color: 'red',
+        tooltip: 'You can request order cancellation'
+      }
+    }
+
+    switch (cancelOrderStatus.cancel_status) {
+      case 'pending':
+        return {
+          disabled: true,
+          label: 'Cancellation Requested',
+          color: 'gray',
+          tooltip: 'Your cancellation request is being reviewed by our team'
+        }
+
+      case 'approved':
+        return {
+          disabled: true,
+          label: 'Cancellation Approved',
+          color: 'teal',
+          tooltip: 'Your order has been cancelled successfully'
+        }
+
+      case 'rejected':
+        return {
+          disabled: true,
+          label: 'Cancellation Rejected',
+          color: 'orange',
+          tooltip: 'Your cancellation request was rejected. Please contact support'
+        }
+
+      default:
+        return null
+    }
+  })()
 
   return (
     <Container size="xl" my={100} mih={900} pos={'relative'}>
@@ -94,7 +137,7 @@ export default function OrderDetailPage() {
                     {formatDate(order.order_date)}
                   </Text>
                 </div>
-                <Badge size="lg" color={getStatusColor(order.status)} variant="filled">
+                <Badge size="lg" color={getStatusColor(order.status_code)} variant="filled">
                   {order.status}
                 </Badge>
               </Group>
@@ -317,10 +360,18 @@ export default function OrderDetailPage() {
                       </Stack>
                     </Card>
 
-                    {order.status.includes('Order Processing') && (
-                      <Button fullWidth color="red" radius="xl" onClick={() => setOpened(true)}>
-                        Cancel Order
-                      </Button>
+                    {order.status.includes('Order Processing') && cancelInfo && (
+                      <Tooltip label={cancelInfo.tooltip} withArrow>
+                        <Button
+                          fullWidth
+                          radius="xl"
+                          color={cancelInfo.color}
+                          disabled={cancelInfo.disabled}
+                          onClick={() => !cancelInfo.disabled && setOpened(true)}
+                        >
+                          {cancelInfo.label}
+                        </Button>
+                      </Tooltip>
                     )}
                   </Stack>
                 </Grid.Col>
