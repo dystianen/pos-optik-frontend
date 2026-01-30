@@ -2,10 +2,12 @@ import { FormValuesUpdate } from '@/components/Checkout/StepPayment'
 import apiClient from '@/lib/apiClient'
 import type {
   CancelOrder,
+  RefundRequest,
   TResCancelOrder,
   TResCancelOrderStatus,
   TResOrder,
   TResOrderDetail,
+  TResRefund,
   TResRefundAccount,
   TResSummaryOrders
 } from '@/types/order'
@@ -59,6 +61,10 @@ const orderService = {
   },
   async checkCancelStatus(id: string) {
     const response = await apiClient.get<TResCancelOrderStatus>(`/cancel/${id}/cancel-status`)
+    return response.data.data
+  },
+  async submitRefund(payload: RefundRequest) {
+    const response = await apiClient.post<TResRefund>(`/refund/submit`, payload)
     return response.data.data
   }
 }

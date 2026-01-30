@@ -125,3 +125,24 @@ export type CancelOrderStatus = {
   requested_at: string
 }
 export type TResCancelOrderStatus = GeneralResponse<CancelOrderStatus>
+
+export type RefundType = 'full' | 'partial'
+
+export interface RefundRequest {
+  order_id: string
+  refund_type: RefundType
+  refund_amount: number
+  reason: string
+  user_refund_account_id: string
+  selected_items?: string[]
+}
+
+export interface RefundResponse {
+  order_id: string
+  refund_id: string
+  refund_type: RefundType
+  refund_amount: number
+  status: string
+}
+
+export type TResRefund = GeneralResponse<RefundResponse>

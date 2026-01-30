@@ -1,6 +1,7 @@
 'use client'
 
 import { CancelOrderModal } from '@/components/Order/CancelOrderModal'
+import { RefundModal } from '@/components/Order/RefundModal'
 import { useOrder } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
@@ -53,12 +54,16 @@ export default function OrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const router = useRouter()
   const clipboard = useClipboard({ timeout: 1500 })
-  const [opened, setOpened] = useState(false)
+  const [openedCancel, setOpenedCancel] = useState(false)
+  const [openedRefund, setOpenedRefund] = useState(false)
 
   const { data: order, isLoading } = useOrder.detailOrder(id)
   const { mutate: cancelOrder } = useOrder.cancelOrder()
+  const { mutate: submitRefund } = useOrder.submitRefund()
+  const { data: refundAccounts } = useOrder.refundAccount()
+  const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
+    useOrder.updateRefundAccount()
   const { data: cancelOrderStatus } = useOrder.checkCancelStatus(id)
-  console.log('🚀 ~ OrderDetailPage ~ cancelOrderStatus:', cancelOrderStatus)
 
   const handleCancelOrder = async (payload: any) => {
     console.log('Cancel request payload:', payload)
@@ -68,6 +73,30 @@ export default function OrderDetailPage() {
       },
       onError: (err) => {
         toast.error(err.message)
+      }
+    })
+  }
+
+  const handleSubmitRefund = async (payload: any) => {
+    console.log('Refund request payload:', payload)
+    await submitRefund(payload, {
+      onSuccess: () => {
+        toast.success('Refund request submitted')
+        setOpenedRefund(false)
+      },
+      onError: (err) => {
+        toast.error(err.message)
+      }
+    })
+  }
+
+  const handleUpdateRefundAccount = (values: any) => {
+    updateRefundAccount(values, {
+      onSuccess: () => {
+        toast.success('Refund account updated successfully')
+      },
+      onError: (err: any) => {
+        toast.error(err?.message || 'Failed to update refund account')
       }
     })
   }
@@ -367,11 +396,22 @@ export default function OrderDetailPage() {
                           radius="xl"
                           color={cancelInfo.color}
                           disabled={cancelInfo.disabled}
-                          onClick={() => !cancelInfo.disabled && setOpened(true)}
+                          onClick={() => !cancelInfo.disabled && setOpenedCancel(true)}
                         >
                           {cancelInfo.label}
                         </Button>
                       </Tooltip>
+                    )}
+
+                    {order.status_code === 'shipped' && (
+                      <Button
+                        fullWidth
+                        radius="xl"
+                        color="blue"
+                        onClick={() => setOpenedRefund(true)}
+                      >
+                        Request Refund
+                      </Button>
                     )}
                   </Stack>
                 </Grid.Col>
@@ -382,11 +422,23 @@ export default function OrderDetailPage() {
       </Stack>
 
       <CancelOrderModal
-        opened={opened}
-        onClose={() => setOpened(false)}
+        opened={openedCancel}
+        onClose={() => setOpenedCancel(false)}
         orderId={id}
         onSubmit={handleCancelOrder}
       />
+
+      {order && refundAccounts && (
+        <RefundModal
+          opened={openedRefund}
+          onClose={() => setOpenedRefund(false)}
+          order={order}
+          refundAccounts={refundAccounts}
+          onSubmit={handleSubmitRefund}
+          isLoadingUpdate={isLoadingUpdateRefundAccount}
+          onUpdateRefundAccount={handleUpdateRefundAccount}
+        />
+      )}
     </Container>
   )
 }

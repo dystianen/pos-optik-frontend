@@ -10,12 +10,12 @@ interface OrderCardProps {
 
 const getStatusColor = (status: string) => {
   const statusColors: Record<string, string> = {
-    Paid: 'green',
-    Processing: 'blue',
-    'Waiting Confirmation': 'orange',
-    Shipped: 'cyan',
-    Delivered: 'teal',
-    Cancelled: 'red'
+    paid: 'green',
+    processing: 'blue',
+    waiting_confirmation: 'orange',
+    shipped: 'cyan',
+    delivered: 'teal',
+    cancelled: 'red'
   }
   return statusColors[status] || 'gray'
 }
@@ -34,7 +34,7 @@ export function OrderCard({ order }: OrderCardProps) {
               {formatDate(order.order_date)}
             </Text>
           </Group>
-          <Badge color={getStatusColor(order.status)} variant="filled">
+          <Badge color={getStatusColor(order.status_code)} variant="filled">
             {order.status}
           </Badge>
         </Group>

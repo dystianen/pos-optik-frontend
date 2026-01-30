@@ -1,24 +1,21 @@
 'use client'
+import { FormValuesRefundAccount, RefundAccountForm } from '@/components/Common/RefundAccountForm'
 import { useOrder } from '@/hooks/useOrder'
 import {
   ActionIcon,
-  Box,
   Button,
   Card,
   FileInput,
   Group,
   Image,
   LoadingOverlay,
-  Modal,
-  Radio,
   Stack,
   Text,
-  TextInput,
   Tooltip
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
-import { useClipboard, useDisclosure, useLocalStorage } from '@mantine/hooks'
-import { IconCheck, IconClipboard, IconEdit } from '@tabler/icons-react'
+import { useClipboard, useLocalStorage } from '@mantine/hooks'
+import { IconCheck, IconClipboard } from '@tabler/icons-react'
 import { useCallback } from 'react'
 import { toast } from 'react-toastify'
 
@@ -39,7 +36,6 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   const clipboard = useClipboard({ timeout: 1500 })
   const [checkoutOrderRaw] = useLocalStorage({ key: 'checkout_order' })
   const checkoutOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
-  const [opened, { open, close }] = useDisclosure(false)
 
   const { mutate: payment, isPending: isLoadingSubmit } = useOrder.payment()
   const { data: refundAccount, isLoading: isLoadingRefundAccount } = useOrder.refundAccount()
@@ -79,7 +75,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
     }
   })
 
-  const formUpdate = useForm<FormValuesUpdate>({
+  const formUpdate = useForm<FormValuesRefundAccount>({
     initialValues: {
       account_name: '',
       bank_name: '',
@@ -125,17 +121,19 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
     [checkoutOrder, payment, nextStep]
   )
 
-  const handleEditRefundAccount = useCallback((values: FormValuesUpdate) => {
-    updateRefundAccount(values, {
-      onSuccess: () => {
-        toast.success('Update refund account successfully')
-        close()
-      },
-      onError: (err: any) => {
-        toast.error(err?.message || 'Update refund account failed')
-      }
-    })
-  }, [])
+  const handleEditRefundAccount = useCallback(
+    (values: FormValuesRefundAccount) => {
+      updateRefundAccount(values, {
+        onSuccess: () => {
+          toast.success('Update refund account successfully')
+        },
+        onError: (err: any) => {
+          toast.error(err?.message || 'Update refund account failed')
+        }
+      })
+    },
+    [updateRefundAccount]
+  )
 
   const accountNumber = '0901952680'
   const bankLabel = 'BCA'
@@ -181,119 +179,13 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
               />
 
               <Stack gap="sm">
-                {refundAccount ? (
-                  <>
-                    <Box>
-                      <Text fw={600}>Refund Information</Text>
-                      <Text size="sm" c="dimmed">
-                        Used only if the order is cancelled!
-                      </Text>
-                    </Box>
-                    <Card
-                      key={refundAccount.user_refund_account_id}
-                      withBorder
-                      radius="md"
-                      p="md"
-                      style={{
-                        borderColor: 'var(--mantine-color-blue-6)',
-                        backgroundColor: 'var(--mantine-color-blue-0)'
-                      }}
-                    >
-                      <Group align="center" justify="space-between" wrap="nowrap">
-                        {/* LEFT */}
-                        <Group align="flex-start">
-                          <Radio checked mt={5} />
-
-                          <Stack gap={2} style={{ flex: 1 }}>
-                            <Text fw={600}>Account Name: {refundAccount.account_name}</Text>
-                            <Text size="sm" c="dimmed">
-                              Bank Name: {refundAccount.bank_name}
-                            </Text>
-                            <Text size="sm" c="dimmed">
-                              Account Number: {refundAccount.account_number}
-                            </Text>
-                          </Stack>
-                        </Group>
-
-                        {/* RIGHT */}
-                        <Box>
-                          <Button
-                            variant="subtle"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              formUpdate.setValues(refundAccount)
-                              open()
-                            }}
-                          >
-                            <IconEdit size={28} />
-                          </Button>
-                        </Box>
-                      </Group>
-                    </Card>
-
-                    <Modal centered opened={opened} onClose={close} title="Update Refund Account">
-                      <Stack>
-                        <TextInput
-                          label="Account Holder Name"
-                          placeholder="John Doe"
-                          {...formUpdate.getInputProps('account_name')}
-                        />
-
-                        <TextInput
-                          label="Bank"
-                          placeholder="BCA"
-                          {...formUpdate.getInputProps('bank_name')}
-                        />
-
-                        <TextInput
-                          label="Account Number"
-                          placeholder="1234567890"
-                          {...formUpdate.getInputProps('account_number')}
-                        />
-
-                        <Group grow>
-                          <Button type="submit" color="red" radius="xl" onClick={close}>
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={() => formUpdate.onSubmit(handleEditRefundAccount)()}
-                            loading={isLoadingUpdateRefundAccount}
-                            radius="xl"
-                          >
-                            Submit
-                          </Button>
-                        </Group>
-                      </Stack>
-                    </Modal>
-                  </>
-                ) : (
-                  <>
-                    <Box>
-                      <Text fw={600}>Refund Information</Text>
-                      <Text size="sm" c="dimmed">
-                        Used only if the order is cancelled, only input once!
-                      </Text>
-                    </Box>
-
-                    <TextInput
-                      label="Account Holder Name"
-                      placeholder="John Doe"
-                      {...form.getInputProps('account_name')}
-                    />
-
-                    <TextInput
-                      label="Bank"
-                      placeholder="BCA"
-                      {...form.getInputProps('bank_name')}
-                    />
-
-                    <TextInput
-                      label="Account Number"
-                      placeholder="1234567890"
-                      {...form.getInputProps('account_number')}
-                    />
-                  </>
-                )}
+                <RefundAccountForm
+                  refundAccount={refundAccount}
+                  isLoadingFetch={isLoadingRefundAccount}
+                  isLoadingUpdate={isLoadingUpdateRefundAccount}
+                  onUpdate={handleEditRefundAccount}
+                  subtitle="Used only if the order is cancelled, only input once!"
+                />
               </Stack>
             </Card>
 

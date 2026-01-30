@@ -78,5 +78,15 @@ export const useOrder = {
       queryKey: ['CHECK_STATUS_CANCEL'],
       queryFn: () => orderService.checkCancelStatus(id)
     })
+  },
+  submitRefund() {
+    return useMutation({
+      mutationFn: orderService.submitRefund,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
+      }
+    })
   }
 }
+
+export default useOrder
