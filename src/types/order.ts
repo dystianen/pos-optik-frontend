@@ -117,14 +117,13 @@ export type CancelOrder = {
 }
 export type TResCancelOrder = GeneralResponse<CancelOrder>
 
-export type CancelOrderStatus = {
+export type RefundStatus = {
   order_id: string
-  has_cancel_request: boolean
-  cancel_status: string
-  refund_amount: string
-  requested_at: string
+  has_request: boolean
+  status: string
+  type: string
 }
-export type TResCancelOrderStatus = GeneralResponse<CancelOrderStatus>
+export type TResRefundStatus = GeneralResponse<RefundStatus>
 
 export type RefundType = 'full' | 'partial'
 

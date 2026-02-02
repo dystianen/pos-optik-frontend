@@ -63,7 +63,11 @@ export default function OrderDetailPage() {
   const { data: refundAccounts } = useOrder.refundAccount()
   const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
     useOrder.updateRefundAccount()
-  const { data: cancelOrderStatus } = useOrder.checkCancelStatus(id)
+  // Determine request type based on order status
+  const requestType =
+    order?.status_code === 'shipped' ? 'refund' : 'cancel'
+
+  const { data: refundStatus } = useOrder.refundStatus(id, requestType)
 
   const handleCancelOrder = async (payload: any) => {
     console.log('Cancel request payload:', payload)
@@ -101,10 +105,21 @@ export default function OrderDetailPage() {
     })
   }
 
-  const cancelInfo = (() => {
-    if (!cancelOrderStatus) return null
+  const requestStatusInfo = (() => {
+    if (!refundStatus) return null
 
-    if (!cancelOrderStatus.has_cancel_request) {
+    const isRefund = refundStatus.type === 'refund'
+    const typeLabel = isRefund ? 'Return' : 'Cancellation'
+
+    if (!refundStatus.has_request) {
+      if (isRefund) {
+        return {
+          disabled: false,
+          label: 'Request Refund',
+          color: 'blue',
+          tooltip: 'You can request a return/refund for this order'
+        }
+      }
       return {
         disabled: false,
         label: 'Cancel Order',
@@ -113,29 +128,77 @@ export default function OrderDetailPage() {
       }
     }
 
-    switch (cancelOrderStatus.cancel_status) {
-      case 'pending':
+    switch (refundStatus.status) {
+      case 'requested':
         return {
           disabled: true,
-          label: 'Cancellation Requested',
+          label: `${typeLabel} Requested`,
           color: 'gray',
-          tooltip: 'Your cancellation request is being reviewed by our team'
+          tooltip: `Your ${typeLabel.toLowerCase()} request is being reviewed by our team`
+        }
+
+      case 'request_rejected':
+        return {
+          disabled: true,
+          label: `${typeLabel} Rejected`,
+          color: 'orange',
+          tooltip: `Your ${typeLabel.toLowerCase()} request was rejected. Please contact support`
         }
 
       case 'approved':
         return {
           disabled: true,
-          label: 'Cancellation Approved',
+          label: `${typeLabel} Approved`,
           color: 'teal',
-          tooltip: 'Your order has been cancelled successfully'
+          tooltip: `Your ${typeLabel.toLowerCase()} has been approved`
         }
 
-      case 'rejected':
+      case 'refunded':
         return {
           disabled: true,
-          label: 'Cancellation Rejected',
-          color: 'orange',
-          tooltip: 'Your cancellation request was rejected. Please contact support'
+          label: 'Refunded',
+          color: 'green',
+          tooltip: 'Your order has been refunded'
+        }
+
+      case 'return_approved':
+        return {
+          disabled: true,
+          label: 'Return Approved',
+          color: 'blue',
+          tooltip: 'Return request has been approved'
+        }
+
+      case 'return_shipped':
+        return {
+          disabled: true,
+          label: 'Return Shipped',
+          color: 'cyan',
+          tooltip: 'Return item has been shipped'
+        }
+
+      case 'return_received':
+        return {
+          disabled: true,
+          label: 'Return Received',
+          color: 'teal',
+          tooltip: 'Return item has been received'
+        }
+
+      case 'return_rejected':
+        return {
+          disabled: true,
+          label: 'Return Rejected',
+          color: 'red',
+          tooltip: 'Return request has been rejected'
+        }
+
+      case 'expired':
+        return {
+          disabled: true,
+          label: 'Request Expired',
+          color: 'gray',
+          tooltip: 'The request has expired'
         }
 
       default:
@@ -341,13 +404,13 @@ export default function OrderDetailPage() {
                             </Group>
                             {order.payment.date && (
                               <Group justify="space-between">
-                                <Text size="sm" c="dimmed">
-                                  Payment Date
-                                </Text>
-                                <Text size="sm" fw={500}>
-                                  {formatDate(order.payment.date)}
-                                </Text>
-                              </Group>
+                              <Text size="sm" c="dimmed">
+                                Payment Date
+                              </Text>
+                              <Text size="sm" fw={500}>
+                                {formatDate(order.payment.date)}
+                              </Text>
+                            </Group>
                             )}
                           </>
                         ) : (
@@ -389,29 +452,34 @@ export default function OrderDetailPage() {
                       </Stack>
                     </Card>
 
-                    {order.status.includes('Order Processing') && cancelInfo && (
-                      <Tooltip label={cancelInfo.tooltip} withArrow>
+                    {/* Cancel Button / Status Info */}
+                    {order.status_code === 'processing' && requestStatusInfo && (
+                      <Tooltip label={requestStatusInfo.tooltip} withArrow>
                         <Button
                           fullWidth
                           radius="xl"
-                          color={cancelInfo.color}
-                          disabled={cancelInfo.disabled}
-                          onClick={() => !cancelInfo.disabled && setOpenedCancel(true)}
+                          color={requestStatusInfo.color}
+                          disabled={requestStatusInfo.disabled}
+                          onClick={() => !requestStatusInfo.disabled && setOpenedCancel(true)}
                         >
-                          {cancelInfo.label}
+                          {requestStatusInfo.label}
                         </Button>
                       </Tooltip>
                     )}
 
-                    {order.status_code === 'shipped' && (
-                      <Button
-                        fullWidth
-                        radius="xl"
-                        color="blue"
-                        onClick={() => setOpenedRefund(true)}
-                      >
-                        Request Refund
-                      </Button>
+                    {/* Refund Button / Status Info */}
+                    {order.status_code === 'shipped' && requestStatusInfo && (
+                      <Tooltip label={requestStatusInfo.tooltip} withArrow>
+                        <Button
+                          fullWidth
+                          radius="xl"
+                          color={requestStatusInfo.color}
+                          disabled={requestStatusInfo.disabled}
+                          onClick={() => !requestStatusInfo.disabled && setOpenedRefund(true)}
+                        >
+                          {requestStatusInfo.label}
+                        </Button>
+                      </Tooltip>
                     )}
                   </Stack>
                 </Grid.Col>

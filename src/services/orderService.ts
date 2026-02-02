@@ -4,11 +4,11 @@ import type {
   CancelOrder,
   RefundRequest,
   TResCancelOrder,
-  TResCancelOrderStatus,
   TResOrder,
   TResOrderDetail,
   TResRefund,
   TResRefundAccount,
+  TResRefundStatus,
   TResSummaryOrders
 } from '@/types/order'
 
@@ -59,8 +59,8 @@ const orderService = {
     const response = await apiClient.post<TResCancelOrder>(`/cancel`, payload)
     return response.data.data
   },
-  async checkCancelStatus(id: string) {
-    const response = await apiClient.get<TResCancelOrderStatus>(`/cancel/${id}/cancel-status`)
+  async refundStatus(id: string, type: string) {
+    const response = await apiClient.get<TResRefundStatus>(`/orders/${id}/refund-status?type=${type}`)
     return response.data.data
   },
   async submitRefund(payload: RefundRequest) {
