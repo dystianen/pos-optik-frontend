@@ -119,9 +119,11 @@ export type TResCancelOrder = GeneralResponse<CancelOrder>
 
 export type RefundStatus = {
   order_id: string
+  refund_id: string
   has_request: boolean
   status: string
-  type: string
+  refund_amount: string
+  requested_at: string
 }
 export type TResRefundStatus = GeneralResponse<RefundStatus>
 
@@ -132,8 +134,10 @@ export interface RefundRequest {
   refund_type: RefundType
   refund_amount: number
   reason: string
+  additional_note: string
   user_refund_account_id: string
   selected_items?: string[]
+  evidence?: File | null
 }
 
 export interface RefundResponse {
@@ -145,3 +149,9 @@ export interface RefundResponse {
 }
 
 export type TResRefund = GeneralResponse<RefundResponse>
+
+export type TReqShipItem = {
+  order_id: string
+  courier: string
+  tracking_number: string
+}

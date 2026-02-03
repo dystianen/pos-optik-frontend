@@ -18,6 +18,7 @@ type RefundAccountFormProps = {
   isLoadingUpdate: boolean
   onUpdate: (values: FormValuesRefundAccount) => void
   subtitle?: string
+  parentForm?: any
 }
 
 export function RefundAccountForm({
@@ -25,7 +26,8 @@ export function RefundAccountForm({
   isLoadingFetch,
   isLoadingUpdate,
   onUpdate,
-  subtitle = 'Used only if the order is cancelled!'
+  subtitle = 'Used only if the order is cancelled!',
+  parentForm
 }: RefundAccountFormProps) {
   const [opened, { open, close }] = useDisclosure(false)
 
@@ -106,15 +108,19 @@ export function RefundAccountForm({
           <TextInput
             label="Account Holder Name"
             placeholder="John Doe"
-            {...form.getInputProps('account_name')}
+            {...(parentForm || form).getInputProps('account_name')}
           />
 
-          <TextInput label="Bank" placeholder="BCA" {...form.getInputProps('bank_name')} />
+          <TextInput
+            label="Bank"
+            placeholder="BCA"
+            {...(parentForm || form).getInputProps('bank_name')}
+          />
 
           <TextInput
             label="Account Number"
             placeholder="1234567890"
-            {...form.getInputProps('account_number')}
+            {...(parentForm || form).getInputProps('account_number')}
           />
         </Stack>
       )}

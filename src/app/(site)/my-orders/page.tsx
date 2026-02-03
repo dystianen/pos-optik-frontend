@@ -17,6 +17,7 @@ import {
   IconAlertCircle,
   IconCircleCheck,
   IconPackage,
+  IconReceiptRefund,
   IconTruck,
   IconX
 } from '@tabler/icons-react'
@@ -24,7 +25,7 @@ import {
 export default function OrdersPage() {
   const [orderTab, setOrderTab] = useLocalStorage<string | null>({
     key: 'orderTab',
-    defaultValue: 'cc46d2a8-436c-42fc-96a1-ffb537dbabed'
+    defaultValue: 'all'
   })
 
   const { data, isLoading } = useOrder.orders({ statusId: orderTab })
@@ -37,6 +38,12 @@ export default function OrdersPage() {
 
         <Tabs value={orderTab} onChange={setOrderTab}>
           <Tabs.List grow>
+            <Tabs.Tab value="all">
+              <Group justify="center">
+                <IconTruck size={20} />
+                <Text>All</Text>
+              </Group>
+            </Tabs.Tab>
             <Tabs.Tab value="cc46d2a8-436c-42fc-96a1-ffb537dbabed">
               <Group justify="center">
                 <IconTruck size={20} />
@@ -53,6 +60,12 @@ export default function OrdersPage() {
               <Group justify="center">
                 <IconX size={20} />
                 <Text>Cancelled</Text>
+              </Group>
+            </Tabs.Tab>
+            <Tabs.Tab value="ae12a448-98b3-4dc1-9c71-87468abc7bb5">
+              <Group justify="center">
+                <IconReceiptRefund size={20} />
+                <Text>Refunded</Text>
               </Group>
             </Tabs.Tab>
             <Tabs.Tab value="8d434de4-ba22-4698-8438-8318ef3f6d8f">

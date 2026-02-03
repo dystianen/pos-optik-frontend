@@ -15,7 +15,8 @@ import {
   Select,
   Stack,
   Text,
-  Textarea
+  Textarea,
+  FileInput
 } from '@mantine/core'
 import { useMemo, useState } from 'react'
 
@@ -24,7 +25,7 @@ type RefundModalProps = {
   onClose: () => void
   order: Order
   refundAccounts: RefundAccount
-  onSubmit: (payload: RefundRequest) => Promise<void> | void
+  onSubmit: (payload: FormData) => Promise<void> | void
   isLoadingUpdate?: boolean
   onUpdateRefundAccount?: (values: FormValuesRefundAccount) => void
 }
@@ -51,6 +52,7 @@ export function RefundModal({
   const [reason, setReason] = useState<string | null>(null)
   const [refundNote, setRefundNote] = useState('')
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set())
+  const [evidence, setEvidence] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
 
   // Calculate max refund amount based on refund type
@@ -91,19 +93,27 @@ export function RefundModal({
 
     const finalRefundAmount = refundType === 'full' ? order.summary.grand_total : maxRefundAmount
 
-    const payload: RefundRequest = {
-      order_id: order.order_id,
-      refund_type: refundType,
-      refund_amount: finalRefundAmount,
-      reason,
-      user_refund_account_id: refundAccounts.user_refund_account_id,
-      selected_items: refundType === 'partial' ? Array.from(selectedItems) : undefined
+    const formData = new FormData()
+    formData.append('order_id', order.order_id)
+    formData.append('refund_type', refundType)
+    formData.append('refund_amount', finalRefundAmount.toString())
+    formData.append('reason', reason)
+    formData.append('additional_note', refundNote)
+    formData.append('user_refund_account_id', refundAccounts.user_refund_account_id)
+
+    if (evidence) {
+      formData.append('evidence', evidence)
+    }
+
+    if (refundType === 'partial') {
+      Array.from(selectedItems).forEach((item) => {
+        formData.append('selected_items[]', item)
+      })
     }
 
     try {
       setLoading(true)
-      await onSubmit(payload)
-      onClose()
+      await onSubmit(formData)
       resetForm()
     } finally {
       setLoading(false)
@@ -115,6 +125,7 @@ export function RefundModal({
     setReason(null)
     setRefundNote('')
     setSelectedItems(new Set())
+    setEvidence(null)
   }
 
   return (
@@ -234,6 +245,17 @@ export function RefundModal({
           searchable
         />
 
+        {/* Evidence Upload */}
+        <FileInput
+          label="Evidence (Optional)"
+          placeholder="Upload photo/video evidence"
+          description="Max size 5MB"
+          clearable
+          value={evidence}
+          onChange={setEvidence}
+          accept="image/*,video/*"
+        />
+
         {/* Additional Note */}
         <Textarea
           label="Additional Information"
@@ -249,7 +271,7 @@ export function RefundModal({
           refundAccount={refundAccounts}
           isLoadingFetch={false}
           isLoadingUpdate={isLoadingUpdate}
-          onUpdate={onUpdateRefundAccount || (() => {})}
+          onUpdate={onUpdateRefundAccount || (() => { })}
           subtitle="Bank account for refund"
         />
 

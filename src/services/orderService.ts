@@ -2,7 +2,6 @@ import { FormValuesUpdate } from '@/components/Checkout/StepPayment'
 import apiClient from '@/lib/apiClient'
 import type {
   CancelOrder,
-  RefundRequest,
   TResCancelOrder,
   TResOrder,
   TResOrderDetail,
@@ -47,24 +46,40 @@ const orderService = {
     const response = await apiClient.post(`/orders/${orderId}/status`, payload)
     return response.data.data
   },
-  async refundAccount() {
-    const response = await apiClient.get<TResRefundAccount>(`/refund-accounts`)
-    return response.data.data
-  },
-  async updateRefundAccount(payload: FormValuesUpdate) {
-    const response = await apiClient.post<TResRefundAccount>(`/refund-accounts/save`, payload)
-    return response.data.data
-  },
+
+  // CANCEL
   async cancelOrder(payload: CancelOrder) {
     const response = await apiClient.post<TResCancelOrder>(`/cancel`, payload)
     return response.data.data
   },
-  async refundStatus(id: string, type: string) {
-    const response = await apiClient.get<TResRefundStatus>(`/orders/${id}/refund-status?type=${type}`)
+  async cancelStatus(id: string) {
+    const response = await apiClient.get<TResRefundStatus>(`/cancel/status/${id}`)
     return response.data.data
   },
-  async submitRefund(payload: RefundRequest) {
-    const response = await apiClient.post<TResRefund>(`/refund/submit`, payload)
+
+  // REFUND
+  async refundStatus(id: string) {
+    const response = await apiClient.get<TResRefundStatus>(`/refund/status/${id}`)
+    return response.data.data
+  },
+  async submitRefund(payload: FormData) {
+    const response = await apiClient.post<TResRefund>(`/refund/submit`, payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    return response.data.data
+  },
+  async shipItem(payload: { refund_id: string; courier: string; tracking_number: string }) {
+    const response = await apiClient.post(`/refund/ship`, payload)
+    return response.data.data
+  },
+  async refundAccount() {
+    const response = await apiClient.get<TResRefundAccount>(`/refund/accounts`)
+    return response.data.data
+  },
+  async updateRefundAccount(payload: FormValuesUpdate) {
+    const response = await apiClient.post<TResRefundAccount>(`/refund/accounts/save`, payload)
     return response.data.data
   }
 }

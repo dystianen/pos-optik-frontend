@@ -16,7 +16,7 @@ import {
 import { useForm } from '@mantine/form'
 import { useClipboard, useLocalStorage } from '@mantine/hooks'
 import { IconCheck, IconClipboard } from '@tabler/icons-react'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { toast } from 'react-toastify'
 
 type FormValues = {
@@ -75,21 +75,22 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
     }
   })
 
-  const formUpdate = useForm<FormValuesRefundAccount>({
-    initialValues: {
-      account_name: '',
-      bank_name: '',
-      account_number: ''
-    },
-    validate: {
-      account_name: (v) => (!v ? 'Account name is required' : null),
-      bank_name: (v) => (!v ? 'Bank is required' : null),
-      account_number: (v) => (!v ? 'Account number is required' : null)
+  // Sync refundAccount to form if it exists
+  useEffect(() => {
+    if (refundAccount) {
+      form.setValues({
+        account_name: refundAccount.account_name,
+        bank_name: refundAccount.bank_name,
+        account_number: refundAccount.account_number
+      })
     }
-  })
+  }, [refundAccount])
+
+  console.log('🚀 ~ StepPayment ~ form:', form.errors)
 
   const handleSubmit = useCallback(
     (values: FormValues) => {
+      console.log("🚀 ~ StepPayment ~ values:", values)
       if (!values.proof) return
 
       if (!checkoutOrder) {
@@ -105,7 +106,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
       formData.append('amount', String(grand_total))
       formData.append('proof', values.proof)
       formData.append('account_name', values.account_name)
-      formData.append('bank_name', values.bank_name.toUpperCase())
+      formData.append('bank_name', (values.bank_name || '').toUpperCase())
       formData.append('account_number', values.account_number)
 
       payment(formData, {
@@ -184,6 +185,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
                   isLoadingFetch={isLoadingRefundAccount}
                   isLoadingUpdate={isLoadingUpdateRefundAccount}
                   onUpdate={handleEditRefundAccount}
+                  parentForm={form}
                   subtitle="Used only if the order is cancelled, only input once!"
                 />
               </Stack>

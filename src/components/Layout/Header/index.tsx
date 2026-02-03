@@ -36,6 +36,7 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   const handleLogout = useCallback(() => {
     removeTokens()
+    router.push('/signin')
   }, [])
 
   const handleRedirectToOrders = useCallback(() => {
@@ -44,9 +45,8 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
-        sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
-      }`}
+      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
+        }`}
     >
       <div>
         <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between">
@@ -140,9 +140,8 @@ const Header = ({ user }: { user: TUser | null }) => {
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
         )}
         <div
-          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
-            navbarOpen ? 'translate-x-0' : 'translate-x-full'
-          } z-50`}
+          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${navbarOpen ? 'translate-x-0' : 'translate-x-full'
+            } z-50`}
         >
           <div className="flex items-center justify-between p-4">
             <Logo />

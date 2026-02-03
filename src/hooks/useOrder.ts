@@ -73,10 +73,16 @@ export const useOrder = {
       }
     })
   },
-  refundStatus(id: string, type: string) {
+  cancelStatus(id: string) {
     return useQuery({
-      queryKey: ['CHECK_STATUS', id, type],
-      queryFn: () => orderService.refundStatus(id, type)
+      queryKey: ['CANCEL_STATUS', id],
+      queryFn: () => orderService.cancelStatus(id)
+    })
+  },
+  refundStatus(id: string) {
+    return useQuery({
+      queryKey: ['REFUND_STATUS', id],
+      queryFn: () => orderService.refundStatus(id)
     })
   },
   submitRefund() {
@@ -84,7 +90,16 @@ export const useOrder = {
       mutationFn: orderService.submitRefund,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
-        queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS'] })
+        queryClient.invalidateQueries({ queryKey: ['REFUND_STATUS'] })
+      }
+    })
+  },
+  shipItem() {
+    return useMutation({
+      mutationFn: orderService.shipItem,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['REFUND_STATUS'] })
+        queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
       }
     })
   }

@@ -59,19 +59,28 @@ export default function OrderDetailPage() {
 
   const { data: order, isLoading } = useOrder.detailOrder(id)
   const { mutate: cancelOrder } = useOrder.cancelOrder()
-  const { mutate: submitRefund } = useOrder.submitRefund()
+  const { mutateAsync: submitRefund } = useOrder.submitRefund()
   const { data: refundAccounts } = useOrder.refundAccount()
   const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
     useOrder.updateRefundAccount()
   // Determine request type based on order status
-  const requestType =
-    order?.status_code === 'shipped' ? 'refund' : 'cancel'
+  const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation']
+  const REFUND_STATUSES = ['shipped', 'delivered']
 
-  const { data: refundStatus } = useOrder.refundStatus(id, requestType)
+  const requestType = (() => {
+    if (!order) return null
+    if (CANCEL_STATUSES.includes(order.status_code)) return 'cancel'
+    if (REFUND_STATUSES.includes(order.status_code)) return 'refund'
+    return null
+  })()
 
-  const handleCancelOrder = async (payload: any) => {
-    console.log('Cancel request payload:', payload)
-    await cancelOrder(payload, {
+  const { data: refundStatusData } = useOrder.refundStatus(id)
+  const { data: cancelStatusData } = useOrder.cancelStatus(id)
+
+  const refundStatus = requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
+
+  const handleCancelOrder = (payload: any) => {
+    cancelOrder(payload, {
       onSuccess: () => {
         toast.success('Cancel order submitted')
       },
@@ -82,16 +91,13 @@ export default function OrderDetailPage() {
   }
 
   const handleSubmitRefund = async (payload: any) => {
-    console.log('Refund request payload:', payload)
-    await submitRefund(payload, {
-      onSuccess: () => {
-        toast.success('Refund request submitted')
-        setOpenedRefund(false)
-      },
-      onError: (err) => {
-        toast.error(err.message)
-      }
-    })
+    try {
+      await submitRefund(payload)
+      toast.success('Refund request submitted')
+      setOpenedRefund(false)
+    } catch (err: any) {
+      toast.error(err.message)
+    }
   }
 
   const handleUpdateRefundAccount = (values: any) => {
@@ -108,7 +114,7 @@ export default function OrderDetailPage() {
   const requestStatusInfo = (() => {
     if (!refundStatus) return null
 
-    const isRefund = refundStatus.type === 'refund'
+    const isRefund = requestType === 'refund'
     const typeLabel = isRefund ? 'Return' : 'Cancellation'
 
     if (!refundStatus.has_request) {
@@ -404,13 +410,13 @@ export default function OrderDetailPage() {
                             </Group>
                             {order.payment.date && (
                               <Group justify="space-between">
-                              <Text size="sm" c="dimmed">
-                                Payment Date
-                              </Text>
-                              <Text size="sm" fw={500}>
-                                {formatDate(order.payment.date)}
-                              </Text>
-                            </Group>
+                                <Text size="sm" c="dimmed">
+                                  Payment Date
+                                </Text>
+                                <Text size="sm" fw={500}>
+                                  {formatDate(order.payment.date)}
+                                </Text>
+                              </Group>
                             )}
                           </>
                         ) : (
@@ -452,34 +458,38 @@ export default function OrderDetailPage() {
                       </Stack>
                     </Card>
 
-                    {/* Cancel Button / Status Info */}
-                    {order.status_code === 'processing' && requestStatusInfo && (
+                    {/* Action Button / Status Info */}
+                    {requestStatusInfo && requestType && (
                       <Tooltip label={requestStatusInfo.tooltip} withArrow>
                         <Button
                           fullWidth
                           radius="xl"
                           color={requestStatusInfo.color}
                           disabled={requestStatusInfo.disabled}
-                          onClick={() => !requestStatusInfo.disabled && setOpenedCancel(true)}
+                          onClick={() => {
+                            if (!requestStatusInfo.disabled) {
+                              if (requestType === 'refund') {
+                                setOpenedRefund(true)
+                              } else {
+                                setOpenedCancel(true)
+                              }
+                            }
+                          }}
                         >
                           {requestStatusInfo.label}
                         </Button>
                       </Tooltip>
                     )}
 
-                    {/* Refund Button / Status Info */}
-                    {order.status_code === 'shipped' && requestStatusInfo && (
-                      <Tooltip label={requestStatusInfo.tooltip} withArrow>
-                        <Button
-                          fullWidth
-                          radius="xl"
-                          color={requestStatusInfo.color}
-                          disabled={requestStatusInfo.disabled}
-                          onClick={() => !requestStatusInfo.disabled && setOpenedRefund(true)}
-                        >
-                          {requestStatusInfo.label}
-                        </Button>
-                      </Tooltip>
+                    {refundStatus?.has_request && (
+                      <Button
+                        variant="light"
+                        fullWidth
+                        radius="xl"
+                        onClick={() => router.push(`/my-orders/${id}/refund`)}
+                      >
+                        View Progress
+                      </Button>
                     )}
                   </Stack>
                 </Grid.Col>
