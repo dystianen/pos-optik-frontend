@@ -138,7 +138,7 @@ const ProductDetail = () => {
           <Grid>
             <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
               {product && (
-                <Card shadow="sm" padding="lg" radius="md" w={'100%'}>
+                <Card withBorder padding="lg" w={'100%'}>
                   <Card.Section>
                     <Grid>
                       <Grid.Col span={{ md: 2 }}>
@@ -146,15 +146,14 @@ const ProductDetail = () => {
                           {galleryImage.map((item, index) => (
                             <UnstyledButton key={index} onClick={() => handleSelectGallery(item)}>
                               <Card
-                                p={2}
-                                shadow="md"
-                                radius="md"
+                                p={6}
+                                withBorder
                                 className={clsx(
                                   'card-hover',
                                   primaryImage?.url === item.url && 'border-primary'
                                 )}
                               >
-                                <div style={{ position: 'relative', height: 80, width: 80 }}>
+                                <div style={{ position: 'relative', height: 60, width: 60 }}>
                                     <Image
                                       src={item.url}
                                       alt={item.alt_text}
@@ -194,7 +193,7 @@ const ProductDetail = () => {
                         </Text>
                       </Box>
 
-                      <Button mt="md" radius="xl" onClick={handleAddCart} loading={loading}>
+                      <Button mt="md" onClick={handleAddCart} loading={loading}>
                         Add to Cart
                       </Button>
                     </Group>
@@ -222,7 +221,7 @@ const ProductDetail = () => {
               <Stack gap={'md'}>
                 {variants.length > 0 ? (
                   <>
-                    <Card shadow="sm">
+                    <Card withBorder>
                       <Text fw={600} fz="lg" mb="sm">
                         Product Variants
                       </Text>
@@ -266,12 +265,11 @@ const ProductDetail = () => {
                               onClick={renderProps.onClick}
                             >
                               <Card
-                                radius={'md'}
-                                shadow="sm"
+                                withBorder
                                 p={'xs'}
                                 className={renderProps.cardClass}
                               >
-                                <Card.Section bg="primary.0" p="md">
+                                <Card.Section p="md">
                                   <div style={{ position: 'relative', height: 50, width: '100%' }}>
                                     <Image
                                       src={item.image.url}

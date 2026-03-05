@@ -110,7 +110,7 @@ export default function RefundProgressPage() {
         {refundStatus ? (
           <>
             {/* Status Summary */}
-            <Paper shadow="sm" p="lg" radius="md">
+            <Paper shadow="sm" p="lg">
               <Group justify="space-between" align="start">
                 <Stack gap={4}>
                   <Text size="sm" c="dimmed">Current Status</Text>
@@ -135,7 +135,7 @@ export default function RefundProgressPage() {
 
             {/* Stepper */}
             {activeStep === -1 ? (
-              <Card p="xl" radius="md" bg="red.0">
+              <Card p="xl" bg="red.0">
                 <Group gap="md">
                   <ThemeIcon color="red" size="xl" radius="xl">
                     <IconAlertCircle size={30} />
@@ -158,7 +158,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="md">
-                    <Paper p="md" radius="md" bg="blue.0">
+                    <Paper p="md" bg="blue.0">
                       <Text size="sm">
                         Your refund/cancellation request has been successfully submitted.
                         Our team will review your request and the attached proof.
@@ -173,7 +173,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="md">
-                    <Paper p="md" radius="md" bg="blue.0">
+                    <Paper p="md" bg="blue.0">
                       <Text size="sm">
                         We are reviewing the details of your request. This process usually takes 1-2 business days. You will receive a notification when the review is complete.
                       </Text>
@@ -187,7 +187,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="xl">
-                    <Paper p="lg" radius="md" shadow="xs">
+                    <Paper p="lg" shadow="xs">
                       <Stack gap="md">
                         <Title order={4}>Submit Shipping Details</Title>
                         <Text size="sm" c="dimmed">
@@ -233,7 +233,6 @@ export default function RefundProgressPage() {
                           onClick={handleShipSubmit}
                           loading={isPendingShip}
                           disabled={!courier || !trackingNumber}
-                          radius={'xl'}
                         >
                           Submit Shipping Info
                         </Button>
@@ -248,7 +247,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="md">
-                    <Paper p="md" radius="md" bg="blue.0">
+                    <Paper p="md" bg="blue.0">
                       <Text size="sm">
                         Thank you for providing the shipping information. We are now waiting for your package to arrive at our warehouse for further inspection.
                       </Text>
@@ -262,7 +261,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="md">
-                    <Paper p="md" radius="md" bg="blue.0">
+                    <Paper p="md" bg="blue.0">
                       <Text size="sm">
                         Your package has been received. We are now inspecting the product
                         before processing your refund.
@@ -277,7 +276,7 @@ export default function RefundProgressPage() {
                   completedIcon={<IconCheck />}
                 >
                   <Box mt="md">
-                    <Paper p="md" radius="md" bg="blue.0">
+                    <Paper p="md" bg="blue.0">
                       <Text size="sm">
                         Your refund has been approved by our admin. We are currently processing the refund to your account.
                       </Text>
@@ -285,7 +284,7 @@ export default function RefundProgressPage() {
                   </Box>
                 </Stepper.Step>
                 <Stepper.Completed>
-                  <Card p="xl" radius="md" bg="green.0" mt="xl">
+                  <Card p="xl" bg="green.0" mt="xl">
                     <Stack align="center" gap="sm">
                       <ThemeIcon color="green" size="xl" radius="xl">
                         <IconCheck size={30} />
@@ -303,7 +302,7 @@ export default function RefundProgressPage() {
           </>
         ) : (
           !isLoadingStatus && (
-            <Card withBorder p="xl" radius="md">
+            <Card withBorder p="xl">
               <Text ta="center" c="dimmed">No active refund or cancellation request found for this order.</Text>
             </Card>
           )

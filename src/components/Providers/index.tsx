@@ -2,7 +2,7 @@
 
 import { getQueryClient } from '@/lib/reactQueryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { MantineProvider, createTheme } from '@mantine/core'
+import { Alert, Badge, Button, Card, Input, MantineProvider, Paper, TextInput, createTheme } from '@mantine/core'
 import { ToastContainer } from 'react-toastify'
 import NextTopLoader from 'nextjs-toploader'
 import React from 'react'
@@ -23,6 +23,43 @@ const theme = createTheme({
       '#1a21bc',
       '#0d1a9c'
     ]
+  },
+  components: {
+    Card: Card.extend({
+      defaultProps: {
+        radius: 'lg',
+      },
+    }),
+    Button: Button.extend({
+      defaultProps: {
+        radius: 'xl',
+      },
+    }),
+    Badge: Badge.extend({
+      defaultProps: {
+        radius: 'md',
+      },
+    }),
+    Input: Input.extend({
+      defaultProps: {
+        radius: 'xl',
+      },
+    }),
+    TextInput: TextInput.extend({
+      defaultProps: {
+        radius: 'md',
+      },
+    }),
+    Alert: Alert.extend({
+      defaultProps: {
+        radius: 'lg',
+      },
+    }),
+    Paper: Paper.extend({
+      defaultProps: {
+        radius: 'lg',
+      },
+    }),
   }
 })
 

@@ -49,7 +49,7 @@ const orderService = {
 
   // CANCEL
   async cancelOrder(payload: CancelOrder) {
-    const response = await apiClient.post<TResCancelOrder>(`/cancel`, payload)
+    const response = await apiClient.post<TResCancelOrder>(`/cancel/submit`, payload)
     return response.data.data
   },
   async cancelStatus(id: string) {

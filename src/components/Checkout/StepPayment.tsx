@@ -138,7 +138,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   const bankLabel = 'BCA'
 
   return (
-    <Card shadow="md" radius="lg" p="xl">
+    <Card shadow="md" p="xl">
       <Stack align="center" gap="lg">
         <Image src="/images/payment.svg" h={360} fit="contain" />
 
@@ -190,7 +190,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
             </Card>
 
             <Group>
-              <Button type="submit" radius="xl" loading={isLoadingSubmit}>
+              <Button type="submit" loading={isLoadingSubmit}>
                 Submit Payment
               </Button>
             </Group>

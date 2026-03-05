@@ -20,7 +20,7 @@ const StepSuccessPayment = () => {
   }
 
   return (
-    <Card shadow="md" radius="lg" p="xl">
+    <Card withBorder p="xl">
       <Stack align="center" gap="lg">
         <Image
           src="/images/payment-success.png"
@@ -36,7 +36,7 @@ const StepSuccessPayment = () => {
           Your payment has been successfully confirmed by our admin. Your order is now being
           processed and will be shipped shortly. Thank you for your trust and purchase!
         </Text>
-        <Button radius={'xl'} onClick={handleViewMyOrder}>
+        <Button onClick={handleViewMyOrder}>
           View My Order
         </Button>
       </Stack>

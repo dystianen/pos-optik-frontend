@@ -72,7 +72,6 @@ export function RefundAccountForm({
       {refundAccount ? (
         <Card
           withBorder
-          radius="md"
           p="md"
           style={{
             borderColor: 'var(--mantine-color-blue-6)',
@@ -142,13 +141,12 @@ export function RefundAccountForm({
           />
 
           <Group grow>
-            <Button type="submit" color="red" radius="xl" onClick={close}>
+            <Button type="submit" color="red" onClick={close}>
               Cancel
             </Button>
             <Button
               onClick={() => form.onSubmit(handleSubmit)()}
               loading={isLoadingUpdate}
-              radius="xl"
             >
               Submit
             </Button>

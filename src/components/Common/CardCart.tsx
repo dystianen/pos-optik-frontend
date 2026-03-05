@@ -41,7 +41,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
 
   return (
     <Card
-      radius="lg"
       withBorder
       style={{
         transition: 'all 0.3s ease'
@@ -72,7 +71,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                   variant="light"
                   color="blue"
                   size="md"
-                  radius="md"
                   w="fit-content"
                   styles={{
                     root: {
@@ -122,7 +120,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                     <Paper
                       mt="md"
                       p="md"
-                      radius="lg"
                       style={{
                         backgroundColor: 'var(--mantine-color-gray-0)'
                       }}

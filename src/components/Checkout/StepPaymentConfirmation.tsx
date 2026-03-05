@@ -25,7 +25,7 @@ const StepPaymentConfirmation = ({ nextStep }: { nextStep: () => void }) => {
   }, [data])
 
   return (
-    <Card shadow="md" radius="lg" p="xl">
+    <Card shadow="md" p="xl">
       <Stack align="center" gap="lg">
         <Image src="/images/waiting.svg" h={300} w={400} fit="contain" alt="Waiting Confirmation" />
         <Title order={2} ta="center">

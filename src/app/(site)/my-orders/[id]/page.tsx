@@ -247,7 +247,7 @@ export default function OrderDetailPage() {
                 <Grid.Col span={{ base: 12, md: 8 }}>
                   <Stack gap="md">
                     {/* Items */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                    <Card padding="lg" withBorder>
                       <Stack gap="md">
                         <Group gap="xs">
                           <IconPackage size={20} />
@@ -289,7 +289,7 @@ export default function OrderDetailPage() {
                     </Card>
 
                     {/* Shipping Address */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                    <Card padding="lg" withBorder>
                       <Stack gap="md">
                         <Group gap="xs">
                           <IconMapPin size={20} />
@@ -312,7 +312,7 @@ export default function OrderDetailPage() {
 
                     {/* Shipping Method */}
                     {order.shipping.method && (
-                      <Card shadow="sm" padding="lg" radius="md" withBorder>
+                      <Card padding="lg" withBorder>
                         <Stack gap="md">
                           <Group gap="xs">
                             <IconTruck size={20} />
@@ -393,7 +393,7 @@ export default function OrderDetailPage() {
                 <Grid.Col span={{ base: 12, md: 4 }}>
                   <Stack gap="md">
                     {/* Payment Info */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                    <Card padding="lg" withBorder>
                       <Stack gap="md">
                         <Group gap="xs">
                           <IconCreditCard size={20} />
@@ -430,7 +430,7 @@ export default function OrderDetailPage() {
                     </Card>
 
                     {/* Order Summary */}
-                    <Card shadow="sm" padding="lg" radius="md" withBorder>
+                    <Card padding="lg" withBorder>
                       <Stack gap="md">
                         <Text fw={600}>Order Summary</Text>
                         <Divider />
@@ -465,7 +465,6 @@ export default function OrderDetailPage() {
                       <Tooltip label={requestStatusInfo.tooltip} withArrow>
                         <Button
                           fullWidth
-                          radius="xl"
                           color={requestStatusInfo.color}
                           disabled={requestStatusInfo.disabled}
                           onClick={() => {
@@ -483,11 +482,10 @@ export default function OrderDetailPage() {
                       </Tooltip>
                     )}
 
-                    {refundStatus?.has_request && (
+                    {refundStatus?.has_request && refundStatus.status === 'approved' && (
                       <Button
                         variant="light"
                         fullWidth
-                        radius="xl"
                         onClick={() => router.push(`/my-orders/${id}/refund`)}
                       >
                         View Progress

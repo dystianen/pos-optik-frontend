@@ -24,7 +24,7 @@ export function OrderCard({ order }: OrderCardProps) {
   const router = useRouter()
 
   return (
-    <Card withBorder padding="lg" radius="lg">
+    <Card withBorder padding="lg">
       <Stack gap="md">
         {/* Header */}
         <Group justify="space-between">
@@ -128,7 +128,6 @@ export function OrderCard({ order }: OrderCardProps) {
           <Button
             variant="light"
             size="sm"
-            radius="md"
             onClick={() => router.push(`/my-orders/${order.order_id}`)}
           >
             View Details

@@ -32,7 +32,7 @@ const StepRejectedPayment = () => {
   }
 
   return (
-    <Card shadow="md" radius="lg" p="xl">
+    <Card withBorder p="xl">
       <Stack align="center" gap="lg">
         <Image
           src="/images/payment-rejected.png"
@@ -56,7 +56,7 @@ const StepRejectedPayment = () => {
           mistake.
         </Text>
 
-        <Button color="red" radius="xl" onClick={handleRetryPayment} loading={isLoading}>
+        <Button color="red" onClick={handleRetryPayment} loading={isLoading}>
           Retry Payment
         </Button>
       </Stack>

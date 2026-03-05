@@ -25,7 +25,7 @@ const ModalAuthentication = ({ opened, onClose, onLogin }: TModalAuthentication)
       <Text mb="md" ta={'center'}>
         You need to log in to continue. Please log in to access this feature.
       </Text>
-      <Button fullWidth radius={'xl'} mt={32} onClick={onLogin}>
+      <Button fullWidth mt={32} onClick={onLogin}>
         Log In
       </Button>
     </Modal>

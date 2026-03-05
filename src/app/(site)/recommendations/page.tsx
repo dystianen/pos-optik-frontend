@@ -23,7 +23,6 @@ const Recommendations = () => {
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           className="sm:w-72"
-          radius="xl"
         />
       </div>
 

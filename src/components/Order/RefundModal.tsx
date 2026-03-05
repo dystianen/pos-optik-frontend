@@ -154,7 +154,7 @@ export function RefundModal({
 
         {/* Partial Refund - Item Selection */}
         {refundType === 'partial' && (
-          <Card shadow="sm" padding="md" radius="md" withBorder>
+          <Card shadow="sm" padding="md" withBorder>
             <Stack gap="md">
               <Group justify="space-between">
                 <Text fw={600}>Select Items to Refund</Text>
@@ -171,7 +171,7 @@ export function RefundModal({
 
               <Stack gap="md">
                 {order.items.map((item) => (
-                  <Card key={item.order_item_id} padding="md" radius="md" withBorder>
+                  <Card key={item.order_item_id} padding="md" withBorder>
                     <Group gap="md" align="start">
                       <Checkbox
                         checked={selectedItems.has(item.order_item_id)}
@@ -222,7 +222,7 @@ export function RefundModal({
 
         {/* Full Refund - Summary */}
         {refundType === 'full' && (
-          <Card shadow="sm" padding="md" radius="md" withBorder bg="blue.0">
+          <Card shadow="sm" padding="md" withBorder bg="blue.0">
             <Group justify="space-between">
               <Text fw={500}>Total Refund Amount:</Text>
               <Text fw={700} size="lg" c="primary">
@@ -279,12 +279,11 @@ export function RefundModal({
 
         {/* Action Buttons */}
         <Group justify="flex-end" mt="md">
-          <Button variant="default" radius="xl" onClick={onClose}>
+          <Button variant="default" onClick={onClose}>
             Cancel
           </Button>
           <Button
             color="blue"
-            radius="xl"
             onClick={handleSubmit}
             loading={loading}
             disabled={

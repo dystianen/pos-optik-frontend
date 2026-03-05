@@ -3,7 +3,7 @@
 import { useToggleWishlist } from '@/hooks/useProducts'
 import { TProduct } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
-import { ActionIcon, Badge, Card, Group, Stack, Text } from '@mantine/core'
+import { ActionIcon, Badge, Card, Divider, Group, Stack, Text } from '@mantine/core'
 import { IconCircleX, IconHeart, IconHeartFilled, IconShoppingBag } from '@tabler/icons-react'
 import productService from '@/services/productService'
 import { useQueryClient } from '@tanstack/react-query'
@@ -62,13 +62,12 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
   return (
     <>
       <Card
-        radius="md"
-        shadow="sm"
+        withBorder
         onClick={handleDetail}
         className={`transition-all ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-hover'}`}
       >
         {/* Image */}
-        <Card.Section bg="primary.0" p="md" onMouseEnter={handlePrefetch}>
+        <Card.Section p="md" onMouseEnter={handlePrefetch}>
           <div style={{ position: 'relative', height: 130 }}>
             <Image
               src={item.product_image_url}
@@ -80,6 +79,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
           </div>
         </Card.Section>
 
+      <Divider />
         <Stack gap={1} mt="sm">
           <Group justify="space-between">
             <Text fz={11} fw={600} c="dimmed" tt="uppercase">

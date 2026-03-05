@@ -86,8 +86,8 @@ const Cart = () => {
             <Stack gap="md">
               {/* Column Headers - Desktop Only */}
               <Card
-                radius="lg"
                 p="md"
+                radius={'md'}
                 style={{
                   backgroundColor: 'var(--mantine-color-primary-0)',
                   border: 'none'
@@ -119,7 +119,7 @@ const Cart = () => {
               ) : cart?.items?.length ? (
                 cart.items.map((item) => <CardCart key={item.cart_item_id} item={item} />)
               ) : (
-                <Card radius="xl" p="xl" shadow="sm">
+                <Card p="xl" shadow="sm">
                   <Stack align="center" py="xl" gap="md">
                     <Box
                       style={{
@@ -146,7 +146,6 @@ const Cart = () => {
                       variant="light"
                       color="primary"
                       size="md"
-                      radius="xl"
                       onClick={() => router.push('/product/kacamata')}
                       mt="sm"
                     >
@@ -161,7 +160,6 @@ const Cart = () => {
           {/* Right Column - Order Summary */}
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Paper
-              radius="xl"
               p="xl"
               withBorder
               style={{
@@ -221,8 +219,7 @@ const Cart = () => {
 
                 <Button
                   fullWidth
-                  size="lg"
-                  radius="xl"
+                  size='md'
                   color="primary"
                   loading={loading}
                   onClick={handleCheckout}

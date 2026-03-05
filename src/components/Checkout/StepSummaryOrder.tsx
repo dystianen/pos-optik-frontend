@@ -40,7 +40,7 @@ const StepSummaryOrder = ({
   }
 
   return (
-    <Card shadow="md" radius="lg" mih={400} p="xl">
+    <Card withBorder mih={400} p="xl">
       <LoadingOverlay
         visible={isLoadingSummary}
         zIndex={1000}
@@ -149,10 +149,10 @@ const StepSummaryOrder = ({
           </Box>
 
           <Group grow justify="center" mt="xl">
-            <Button variant="default" radius="xl" onClick={prevStep}>
+            <Button variant="default" onClick={prevStep}>
               Back
             </Button>
-            <Button radius="xl" onClick={handleSubmitOrders} loading={isLoadingSubmit}>
+            <Button onClick={handleSubmitOrders} loading={isLoadingSubmit}>
               Submit Order
             </Button>
           </Group>

@@ -101,7 +101,7 @@ const SignUp = () => {
 
             {/* Submit Button */}
             <Group justify="center" mt="md">
-              <Button type="submit" w={'100%'} radius={'xl'} size="lg" loading={loading}>
+              <Button type="submit" w={'100%'} size="lg" loading={loading}>
                 Submit
               </Button>
             </Group>

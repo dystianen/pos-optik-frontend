@@ -4,7 +4,7 @@ import { Card, Grid, Group, Skeleton, Stack } from '@mantine/core'
 
 const CardCartSkeleton = () => {
   return (
-    <Card withBorder radius="md">
+    <Card withBorder>
       <Grid>
         <Grid.Col span={8}>
           <Group wrap="nowrap">

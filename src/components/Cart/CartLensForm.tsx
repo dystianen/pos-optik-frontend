@@ -14,7 +14,7 @@ export default function CartLensForm({ value, onChange }: CartLensFormProps) {
   }
 
   return (
-    <Card shadow="sm" padding="lg" radius="md">
+    <Card withBorder padding="lg">
       <Text fw={600} fz="lg" mb="sm">
         Prescription
       </Text>

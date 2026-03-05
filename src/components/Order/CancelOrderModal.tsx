@@ -61,12 +61,11 @@ export function CancelOrderModal({ opened, onClose, orderId, onSubmit }: CancelO
         />
 
         <Group justify="flex-end" mt="md">
-          <Button variant="default" radius="xl" onClick={onClose}>
+          <Button variant="default" onClick={onClose}>
             Close
           </Button>
           <Button
             color="red"
-            radius="xl"
             onClick={handleSubmit}
             loading={loading}
             disabled={!reason}

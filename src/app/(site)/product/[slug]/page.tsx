@@ -70,7 +70,6 @@ const Products = () => {
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           className="sm:w-72"
-          radius={'md'}
           leftSection={<IconSearch size={18} />}
         />
       </div>

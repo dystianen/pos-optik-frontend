@@ -25,7 +25,6 @@ const NewEyewear = () => {
           onChange={(e) => setSearch(e.currentTarget.value)}
           leftSection={<IconSearch size={18} />}
           className="sm:w-72"
-          radius="md"
         />
       </div>
 

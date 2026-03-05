@@ -2,7 +2,7 @@ import { Card, Group, Skeleton } from '@mantine/core'
 
 const CardProductSkeleton = () => {
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
+    <Card shadow="sm" padding="lg" withBorder>
       <Card.Section>
         <Skeleton height={150} />
       </Card.Section>

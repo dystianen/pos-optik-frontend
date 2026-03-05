@@ -38,7 +38,7 @@ const config: Config = {
     plugin(({ addComponents }) => {
       addComponents({
         '.card-hover': {
-          '@apply cursor-pointer border border-transparent transition-all duration-200 hover:shadow-lg hover:border-primary':
+          '@apply cursor-pointer border transition-all duration-200 hover:shadow-lg hover:border-primary':
             {}
         }
       })

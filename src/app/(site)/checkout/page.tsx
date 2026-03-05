@@ -168,12 +168,11 @@ const Orders = () => {
     <Container my={120}>
       <Stepper active={activeStep} size="sm">
         <Stepper.Step label="Shipping">
-          <Card shadow="md" radius="lg" p="xl">
+          <Card withBorder p="xl">
             <Stack gap={'xl'}>
               <Alert
                 variant="light"
                 color="yellow"
-                radius="lg"
                 title="Shipping Information"
                 icon={<IconInfoCircle />}
               >
@@ -181,7 +180,7 @@ const Orders = () => {
                 time and shipping costs will follow the regular service terms.
               </Alert>
 
-              <Card withBorder radius="lg" p="xl">
+              <Card withBorder p="xl">
                 <LoadingOverlay
                   visible={isLoadingShippingAddresses}
                   zIndex={1000}
@@ -197,7 +196,6 @@ const Orders = () => {
                       <Button
                         size="xs"
                         variant="light"
-                        radius={'xl'}
                         onClick={() => handleSelectAddress(null)}
                       >
                         + Add New Address
@@ -210,7 +208,6 @@ const Orders = () => {
                           <Card
                             key={address.csa_id}
                             withBorder
-                            radius="md"
                             p="md"
                             style={{
                               borderColor:
@@ -271,13 +268,12 @@ const Orders = () => {
                     </Text>
 
                     <Group grow justify="center" mt="xl">
-                      <Button variant="default" radius="xl" onClick={handleBackOrCancel}>
+                      <Button variant="default" onClick={handleBackOrCancel}>
                         Back
                       </Button>
 
                       <Button
                         type="submit"
-                        radius="xl"
                         loading={isLoadingSummary}
                         onClick={nextToSummaryOrder}
                       >
@@ -337,11 +333,11 @@ const Orders = () => {
                     </Stack>
 
                     <Group grow justify="center" mt="xl">
-                      <Button variant="default" radius="xl" size="lg" onClick={handleBackOrCancel}>
+                      <Button variant="default" size="lg" onClick={handleBackOrCancel}>
                         {hasAddress ? 'Cancel' : 'Back'}
                       </Button>
 
-                      <Button type="submit" radius="xl" size="lg" loading={isLoadingSave}>
+                      <Button type="submit" size="lg" loading={isLoadingSave}>
                         {csaId ? 'Update Address' : 'Save Address'}
                       </Button>
                     </Group>
