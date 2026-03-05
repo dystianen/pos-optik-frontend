@@ -2,7 +2,6 @@ import { TMenu } from '@/features/menu/types'
 import { formatSlug } from '@/utils/format'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
 
 const MobileHeaderLink: React.FC<{ item: TMenu }> = ({ item }) => {
   const pathname = usePathname()
