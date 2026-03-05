@@ -1,5 +1,5 @@
 export const API_ROUTES = {
-  MENU: '/menu',
+  MENU: '/products/categories',
   AUTH: {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
