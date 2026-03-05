@@ -2,14 +2,14 @@
 import CardProduct from '@/components/Common/CardProduct'
 import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
 import { useMenu } from '@/hooks/useMenu'
-import { useProducts } from '@/hooks/useProducts'
+import { useGetProduct } from '@/hooks/useProducts'
 import { formatLabel } from '@/utils/format'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 function formatCategoryName(slug: string) {
   return slug
@@ -26,33 +26,37 @@ const Products = () => {
   const slug = params.slug as string
   const querySearch = searchParams.get('search') ?? ''
 
-  const { data: menu } = useMenu.menu()
+  const { data: menu } = useMenu()
   const category = menu?.find((item) =>
     item.category_name.toLowerCase().includes(formatLabel(slug).toLowerCase())
   )
 
-  const [search, setSearch] = useState('')
+  const [search, setSearch] = useState(querySearch)
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  useEffect(() => {
-    setSearch(querySearch)
-  }, [querySearch])
+  // Gunakan ref untuk skip effect pertama kali (saat mount)
+  const isFirstRender = useRef(true)
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams.toString())
-
-    if (!search) {
-      params.delete('search')
-    } else {
-      params.set('search', search)
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
     }
 
-    router.replace(`?${params.toString()}`, { scroll: false })
+    const urlParams = new URLSearchParams(searchParams.toString())
+    if (!search) {
+      urlParams.delete('search')
+    } else {
+      urlParams.set('search', search)
+    }
+    router.replace(`?${urlParams.toString()}`, { scroll: false })
   }, [search])
 
-  const { data: products, isLoading } = useProducts.getProduct({
-    category: category?.category_id || '',
-    search: debouncedSearch
+  // Hanya fetch products setelah category tersedia
+  const { data: products, isLoading } = useGetProduct({
+    category: category?.category_id ?? null,
+    search: debouncedSearch,
+    enabled: !!category
   })
 
   return (

@@ -1,23 +1,42 @@
 'use client'
 
-import { useProducts } from '@/hooks/useProducts'
+import { useToggleWishlist } from '@/hooks/useProducts'
 import { TProduct } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
-import { ActionIcon, Badge, Card, Group, Image, Stack, Text } from '@mantine/core'
+import { ActionIcon, Badge, Card, Group, Stack, Text } from '@mantine/core'
 import { IconCircleX, IconHeart, IconHeartFilled, IconShoppingBag } from '@tabler/icons-react'
+import productService from '@/services/productService'
+import { useQueryClient } from '@tanstack/react-query'
+import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'nextjs-toploader/app'
-import { useCallback, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 import ModalAuthentication from '../Modal/ModalAuthentication'
 
-const CardProduct = ({ item }: { item: TProduct }) => {
+const ModalAuthenticationDynamic = dynamic(() => import('../Modal/ModalAuthentication'), {
+  ssr: false
+})
+
+const CardProduct = memo(({ item }: { item: TProduct }) => {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [authModalOpen, setAuthModalOpen] = useState(false)
 
-  const { mutate: toggleWishlist } = useProducts.toggleWishlist()
+  const { mutate: toggleWishlist } = useToggleWishlist()
 
   const stock = Number(item.product_stock)
   const totalSold = Number(item.total_sold ?? 0)
+
+  // Prefetch detail on hover
+  const handlePrefetch = useCallback(() => {
+    if (stock === 0) return
+    queryClient.prefetchQuery({
+      queryKey: ['product-detail', item.product_id],
+      queryFn: () => productService.getProductDetail({ id: item.product_id }),
+      staleTime: 5 * 60 * 1000
+    })
+  }, [item.product_id, queryClient, stock])
 
   const handleLogin = useCallback(() => {
     router.push('/signin')
@@ -49,8 +68,16 @@ const CardProduct = ({ item }: { item: TProduct }) => {
         className={`transition-all ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-hover'}`}
       >
         {/* Image */}
-        <Card.Section bg="primary.0" p="md">
-          <Image src={item.product_image_url} alt={item.product_name} h={130} fit="contain" />
+        <Card.Section bg="primary.0" p="md" onMouseEnter={handlePrefetch}>
+          <div style={{ position: 'relative', height: 130 }}>
+            <Image
+              src={item.product_image_url}
+              alt={item.product_name}
+              fill
+              style={{ objectFit: 'contain' }}
+              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 15vw"
+            />
+          </div>
         </Card.Section>
 
         <Stack gap={1} mt="sm">
@@ -103,13 +130,13 @@ const CardProduct = ({ item }: { item: TProduct }) => {
         </Stack>
       </Card>
 
-      <ModalAuthentication
+      <ModalAuthenticationDynamic
         opened={authModalOpen}
         onClose={() => setAuthModalOpen(false)}
         onLogin={handleLogin}
       />
     </>
   )
-}
+})
 
 export default CardProduct

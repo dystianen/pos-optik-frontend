@@ -1,4 +1,4 @@
-import { useProducts } from '@/hooks/useProducts'
+import { useGetTotalWishlist } from '@/hooks/useProducts'
 import { ActionIcon, Indicator } from '@mantine/core'
 import { IconHeart } from '@tabler/icons-react'
 import Link from 'next/link'
@@ -7,7 +7,7 @@ import { useCallback, useMemo } from 'react'
 
 const Wishlist = () => {
   const router = useRouter()
-  const { data: wishlist } = useProducts.getTotalWishlist()
+  const { data: wishlist } = useGetTotalWishlist()
   const isWishlist = useMemo(() => Number(wishlist?.total) > 0, [wishlist])
 
   const handleRedirectToCart = useCallback(() => {

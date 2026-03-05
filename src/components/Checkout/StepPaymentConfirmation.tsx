@@ -1,5 +1,5 @@
 'use client'
-import { useOrder } from '@/hooks/useOrder'
+import { useCheckStatus } from '@/hooks/useOrder'
 import { Card, Image, Stack, Text, Title } from '@mantine/core'
 import { readLocalStorageValue } from '@mantine/hooks'
 import { useEffect } from 'react'
@@ -8,7 +8,7 @@ const StepPaymentConfirmation = ({ nextStep }: { nextStep: () => void }) => {
   const checkoutOrderRaw = readLocalStorageValue<string>({ key: 'checkout_order' })
   const checkoutOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
 
-  const { data, refetch } = useOrder.checkStatus(checkoutOrder?.order_id || '')
+  const { data, refetch } = useCheckStatus(checkoutOrder?.order_id || '')
 
   useEffect(() => {
     const interval = setInterval(() => {

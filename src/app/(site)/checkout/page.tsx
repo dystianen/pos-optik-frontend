@@ -1,10 +1,12 @@
 'use client'
-import StepPayment from '@/components/Checkout/StepPayment'
-import StepPaymentConfirmation from '@/components/Checkout/StepPaymentConfirmation'
-import StepResultPayment from '@/components/Checkout/StepResultPayment'
-import StepSummaryOrder from '@/components/Checkout/StepSummaryOrder'
-import { useOrder } from '@/hooks/useOrder'
-import { useShipping } from '@/hooks/useShipping'
+import dynamic from 'next/dynamic'
+
+const StepPayment = dynamic(() => import('@/components/Checkout/StepPayment'), { ssr: false })
+const StepPaymentConfirmation = dynamic(() => import('@/components/Checkout/StepPaymentConfirmation'), { ssr: false })
+const StepResultPayment = dynamic(() => import('@/components/Checkout/StepResultPayment'), { ssr: false })
+const StepSummaryOrder = dynamic(() => import('@/components/Checkout/StepSummaryOrder'), { ssr: false })
+import { useSummaryOrders } from '@/hooks/useOrder'
+import { useGetAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/hooks/useShipping'
 import { TSummaryOrders } from '@/types/order'
 import { TCustomerShipping, TReqCustomerShipping } from '@/types/shipping'
 import {
@@ -55,11 +57,11 @@ const Orders = () => {
   })
 
   const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } =
-    useShipping.getAllShippingAddress()
-  const { data: shippingAddress } = useShipping.getShippingAddress(csaId)
+    useGetAllShippingAddress()
+  const { data: shippingAddress } = useGetShippingAddress(csaId)
   const { mutate: saveShippingAddress, isPending: isLoadingSave } =
-    useShipping.saveCustomerShipping()
-  const { mutate: summary, isPending: isLoadingSummary } = useOrder.summaryOrders()
+    useSaveCustomerShipping()
+  const { mutate: summary, isPending: isLoadingSummary } = useSummaryOrders()
 
   const [showForm, setShowForm] = useState(false)
   const [summaryOrder, setSummaryOrder] = useState<TSummaryOrders | null>(null)

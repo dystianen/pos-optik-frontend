@@ -1,7 +1,9 @@
 'use client'
-import Search from '@/components/Common/Search'
-import Cart from '@/components/Common/ShoppingCart'
-import Wishlist from '@/components/Common/Wishlist'
+import dynamic from 'next/dynamic'
+
+const Search = dynamic(() => import('@/components/Common/Search'), { ssr: false })
+const Cart = dynamic(() => import('@/components/Common/ShoppingCart'), { ssr: false })
+const Wishlist = dynamic(() => import('@/components/Common/Wishlist'), { ssr: false })
 import { useMenu } from '@/hooks/useMenu'
 import { TUser } from '@/types/auth'
 import { removeTokens } from '@/utils/auth-server'
@@ -20,7 +22,7 @@ const Header = ({ user }: { user: TUser | null }) => {
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
 
-  const { data: menu, isLoading: isLoadingMenu } = useMenu.menu()
+  const { data: menu, isLoading: isLoadingMenu } = useMenu()
 
   // sticky nav
   const handleScroll = () => {

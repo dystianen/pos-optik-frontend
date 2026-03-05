@@ -1,10 +1,12 @@
 'use client'
-import CartLensForm from '@/components/Cart/CartLensForm'
-import { ProductDetailSkeleton } from '@/components/Common/Skeleton/ProductDetailSkeleton'
+import dynamic from 'next/dynamic'
+
+const CartLensForm = dynamic(() => import('@/components/Cart/CartLensForm'), { ssr: false })
+const ModalAuthentication = dynamic(() => import('@/components/Modal/ModalAuthentication'), { ssr: false })
 import SectionCarousel from '@/components/Home/SectionCarousel'
-import ModalAuthentication from '@/components/Modal/ModalAuthentication'
-import { useCart } from '@/hooks/useCart'
-import { useProducts } from '@/hooks/useProducts'
+import { ProductDetailSkeleton } from '@/components/Common/Skeleton/ProductDetailSkeleton'
+import { useAddToCart } from '@/hooks/useCart'
+import { useGetProductAttribute, useGetProductDetail, useGetRecommendations } from '@/hooks/useProducts'
 import type { PrescriptionPayload } from '@/types/cart'
 import { TGalleryDetail, Variant } from '@/types/product'
 import { formatCurrency } from '@/utils/format'
@@ -17,12 +19,12 @@ import {
   Divider,
   Grid,
   Group,
-  Image,
   SimpleGrid,
   Stack,
   Text,
   UnstyledButton
 } from '@mantine/core'
+import Image from 'next/image'
 import { IconCircleX } from '@tabler/icons-react'
 import { clsx } from 'clsx'
 import { hasCookie } from 'cookies-next/client'
@@ -53,11 +55,11 @@ const ProductDetail = () => {
     type: 'none'
   })
 
-  const { data: product, isLoading: isLoadingPage } = useProducts.getProductDetail(productId)
-  const { data: attributes } = useProducts.getProductAttribute(productId || '')
-  const { mutate: addToCart } = useCart.addToCart()
+  const { data: product, isLoading: isLoadingPage } = useGetProductDetail(productId)
+  const { data: attributes } = useGetProductAttribute(productId || '')
+  const { mutate: addToCart } = useAddToCart()
   const { data: recommendations, isLoading: isLoadingRecommendations } =
-    useProducts.getRecommendations({ productId, limit: 10 })
+    useGetRecommendations({ productId, limit: 10 })
 
   useEffect(() => {
     setSelectedVariant(null)
@@ -152,7 +154,14 @@ const ProductDetail = () => {
                                   primaryImage?.url === item.url && 'border-primary'
                                 )}
                               >
-                                <Image src={item.url} h={80} fit="contain" />
+                                <div style={{ position: 'relative', height: 80, width: 80 }}>
+                                    <Image
+                                      src={item.url}
+                                      alt={item.alt_text}
+                                      fill
+                                      style={{ objectFit: 'contain' }}
+                                    />
+                                  </div>
                               </Card>
                             </UnstyledButton>
                           ))}
@@ -160,12 +169,15 @@ const ProductDetail = () => {
                       </Grid.Col>
                       <Grid.Col span={{ md: 10 }}>
                         {primaryImage.url !== '' && (
-                          <Image
-                            src={primaryImage.url}
-                            alt={primaryImage.alt_text}
-                            h={400}
-                            fit="contain"
-                          />
+                          <div style={{ position: 'relative', height: 400, width: '100%' }}>
+                            <Image
+                              src={primaryImage.url}
+                              alt={primaryImage.alt_text}
+                              fill
+                              style={{ objectFit: 'contain' }}
+                              priority
+                            />
+                          </div>
                         )}
                       </Grid.Col>
                     </Grid>
@@ -260,7 +272,14 @@ const ProductDetail = () => {
                                 className={renderProps.cardClass}
                               >
                                 <Card.Section bg="primary.0" p="md">
-                                  <Image src={item.image.url} alt={item.image.alt_text} h={50} />
+                                  <div style={{ position: 'relative', height: 50, width: '100%' }}>
+                                    <Image
+                                      src={item.image.url}
+                                      alt={item.image.alt_text}
+                                      fill
+                                      style={{ objectFit: 'contain' }}
+                                    />
+                                  </div>
                                 </Card.Section>
                                 <Stack gap={2}>
                                   <Text fz={'10'} lineClamp={2} mt={'xs'}>

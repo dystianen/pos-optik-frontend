@@ -25,7 +25,7 @@ import { useCallback, useState } from 'react'
 
 const Cart = () => {
   const router = useRouter()
-  const { data: cart, isLoading } = useCart.cart()
+  const { data: cart, isLoading } = useCart()
   const [loading, setLoading] = useState(false)
 
   const handleCheckout = useCallback(() => {

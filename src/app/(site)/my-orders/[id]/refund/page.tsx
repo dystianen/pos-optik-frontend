@@ -1,6 +1,6 @@
 'use client'
 
-import { useOrder } from '@/hooks/useOrder'
+import { useRefundStatus, useShipItem } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   Button,
@@ -43,8 +43,8 @@ export default function RefundProgressPage() {
   const [courier, setCourier] = useState('')
   const [trackingNumber, setTrackingNumber] = useState('')
 
-  const { data: refundStatus, isLoading: isLoadingStatus } = useOrder.refundStatus(id)
-  const { mutateAsync: shipItem, isPending: isPendingShip } = useOrder.shipItem()
+  const { data: refundStatus, isLoading: isLoadingStatus } = useRefundStatus(id)
+  const { mutateAsync: shipItem, isPending: isPendingShip } = useShipItem()
 
   const activeStep = useMemo(() => {
     if (!refundStatus) return 0

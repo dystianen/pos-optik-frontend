@@ -31,6 +31,7 @@ const productService = {
     return response.data.data
   },
   async getProductDetail({ id }: { id: string | null }) {
+    if (!id) throw new Error('Product ID is required')
     const response = await apiClient.get<TResDetailProduct>(`/products/${id}`)
     return response.data.data
   },

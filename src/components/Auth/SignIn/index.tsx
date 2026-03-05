@@ -1,6 +1,6 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
-import { useAuth } from '@/hooks/useAuth'
+import { useLogin } from '@/hooks/useAuth'
 import { TReqLogin } from '@/types/auth'
 import { setAccessToken, setRefreshToken, setUser } from '@/utils/auth-server'
 import { Button, Group, Stack, TextInput } from '@mantine/core'
@@ -22,7 +22,7 @@ const SignUp = () => {
     }
   })
 
-  const { mutate: submitLogin } = useAuth.login()
+  const { mutate: submitLogin } = useLogin()
 
   const handleSubmit = (values: TReqLogin) => {
     setLoading(true)
@@ -35,7 +35,6 @@ const SignUp = () => {
         router.replace('/')
       },
       onError: (err) => {
-        console.log(err)
         setLoading(false)
         toast.error(err.message)
       }

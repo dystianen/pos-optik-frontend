@@ -1,6 +1,6 @@
 'use client'
 
-import { useCart } from '@/hooks/useCart'
+import { useDeleteItemCart } from '@/hooks/useCart'
 import { TItemCart } from '@/types/order'
 import { formatCurrency } from '@/utils/format'
 
@@ -12,7 +12,6 @@ import {
   Collapse,
   Grid,
   Group,
-  Image,
   Paper,
   Stack,
   Table,
@@ -22,16 +21,17 @@ import {
   rem
 } from '@mantine/core'
 import { IconChevronDown, IconChevronUp, IconEye, IconTrash } from '@tabler/icons-react'
-import { useCallback, useState } from 'react'
+import Image from 'next/image'
+import { memo, useCallback, useState } from 'react'
 
 type TCardCart = {
   item: TItemCart
   hideAction?: boolean
 }
 
-const CardCart = ({ item, hideAction = false }: TCardCart) => {
+const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
   const [openRx, setOpenRx] = useState(false)
-  const { mutate: deleteItem, isPending } = useCart.deleteItemCart()
+  const { mutate: deleteItem, isPending } = useDeleteItemCart()
 
   const handleDeleteItemCart = useCallback(() => {
     deleteItem(item.cart_item_id)
@@ -52,14 +52,14 @@ const CardCart = ({ item, hideAction = false }: TCardCart) => {
         <Grid.Col span={{ base: 12, sm: 8 }}>
           <Group align="center" gap="lg" wrap="nowrap">
             {/* Product Image */}
-            <Image
-              src={item.image || '/images/placeholder.png'}
-              alt={item.product_name}
-              w={120}
-              h={80}
-              radius="md"
-              fit="cover"
-            />
+            <div style={{ position: 'relative', width: 120, height: 80, borderRadius: '8px', overflow: 'hidden' }}>
+              <Image
+                src={item.image || '/images/placeholder.png'}
+                alt={item.product_name}
+                fill
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
 
             {/* Product Details */}
             <Stack gap="xs" style={{ flex: 1 }}>
@@ -228,6 +228,6 @@ const CardCart = ({ item, hideAction = false }: TCardCart) => {
       </Grid>
     </Card>
   )
-}
+})
 
 export default CardCart

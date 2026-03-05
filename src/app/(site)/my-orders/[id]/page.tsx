@@ -1,8 +1,10 @@
 'use client'
 
-import { CancelOrderModal } from '@/components/Order/CancelOrderModal'
-import { RefundModal } from '@/components/Order/RefundModal'
-import { useOrder } from '@/hooks/useOrder'
+import dynamic from 'next/dynamic'
+
+const CancelOrderModal = dynamic(() => import('@/components/Order/CancelOrderModal').then(mod => mod.CancelOrderModal), { ssr: false })
+const RefundModal = dynamic(() => import('@/components/Order/RefundModal').then(mod => mod.RefundModal), { ssr: false })
+import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount } from '@/hooks/useOrder'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   ActionIcon,
@@ -57,12 +59,12 @@ export default function OrderDetailPage() {
   const [openedCancel, setOpenedCancel] = useState(false)
   const [openedRefund, setOpenedRefund] = useState(false)
 
-  const { data: order, isLoading } = useOrder.detailOrder(id)
-  const { mutate: cancelOrder } = useOrder.cancelOrder()
-  const { mutateAsync: submitRefund } = useOrder.submitRefund()
-  const { data: refundAccounts } = useOrder.refundAccount()
+  const { data: order, isLoading } = useDetailOrder(id)
+  const { mutate: cancelOrder } = useCancelOrder()
+  const { mutateAsync: submitRefund } = useSubmitRefund()
+  const { data: refundAccounts } = useRefundAccount()
   const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
-    useOrder.updateRefundAccount()
+    useUpdateRefundAccount()
   // Determine request type based on order status
   const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation']
   const REFUND_STATUSES = ['shipped', 'delivered']
@@ -74,8 +76,8 @@ export default function OrderDetailPage() {
     return null
   })()
 
-  const { data: refundStatusData } = useOrder.refundStatus(id)
-  const { data: cancelStatusData } = useOrder.cancelStatus(id)
+  const { data: refundStatusData } = useRefundStatus(id)
+  const { data: cancelStatusData } = useCancelStatus(id)
 
   const refundStatus = requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
 

@@ -1,6 +1,6 @@
 'use client'
 import SectionCarousel from '@/components/Home/SectionCarousel'
-import { useProducts } from '@/hooks/useProducts'
+import { useGetBestSeller, useGetNewEyeWear } from '@/hooks/useProducts'
 import { Carousel } from '@mantine/carousel'
 import { Container, Image, Stack } from '@mantine/core'
 import Autoplay from 'embla-carousel-autoplay'
@@ -8,10 +8,10 @@ import { useRef } from 'react'
 
 export default function Home() {
   const autoplay = useRef(Autoplay({ delay: 3000 }))
-  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useProducts.getNewEyeWear({
+  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useGetNewEyeWear({
     limit: 10
   })
-  const { data: bestSeller, isLoading: isLoadingBestSeller } = useProducts.getBestSeller({
+  const { data: bestSeller, isLoading: isLoadingBestSeller } = useGetBestSeller({
     limit: 10
   })
 

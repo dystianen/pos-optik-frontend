@@ -1,5 +1,5 @@
 'use client'
-import { useOrder } from '@/hooks/useOrder'
+import { useUpdateStatus } from '@/hooks/useOrder'
 import { Button, Card, Image, Stack, Text, Title } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 
@@ -12,7 +12,7 @@ const StepRejectedPayment = () => {
     defaultValue: 0
   })
 
-  const { mutate: retryPayment, isPending: isLoading } = useOrder.updateStatus()
+  const { mutate: retryPayment, isPending: isLoading } = useUpdateStatus()
 
   const handleRetryPayment = () => {
     const { order_id } = checkoutOrder

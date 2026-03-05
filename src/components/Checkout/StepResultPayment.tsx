@@ -1,5 +1,5 @@
 'use client'
-import { useOrder } from '@/hooks/useOrder'
+import { useCheckStatus } from '@/hooks/useOrder'
 import { readLocalStorageValue } from '@mantine/hooks'
 import StepRejectedPayment from './StepRejectedPayment'
 import StepSuccessPayment from './StepSuccessPayment'
@@ -10,7 +10,7 @@ const StepResultPayment = () => {
 
   const orderId = checkoutOrder?.order_id
 
-  const { data, isLoading, isError } = useOrder.checkStatus(orderId || '')
+  const { data, isLoading, isError } = useCheckStatus(orderId || '')
 
   // ⏳ Loading state
   if (isLoading) {

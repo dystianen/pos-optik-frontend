@@ -2,7 +2,7 @@
 
 import CardProduct from '@/components/Common/CardProduct'
 import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
-import { useProducts } from '@/hooks/useProducts'
+import { useGetListWishlist } from '@/hooks/useProducts'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
@@ -13,7 +13,7 @@ const NewEyewear = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: wishlist, isLoading } = useProducts.getListWishlist({ search: debouncedSearch })
+  const { data: wishlist, isLoading } = useGetListWishlist({ search: debouncedSearch })
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">

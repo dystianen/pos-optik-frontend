@@ -1,6 +1,6 @@
 'use client'
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/Common/RefundAccountForm'
-import { useOrder } from '@/hooks/useOrder'
+import { usePayment, useRefundAccount, useUpdateRefundAccount } from '@/hooks/useOrder'
 import {
   ActionIcon,
   Button,
@@ -37,10 +37,10 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   const [checkoutOrderRaw] = useLocalStorage({ key: 'checkout_order' })
   const checkoutOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
 
-  const { mutate: payment, isPending: isLoadingSubmit } = useOrder.payment()
-  const { data: refundAccount, isLoading: isLoadingRefundAccount } = useOrder.refundAccount()
+  const { mutate: payment, isPending: isLoadingSubmit } = usePayment()
+  const { data: refundAccount, isLoading: isLoadingRefundAccount } = useRefundAccount()
   const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
-    useOrder.updateRefundAccount()
+    useUpdateRefundAccount()
 
   const form = useForm<FormValues>({
     initialValues: {
@@ -86,11 +86,9 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
     }
   }, [refundAccount])
 
-  console.log('🚀 ~ StepPayment ~ form:', form.errors)
 
   const handleSubmit = useCallback(
     (values: FormValues) => {
-      console.log("🚀 ~ StepPayment ~ values:", values)
       if (!values.proof) return
 
       if (!checkoutOrder) {

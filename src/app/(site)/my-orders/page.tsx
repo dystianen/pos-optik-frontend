@@ -1,6 +1,8 @@
 'use client'
-import { OrderCard } from '@/components/Order/OrderCard'
-import { useOrder } from '@/hooks/useOrder'
+import dynamic from 'next/dynamic'
+
+const OrderCard = dynamic(() => import('@/components/Order/OrderCard').then(mod => mod.OrderCard), { ssr: false })
+import { useOrders } from '@/hooks/useOrder'
 import {
   Box,
   Center,
@@ -28,7 +30,7 @@ export default function OrdersPage() {
     defaultValue: 'all'
   })
 
-  const { data, isLoading } = useOrder.orders({ statusId: orderTab })
+  const { data, isLoading } = useOrders({ statusId: orderTab })
 
   return (
     <Container size="xl" py="xl" mt={60}>

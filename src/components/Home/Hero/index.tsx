@@ -63,9 +63,10 @@ const Hero = () => {
           <div className="col-span-6 flex justify-center">
             <Image
               src={`${getImagePrefix()}images/banner/mahila.png`}
-              alt="nothing"
+              alt="Hero image"
               width={1000}
               height={805}
+              priority
             />
           </div>
         </div>

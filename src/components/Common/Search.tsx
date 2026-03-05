@@ -1,4 +1,4 @@
-import { useProducts } from '@/hooks/useProducts'
+import { useGetSearchProduct } from '@/hooks/useProducts'
 import { formatCurrency, formatSlug } from '@/utils/format'
 import {
   ActionIcon,
@@ -22,7 +22,7 @@ const Search = () => {
   const [debouncedSearch] = useDebouncedValue(search, 300)
   const [opened, { toggle }] = useDisclosure(false)
 
-  const { data: products } = useProducts.getSearchProduct({
+  const { data: products } = useGetSearchProduct({
     q: debouncedSearch
   })
 

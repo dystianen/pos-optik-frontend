@@ -1,4 +1,4 @@
-import { useOrder } from '@/hooks/useOrder'
+import { useSubmitOrder } from '@/hooks/useOrder'
 import { TSummaryOrders } from '@/types/order'
 import { formatCurrency } from '@/utils/format'
 import { Box, Button, Card, Divider, Group, LoadingOverlay, Stack, Text } from '@mantine/core'
@@ -19,7 +19,7 @@ const StepSummaryOrder = ({
 }) => {
   const csaId = readLocalStorageValue<string>({ key: 'csaId' })
   const [, setCheckoutOrder] = useLocalStorage({ key: 'checkout_order' })
-  const { mutate: submitOrder, isPending: isLoadingSubmit } = useOrder.submit()
+  const { mutate: submitOrder, isPending: isLoadingSubmit } = useSubmitOrder()
 
   const handleSubmitOrders = () => {
     submitOrder(csaId, {

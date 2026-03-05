@@ -1,6 +1,6 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
-import { useAuth } from '@/hooks/useAuth'
+import { useRegister } from '@/hooks/useAuth'
 import { Button, Group, Select, Stack, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
@@ -13,7 +13,7 @@ const SignUp = () => {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
-  const { mutate: submitRegister } = useAuth.register()
+  const { mutate: submitRegister } = useRegister()
 
   const form = useForm({
     mode: 'uncontrolled',
