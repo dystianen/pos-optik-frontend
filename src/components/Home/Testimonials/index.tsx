@@ -6,7 +6,7 @@ import React from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { TestimonialData } from "@/app/api/data";
-import { getImagePrefix } from "@/utils/util";
+import { getImagePrefix } from "@/utils/general";
 
 const Testimonial = () => {
 

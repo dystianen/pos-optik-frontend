@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { getImagePrefix } from "@/utils/util";
+import { getImagePrefix } from "@/utils/general";
 
 const NotFound = () => {
   return (

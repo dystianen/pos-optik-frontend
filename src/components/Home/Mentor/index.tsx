@@ -1,6 +1,6 @@
 'use client'
 import { MentorData } from '@/app/api/data'
-import { getImagePrefix } from '@/utils/util'
+import { getImagePrefix } from '@/utils/general'
 import Image from 'next/image'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick-theme.css'

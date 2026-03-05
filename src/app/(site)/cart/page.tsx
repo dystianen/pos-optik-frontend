@@ -1,8 +1,8 @@
 'use client'
 
-import CardCart from '@/components/Common/CardCart'
-import CardCartSkeleton from '@/components/Common/Skeleton/CardCartSkeleton'
-import { useCart } from '@/hooks/useCart'
+import CardCart from '@/components/ui/CardCart'
+import CardCartSkeleton from '@/components/ui/Skeleton/CardCartSkeleton'
+import { useCart } from '@/features/cart/hooks'
 import { formatCurrency } from '@/utils/format'
 import {
   Badge,

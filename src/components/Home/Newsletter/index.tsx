@@ -1,4 +1,4 @@
-import { getImagePrefix } from '@/utils/util'
+import { getImagePrefix } from '@/utils/general'
 import Image from 'next/image'
 
 const Newsletter = () => {

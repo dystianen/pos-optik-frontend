@@ -1,8 +1,8 @@
 'use client'
 
-import CardProduct from '@/components/Common/CardProduct'
-import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
-import { useGetNewEyeWear } from '@/hooks/useProducts'
+import CardProduct from '@/components/ui/CardProduct'
+import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
+import { useNewEyeWear } from '@/features/product/hooks'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
@@ -13,7 +13,7 @@ const NewEyewear = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: products, isLoading } = useGetNewEyeWear({ search: debouncedSearch })
+  const { data: products, isLoading } = useNewEyeWear({ search: debouncedSearch })
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">

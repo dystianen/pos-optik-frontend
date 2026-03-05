@@ -1,4 +1,4 @@
-import { getImagePrefix } from '@/utils/util'
+import { getImagePrefix } from '@/utils/general'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import Image from 'next/image'
 

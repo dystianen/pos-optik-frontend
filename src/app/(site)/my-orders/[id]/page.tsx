@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic'
 
-const CancelOrderModal = dynamic(() => import('@/components/Order/CancelOrderModal').then(mod => mod.CancelOrderModal), { ssr: false })
-const RefundModal = dynamic(() => import('@/components/Order/RefundModal').then(mod => mod.RefundModal), { ssr: false })
-import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount } from '@/hooks/useOrder'
+const CancelOrderModal = dynamic(() => import('@/features/order/components/CancelOrderModal').then(mod => mod.CancelOrderModal), { ssr: false })
+const RefundModal = dynamic(() => import('@/features/order/components/RefundModal').then(mod => mod.RefundModal), { ssr: false })
+import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount } from '@/features/order/hooks'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   ActionIcon,

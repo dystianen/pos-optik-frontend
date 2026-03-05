@@ -1,8 +1,8 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-const OrderCard = dynamic(() => import('@/components/Order/OrderCard').then(mod => mod.OrderCard), { ssr: false })
-import { useOrders } from '@/hooks/useOrder'
+const OrderCard = dynamic(() => import('@/features/order/components/OrderCard').then(mod => mod.OrderCard), { ssr: false })
+import { useOrders } from '@/features/order/hooks'
 import {
   Box,
   Center,

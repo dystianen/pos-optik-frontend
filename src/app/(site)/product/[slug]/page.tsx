@@ -1,8 +1,8 @@
 'use client'
-import CardProduct from '@/components/Common/CardProduct'
-import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
-import { useMenu } from '@/hooks/useMenu'
-import { useGetProduct } from '@/hooks/useProducts'
+import CardProduct from '@/components/ui/CardProduct'
+import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
+import { useMenu } from '@/features/menu/hooks'
+import { useProduct } from '@/features/product/hooks'
 import { formatLabel } from '@/utils/format'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
@@ -53,10 +53,9 @@ const Products = () => {
   }, [search])
 
   // Hanya fetch products setelah category tersedia
-  const { data: products, isLoading } = useGetProduct({
+  const { data: products, isLoading } = useProduct({
     category: category?.category_id ?? null,
-    search: debouncedSearch,
-    enabled: !!category
+    search: debouncedSearch
   })
 
   return (

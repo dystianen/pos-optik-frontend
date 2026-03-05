@@ -1,14 +1,14 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-const CartLensForm = dynamic(() => import('@/components/Cart/CartLensForm'), { ssr: false })
+const CartLensForm = dynamic(() => import('@/features/cart/components/CartLensForm'), { ssr: false })
 const ModalAuthentication = dynamic(() => import('@/components/Modal/ModalAuthentication'), { ssr: false })
 import SectionCarousel from '@/components/Home/SectionCarousel'
-import { ProductDetailSkeleton } from '@/components/Common/Skeleton/ProductDetailSkeleton'
-import { useAddToCart } from '@/hooks/useCart'
-import { useGetProductAttribute, useGetProductDetail, useGetRecommendations } from '@/hooks/useProducts'
-import type { PrescriptionPayload } from '@/types/cart'
-import { TGalleryDetail, Variant } from '@/types/product'
+import { ProductDetailSkeleton } from '@/components/ui/Skeleton/ProductDetailSkeleton'
+import { useAddCart } from '@/features/cart/hooks'
+import { useProductAttribute, useProductDetail, useRecommendations } from '@/features/product/hooks'
+import type { PrescriptionPayload } from '@/features/cart/types'
+import type { TGalleryDetail, Variant } from '@/features/product/types'
 import { formatCurrency } from '@/utils/format'
 import {
   Badge,
@@ -55,11 +55,11 @@ const ProductDetail = () => {
     type: 'none'
   })
 
-  const { data: product, isLoading: isLoadingPage } = useGetProductDetail(productId)
-  const { data: attributes } = useGetProductAttribute(productId || '')
-  const { mutate: addToCart } = useAddToCart()
+  const { data: product, isLoading: isLoadingPage } = useProductDetail(productId)
+  const { data: attributes } = useProductAttribute(productId || '')
+  const { mutate: addToCart } = useAddCart()
   const { data: recommendations, isLoading: isLoadingRecommendations } =
-    useGetRecommendations({ productId, limit: 10 })
+    useRecommendations({ productId, limit: 10 })
 
   useEffect(() => {
     setSelectedVariant(null)

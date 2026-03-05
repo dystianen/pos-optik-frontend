@@ -1,11 +1,11 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-const Search = dynamic(() => import('@/components/Common/Search'), { ssr: false })
-const Cart = dynamic(() => import('@/components/Common/ShoppingCart'), { ssr: false })
-const Wishlist = dynamic(() => import('@/components/Common/Wishlist'), { ssr: false })
-import { useMenu } from '@/hooks/useMenu'
-import { TUser } from '@/types/auth'
+const Search = dynamic(() => import('@/components/ui/Search'), { ssr: false })
+const Cart = dynamic(() => import('@/components/ui/ShoppingCart'), { ssr: false })
+const Wishlist = dynamic(() => import('@/components/ui/Wishlist'), { ssr: false })
+import { useMenu } from '@/features/menu/hooks'
+import { TUser } from '@/features/auth/types'
 import { removeTokens } from '@/utils/auth-server'
 import { Group, Menu, Skeleton, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'

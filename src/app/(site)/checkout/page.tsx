@@ -1,14 +1,14 @@
 'use client'
 import dynamic from 'next/dynamic'
 
-const StepPayment = dynamic(() => import('@/components/Checkout/StepPayment'), { ssr: false })
-const StepPaymentConfirmation = dynamic(() => import('@/components/Checkout/StepPaymentConfirmation'), { ssr: false })
-const StepResultPayment = dynamic(() => import('@/components/Checkout/StepResultPayment'), { ssr: false })
-const StepSummaryOrder = dynamic(() => import('@/components/Checkout/StepSummaryOrder'), { ssr: false })
-import { useSummaryOrders } from '@/hooks/useOrder'
-import { useGetAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/hooks/useShipping'
-import { TSummaryOrders } from '@/types/order'
-import { TCustomerShipping, TReqCustomerShipping } from '@/types/shipping'
+const StepPayment = dynamic(() => import('@/features/checkout/components/StepPayment'), { ssr: false })
+const StepPaymentConfirmation = dynamic(() => import('@/features/checkout/components/StepPaymentConfirmation'), { ssr: false })
+const StepResultPayment = dynamic(() => import('@/features/checkout/components/StepResultPayment'), { ssr: false })
+const StepSummaryOrder = dynamic(() => import('@/features/checkout/components/StepSummaryOrder'), { ssr: false })
+import { useSummaryOrders } from '@/features/order/hooks'
+import { TSummaryOrders } from '@/features/order/types'
+import { useAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/features/shipping/hooks'
+import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/types'
 import {
   Alert,
   Box,
@@ -57,7 +57,7 @@ const Orders = () => {
   })
 
   const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } =
-    useGetAllShippingAddress()
+    useAllShippingAddress()
   const { data: shippingAddress } = useGetShippingAddress(csaId)
   const { mutate: saveShippingAddress, isPending: isLoadingSave } =
     useSaveCustomerShipping()
@@ -101,7 +101,7 @@ const Orders = () => {
 
     saveShippingAddress(payload, {
       onSuccess: (res) => {
-        const id = res?.data?.id ?? csaId
+        const id = res?.csa_id ?? csaId
 
         setCsaId(id)
         setShowForm(false)

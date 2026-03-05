@@ -1,19 +1,19 @@
 'use client'
 
-import CardProduct from '@/components/Common/CardProduct'
-import CardProductSkeleton from '@/components/Common/Skeleton/CardProductSkeleton'
-import { useGetListWishlist } from '@/hooks/useProducts'
+import CardProduct from '@/components/ui/CardProduct'
+import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
+import { useWishlist } from '@/features/product/hooks'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
-const NewEyewear = () => {
+const Wishlist = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: wishlist, isLoading } = useGetListWishlist({ search: debouncedSearch })
+  const { data: wishlist, isLoading } = useWishlist({ search: debouncedSearch })
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">
@@ -61,4 +61,4 @@ const NewEyewear = () => {
   )
 }
 
-export default NewEyewear
+export default Wishlist

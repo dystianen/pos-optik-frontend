@@ -1,6 +1,6 @@
 'use client'
 
-import { useRefundStatus, useShipItem } from '@/hooks/useOrder'
+import { useRefundStatus, useShipItem } from '@/features/order/hooks'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   Button,
