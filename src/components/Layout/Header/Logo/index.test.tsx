@@ -1,6 +1,5 @@
 import { MantineProvider } from '@mantine/core'
 import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
 import Logo from './index'
 
 // We need to wrap Mantine components with MantineProvider

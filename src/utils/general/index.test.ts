@@ -1,5 +1,4 @@
-import { afterAll, beforeEach, describe, expect, it, vi } from 'vitest'
-import { embedImage } from '.'
+import { embedImage, getImagePrefix } from './index'
 
 describe('util', () => {
   const originalEnv = process.env

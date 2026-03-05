@@ -1,5 +1,4 @@
-import { describe, expect, it } from 'vitest'
-import { validateEmail } from '@/utils/validate-email'
+import { validateEmail } from './index'
 
 describe('validateEmail', () => {
   it('should return true for valid emails', () => {
