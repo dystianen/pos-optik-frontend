@@ -1,24 +1,26 @@
 'use client'
-import { TMenu } from '@/types/menu'
+import { TMenu } from '@/features/menu/types'
 import { formatSlug } from '@/utils/format'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 const HeaderLink: React.FC<{ item: TMenu }> = ({ item }) => {
-  const path = usePathname()
-
-  const isActive = path === formatSlug(item.category_name)
+  const pathname = usePathname()
+  const slug = formatSlug(item.category_name)
+  const href = `/product/${slug}`
+  const isActive = pathname === href
 
   return (
     <Link
-      href={`/product/${formatSlug(item.category_name)}`}
-      className={`text-lg hover:text-black relative ${
-        isActive
-          ? 'text-black after:absolute after:w-8 after:h-1 after:bg-primary after:rounded-full after:-bottom-1'
-          : 'text-grey'
+      href={href}
+      className={`relative py-2 text-base font-medium transition-colors duration-200 hover:text-primary ${
+        isActive ? 'text-black' : 'text-gray-500'
       }`}
     >
       {item.category_name}
+      {isActive && (
+        <span className="absolute bottom-0 left-0 h-0.5 w-full bg-primary transition-all duration-300" />
+      )}
     </Link>
   )
 }

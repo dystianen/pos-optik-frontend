@@ -11,9 +11,8 @@ import { Group, Menu, Skeleton, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
-import { headerData } from '../Header/Navigation/menuData'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
 
@@ -51,9 +50,9 @@ const Header = ({ user }: { user: TUser | null }) => {
         }`}
     >
       <div>
-        <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between">
+        <div className="container mx-auto flex items-center justify-between lg:max-w-screen-xl">
           <Logo />
-          <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
+          <nav className="hidden flex-grow items-center justify-center gap-8 lg:flex">
             {isLoadingMenu ? (
               <>
                 <Skeleton height={24} width={100} radius="sm" />
@@ -70,73 +69,70 @@ const Header = ({ user }: { user: TUser | null }) => {
             )}
           </nav>
 
-          <Group>
-            {user?.name ? (
-              <>
-                <Group gap={0}>
-                  <Search />
-                  <Wishlist />
-                  <Cart />
-                </Group>
-                <Menu width={200} position="bottom-start">
-                  <Menu.Target>
-                    <UnstyledButton>
-                      <Group gap={'xs'}>
-                        <IconUserFilled color="#1a21bc" size={28} />
-                        <Text size="lg" className="hidden md:block">
-                          {user.name}
-                        </Text>
-                      </Group>
-                    </UnstyledButton>
-                  </Menu.Target>
-                  <button
-                    onClick={() => setNavbarOpen(!navbarOpen)}
-                    className="block lg:hidden p-2 rounded-lg"
-                    aria-label="Toggle mobile menu"
-                  >
-                    <span className="block w-6 h-0.5 bg-black"></span>
-                    <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
-                    <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
-                  </button>
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="flex items-center">
+              <Search />
+              <Wishlist />
+              <Cart />
+            </div>
 
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      onClick={handleRedirectToOrders}
-                      leftSection={<IconTruckDelivery size={14} />}
-                    >
-                      My Orders
-                    </Menu.Item>
-                    <Menu.Item
-                      onClick={handleLogout}
-                      leftSection={<IconPower size={14} />}
-                      c={'red'}
-                    >
-                      Logout
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </>
+            {user?.name ? (
+              <Menu width={200} position="bottom-end" shadow="md">
+                <Menu.Target>
+                  <UnstyledButton className="p-1">
+                    <Group gap="xs">
+                      <IconUserFilled color="#1a21bc" size={24} className="md:w-[28px] md:h-[28px]" />
+                      <Text size="sm" className="hidden md:block font-medium">
+                        {user.name}
+                      </Text>
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+
+                <Menu.Dropdown>
+                  <Menu.Item
+                    onClick={handleRedirectToOrders}
+                    leftSection={<IconTruckDelivery size={16} />}
+                  >
+                    My Orders
+                  </Menu.Item>
+                  <Menu.Item
+                    onClick={handleLogout}
+                    leftSection={<IconPower size={16} />}
+                    c="red"
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             ) : (
-              <div className="flex items-center gap-4">
-                <Search />
-                <Link
-                  href="/signin"
-                  className="hidden lg:block bg-primary text-white hover:bg-primary/15 hover:text-primary px-8 py-3 rounded-full text-lg font-medium"
-                >
-                  Sign In/Sign Up
-                </Link>
-                <button
-                  onClick={() => setNavbarOpen(!navbarOpen)}
-                  className="block lg:hidden p-2 rounded-lg"
-                  aria-label="Toggle mobile menu"
-                >
-                  <span className="block w-6 h-0.5 bg-black"></span>
-                  <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
-                  <span className="block w-6 h-0.5 bg-black mt-1.5"></span>
-                </button>
-              </div>
+              <Link
+                href="/signin"
+                className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
+              >
+                Sign In
+              </Link>
             )}
-          </Group>
+
+            <button
+              onClick={() => setNavbarOpen(!navbarOpen)}
+              className="flex lg:hidden flex-col items-center justify-center w-10 h-10 gap-1.5 focus:outline-none"
+              aria-label="Toggle mobile menu"
+            >
+              <span
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? 'rotate-45 translate-y-2' : ''
+                  }`}
+              ></span>
+              <span
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? 'opacity-0' : ''
+                  }`}
+              ></span>
+              <span
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? '-rotate-45 -translate-y-2' : ''
+                  }`}
+              ></span>
+            </button>
+          </div>
         </div>
         {navbarOpen && (
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
@@ -154,7 +150,7 @@ const Header = ({ user }: { user: TUser | null }) => {
             ></button>
           </div>
           <nav className="flex flex-col items-start p-4">
-            {headerData.map((item, index) => (
+            {menu?.map((item, index) => (
               <MobileHeaderLink key={index} item={item} />
             ))}
             <div className="mt-4 flex flex-col space-y-4 w-full">
@@ -186,4 +182,4 @@ const Header = ({ user }: { user: TUser | null }) => {
   )
 }
 
-export default Header
+export default memo(Header)

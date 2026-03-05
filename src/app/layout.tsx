@@ -5,7 +5,7 @@ import Providers from '@/components/Providers'
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { Funnel_Display } from 'next/font/google'
+import { Funnel_Display, Kaushan_Script } from 'next/font/google'
 import { getUser } from '@/utils/auth-server'
 
 // Stylesheet
@@ -21,6 +21,12 @@ const font = Funnel_Display({
   weight: ['400', '500', '600', '700']
 })
 
+const logoFont = Kaushan_Script({
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--font-logo'
+})
+
 export default async function RootLayout({
   children
 }: Readonly<{
@@ -33,7 +39,7 @@ export default async function RootLayout({
       <head>
         <ColorSchemeScript />
       </head>
-      <body className={`${font.className}`}>
+      <body className={`${font.className} ${logoFont.variable}`}>
         <Providers>
           <Header user={user} />
           {children}
