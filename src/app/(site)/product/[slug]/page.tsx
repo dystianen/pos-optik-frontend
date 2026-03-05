@@ -1,15 +1,9 @@
-'use client'
-import CardProduct from '@/components/ui/CardProduct'
-import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
-import { useMenu } from '@/features/menu/hooks'
-import { useProduct } from '@/features/product/hooks'
-import { formatLabel } from '@/utils/format'
-import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
-import { useDebouncedValue } from '@mantine/hooks'
-import { IconSearch } from '@tabler/icons-react'
-import Image from 'next/image'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { Metadata } from 'next'
+import ProductsClient from './ProductsClient'
+
+type Props = {
+  params: Promise<{ slug: string }>
+}
 
 function formatCategoryName(slug: string) {
   return slug
@@ -18,92 +12,14 @@ function formatCategoryName(slug: string) {
     .join(' ')
 }
 
-const Products = () => {
-  const router = useRouter()
-  const params = useParams()
-  const searchParams = useSearchParams()
-
-  const slug = params.slug as string
-  const querySearch = searchParams.get('search') ?? ''
-
-  const { data: menu } = useMenu()
-  const category = menu?.find((item) =>
-    item.category_name.toLowerCase().includes(formatLabel(slug).toLowerCase())
-  )
-
-  const [search, setSearch] = useState(querySearch)
-  const [debouncedSearch] = useDebouncedValue(search, 300)
-
-  // Gunakan ref untuk skip effect pertama kali (saat mount)
-  const isFirstRender = useRef(true)
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      return
-    }
-
-    const urlParams = new URLSearchParams(searchParams.toString())
-    if (!search) {
-      urlParams.delete('search')
-    } else {
-      urlParams.set('search', search)
-    }
-    router.replace(`?${urlParams.toString()}`, { scroll: false })
-  }, [search])
-
-  // Hanya fetch products setelah category tersedia
-  const { data: products, isLoading } = useProduct({
-    category: category?.category_id ?? null,
-    search: debouncedSearch
-  })
-
-  return (
-    <Container size="xl" my="xl" mt={100} w="100%">
-      <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-5 sm:mb-0">
-          {formatCategoryName(slug)}
-        </h2>
-        <TextInput
-          placeholder={`Search ${formatCategoryName(slug)} ...`}
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
-          className="sm:w-72"
-          leftSection={<IconSearch size={18} />}
-        />
-      </div>
-
-      {isLoading ? (
-        <Grid>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <Grid.Col key={i} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
-              <CardProductSkeleton />
-            </Grid.Col>
-          ))}
-        </Grid>
-      ) : products && products.length > 0 ? (
-        <Grid>
-          {products.map((item, index: number) => (
-            <Grid.Col key={index} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
-              <CardProduct item={item} />
-            </Grid.Col>
-          ))}
-        </Grid>
-      ) : (
-        <Stack align="center" gap={0} h={400}>
-          <Image
-            src={'/images/product-not-found.png'}
-            width={400}
-            height={400}
-            alt="Product not found"
-          />
-          <Text c="dimmed" fz={24}>
-            Product Not Found.
-          </Text>
-        </Stack>
-      )}
-    </Container>
-  )
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  return {
+    title: formatCategoryName(slug)
+  }
 }
 
-export default Products
+export default async function Page({ params }: Props) {
+  const { slug } = await params
+  return <ProductsClient slug={slug} />
+}

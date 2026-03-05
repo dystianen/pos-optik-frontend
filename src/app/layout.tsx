@@ -6,7 +6,16 @@ import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { Funnel_Display, Kaushan_Script } from 'next/font/google'
+import type { Metadata } from 'next'
 import { getUser } from '@/utils/auth-server'
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | Optikers',
+    default: 'Optikers - Kacamata & Lensa'
+  },
+  description: 'Temukan koleksi kacamata dan lensa terbaik di Optikers.'
+}
 
 // Stylesheet
 import '@mantine/carousel/styles.css'

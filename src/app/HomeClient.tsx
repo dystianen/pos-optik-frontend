@@ -1,0 +1,73 @@
+'use client'
+import SectionCarousel from '@/components/Home/SectionCarousel'
+import { useBestSeller, useNewEyeWear } from '@/features/product/hooks'
+import { Carousel } from '@mantine/carousel'
+import { Container, Image, Stack } from '@mantine/core'
+import Autoplay from 'embla-carousel-autoplay'
+import { useRef } from 'react'
+
+export default function HomeClient() {
+  const autoplay = useRef(Autoplay({ delay: 3000 }))
+  const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useNewEyeWear({
+    limit: 10
+  })
+  const { data: bestSeller, isLoading: isLoadingBestSeller } = useBestSeller({
+    limit: 10
+  })
+
+  return (
+    <main>
+      <Stack gap={'xl'}>
+        <Container size={'xl'} mt={100}>
+          <Carousel
+            withIndicators
+            w="100%"
+            controlSize={40}
+            plugins={[autoplay.current]}
+            onMouseEnter={autoplay.current.stop}
+            onMouseLeave={() => autoplay.current.play()}
+            emblaOptions={{
+              loop: true
+            }}
+            styles={{
+              viewport: {
+                borderRadius: 15
+              },
+              control: {
+                color: 'white'
+              },
+              slide: {
+                height: 400
+              }
+            }}
+          >
+            <Carousel.Slide>
+              <Image src="/images/banner/banner-4.jpg" />
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Image src="/images/banner/banner-1.jpg" />
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Image src="/images/banner/banner-2.jpg" />
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Image src="/images/banner/banner-3.jpg" />
+            </Carousel.Slide>
+          </Carousel>
+        </Container>
+        <SectionCarousel
+          title="New Eyewear"
+          exploreTo="/new-eyewear"
+          data={newEyeWear ?? []}
+          isLoading={isLoadingNewEyeWear}
+        />
+        <SectionCarousel
+          title="Best Seller"
+          exploreTo="/best-seller"
+          data={bestSeller ?? []}
+          isLoading={isLoadingBestSeller}
+        />
+      </Stack>
+    </main>
+  )
+}
