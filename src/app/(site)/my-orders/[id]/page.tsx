@@ -316,7 +316,7 @@ export default function OrderDetailPage() {
                         </Group>
                         <Divider />
                         <Stack gap="xs">
-                          <Text fw={500}>{order.shipping.address.recipient_name}</Text>
+                          <Text fw={500} size="sm">{order.shipping.address.recipient_name}</Text>
                           <Text size="sm" c="dimmed">
                             {order.shipping.address.phone}
                           </Text>
