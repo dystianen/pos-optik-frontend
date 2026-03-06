@@ -30,14 +30,14 @@ export default function CartLensForm({ value, onChange }: CartLensFormProps) {
         }}
       >
         <Group mt="xs">
-          <Radio value="none" label="Tanpa Resep" />
-          <Radio value="manual" label="Input Manual" />
+          <Radio value="none" label="Without Prescription" />
+          <Radio value="manual" label="Manual Input" />
         </Group>
       </Radio.Group>
 
       {value.type === 'manual' && (
         <Stack mt="lg" gap="sm">
-          <Text fw={600}>OD (Mata Kanan)</Text>
+          <Text fw={600}>OD (Right Eye)</Text>
           <Group grow>
             <TextInput
               placeholder="SPH"
@@ -89,7 +89,7 @@ export default function CartLensForm({ value, onChange }: CartLensFormProps) {
             />
           </Group>
 
-          <Text fw={600}>OS (Mata Kiri)</Text>
+          <Text fw={600}>OS (Left Eye)</Text>
           <Group grow>
             <TextInput
               placeholder="SPH"
