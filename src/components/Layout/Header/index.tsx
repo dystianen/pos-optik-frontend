@@ -47,7 +47,7 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-[1000] w-full pb-5 px-3 transition-all duration-300 bg-white ${
+      className={`fixed top-0 z-[99] w-full pb-5 px-3 transition-all duration-300 bg-white ${
         sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
       }`}
     >
@@ -84,7 +84,7 @@ const Header = ({ user }: { user: TUser | null }) => {
                   width={200}
                   position="bottom-end"
                   shadow="md"
-                  styles={{ dropdown: { zIndex: 1001, borderRadius: 12 } }}
+                  styles={{ dropdown: { borderRadius: 12 } }}
                 >
                   <Menu.Target>
                     <UnstyledButton className="p-1">
