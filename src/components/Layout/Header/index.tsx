@@ -86,9 +86,9 @@ const Header = ({ user }: { user: TUser | null }) => {
                       <Group gap="xs">
                         <IconUser
                           color={theme.colors.primary[8]}
-                          size={24}
+                          size={25}
                         />
-                        <Text size="sm" className="hidden md:block font-medium">
+                        <Text className="hidden md:block font-medium">
                           {user.name}
                         </Text>
                       </Group>
