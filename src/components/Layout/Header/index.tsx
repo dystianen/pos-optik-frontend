@@ -80,7 +80,12 @@ const Header = ({ user }: { user: TUser | null }) => {
                   <Cart />
                 </div>
 
-                <Menu width={200} position="bottom-end" shadow="md">
+                <Menu
+                  width={200}
+                  position="bottom-end"
+                  shadow="md"
+                  styles={{ dropdown: { zIndex: 1001, borderRadius: 12 } }}
+                >
                   <Menu.Target>
                     <UnstyledButton className="p-1">
                       <Group gap="xs">
