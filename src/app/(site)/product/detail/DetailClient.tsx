@@ -1,13 +1,9 @@
 'use client'
-import dynamic from 'next/dynamic'
-
-const CartLensForm = dynamic(() => import('@/features/cart/components/CartLensForm'), { ssr: false })
-const ModalAuthentication = dynamic(() => import('@/components/Modal/ModalAuthentication'), { ssr: false })
 import SectionCarousel from '@/components/Home/SectionCarousel'
 import { ProductDetailSkeleton } from '@/components/ui/Skeleton/ProductDetailSkeleton'
 import { useAddCart } from '@/features/cart/hooks'
-import { useProductAttribute, useProductDetail, useRecommendations } from '@/features/product/hooks'
 import type { PrescriptionPayload } from '@/features/cart/types'
+import { useProductAttribute, useProductDetail, useRecommendations } from '@/features/product/hooks'
 import type { TGalleryDetail, Variant } from '@/features/product/types'
 import { formatCurrency } from '@/utils/format'
 import {
@@ -22,15 +18,24 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  Tooltip,
   UnstyledButton
 } from '@mantine/core'
-import Image from 'next/image'
 import { IconCircleX } from '@tabler/icons-react'
 import { clsx } from 'clsx'
 import { hasCookie } from 'cookies-next/client'
+import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+
+const CartLensForm = dynamic(() => import('@/features/cart/components/CartLensForm'), {
+  ssr: false
+})
+const ModalAuthentication = dynamic(() => import('@/components/Modal/ModalAuthentication'), {
+  ssr: false
+})
 
 type TImage = {
   url: string
@@ -55,8 +60,10 @@ const DetailClient = ({ productId }: { productId: string }) => {
   const { data: product, isLoading: isLoadingPage } = useProductDetail(productId)
   const { data: attributes } = useProductAttribute(productId || '')
   const { mutate: addToCart } = useAddCart()
-  const { data: recommendations, isLoading: isLoadingRecommendations } =
-    useRecommendations({ productId, limit: 10 })
+  const { data: recommendations, isLoading: isLoadingRecommendations } = useRecommendations({
+    productId,
+    limit: 10
+  })
 
   useEffect(() => {
     setSelectedVariant(null)
@@ -146,17 +153,18 @@ const DetailClient = ({ productId }: { productId: string }) => {
                                 p={6}
                                 withBorder
                                 className={clsx(
+                                  'card-hover',
                                   primaryImage?.url === item.url && 'border-primary'
                                 )}
                               >
                                 <div style={{ position: 'relative', height: 60, width: 60 }}>
-                                    <Image
-                                      src={item.url}
-                                      alt={item.alt_text}
-                                      fill
-                                      style={{ objectFit: 'contain' }}
-                                    />
-                                  </div>
+                                  <Image
+                                    src={item.url}
+                                    alt={item.alt_text}
+                                    fill
+                                    style={{ objectFit: 'contain' }}
+                                  />
+                                </div>
                               </Card>
                             </UnstyledButton>
                           ))}
@@ -189,9 +197,16 @@ const DetailClient = ({ productId }: { productId: string }) => {
                         </Text>
                       </Box>
 
-                      <Button mt="md" onClick={handleAddCart} loading={loading}>
-                        Add to Cart
-                      </Button>
+                      <Tooltip label="Select variant first" disabled={!!selectedVariant}>
+                        <Button
+                          mt="md"
+                          onClick={handleAddCart}
+                          disabled={!selectedVariant}
+                          loading={loading}
+                        >
+                          Add to Cart
+                        </Button>
+                      </Tooltip>
                     </Group>
 
                     <Text size="xl" fw={600} c="primary">
@@ -255,15 +270,8 @@ const DetailClient = ({ productId }: { productId: string }) => {
                                 }
 
                           return (
-                            <UnstyledButton
-                              key={index}
-                              onClick={renderProps.onClick}
-                            >
-                              <Card
-                                withBorder
-                                p={'xs'}
-                                className={renderProps.cardClass}
-                              >
+                            <UnstyledButton key={index} onClick={renderProps.onClick}>
+                              <Card withBorder p={'xs'} className={renderProps.cardClass}>
                                 <Card.Section p="md">
                                   <div style={{ position: 'relative', height: 50, width: '100%' }}>
                                     <Image

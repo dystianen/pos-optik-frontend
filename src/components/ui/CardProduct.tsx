@@ -82,7 +82,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
       <Card
         withBorder
         className={`group relative overflow-hidden transition-all duration-300 
-  ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-hover'}`}
+        ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-focus'}`}
       >
         {/* IMAGE */}
         <Card.Section onMouseEnter={handlePrefetch}>

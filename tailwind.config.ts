@@ -37,8 +37,12 @@ const config: Config = {
   plugins: [
     plugin(({ addComponents }) => {
       addComponents({
-        '.card-hover': {
+        '.card-focus': {
           '@apply cursor-pointer border border-primary transition-all duration-200 hover:-translate-y-1':
+            {}
+        },
+        '.card-hover': {
+          '@apply cursor-pointer border transition-all duration-200 hover:border-primary hover:-translate-y-1':
             {}
         }
       })
