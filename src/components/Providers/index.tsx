@@ -12,16 +12,16 @@ const theme = createTheme({
   primaryShade: 8,
   colors: {
     primary: [
-      '#ecedff',
-      '#d5d7f9',
-      '#a8abf0',
-      '#797de9',
-      '#5155e2',
-      '#393ddf',
-      '#2c30de',
-      '#1f24c5',
-      '#1a21bc',
-      '#0d1a9c'
+      "#ecfdfc",
+      "#dafaf7",
+      "#b0f5ee",
+      "#85f0e6",
+      "#66ecdf",
+      "#55eada",
+      "#4be9d8",
+      "#3dcfbf",
+      "#2fb8aa",
+      "#0d9488"
     ]
   },
   components: {

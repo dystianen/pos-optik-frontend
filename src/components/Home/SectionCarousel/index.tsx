@@ -3,7 +3,8 @@ import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
 import { TProduct } from '@/features/product/types'
 import { Carousel } from '@mantine/carousel'
-import { Container } from '@mantine/core'
+import { Container, Group, Text } from '@mantine/core'
+import { IconArrowRight } from '@tabler/icons-react'
 import Link from 'next/link'
 
 type TSectionCarousel = {
@@ -27,7 +28,10 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
             href={exploreTo}
             className="text-primary text-lg font-medium hover:tracking-widest duration-500"
           >
-            Explore &nbsp;&gt;&nbsp;
+            <Group align="center" gap={6}>
+              <Text>Explore</Text>
+              <IconArrowRight />
+            </Group>
           </Link>
         )}
       </div>

@@ -2,7 +2,7 @@
 import { TUser } from '@/features/auth/types'
 import { useMenu } from '@/features/menu/hooks'
 import { removeTokens } from '@/utils/auth-server'
-import { Group, Menu, Skeleton, Text, UnstyledButton } from '@mantine/core'
+import { Group, Menu, Skeleton, Text, UnstyledButton, useMantineTheme } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
@@ -17,6 +17,7 @@ const Cart = dynamic(() => import('@/components/ui/ShoppingCart'), { ssr: false 
 const Wishlist = dynamic(() => import('@/components/ui/Wishlist'), { ssr: false })
 
 const Header = ({ user }: { user: TUser | null }) => {
+  const theme = useMantineTheme()
   const router = useRouter()
   const [navbarOpen, setNavbarOpen] = useState(false)
   const [sticky, setSticky] = useState(false)
@@ -84,7 +85,7 @@ const Header = ({ user }: { user: TUser | null }) => {
                     <UnstyledButton className="p-1">
                       <Group gap="xs">
                         <IconUserFilled
-                          color="#1a21bc"
+                          color={theme.colors.primary[8]}
                           size={24}
                           className="md:w-[28px] md:h-[28px]"
                         />

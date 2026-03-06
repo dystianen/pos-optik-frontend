@@ -69,11 +69,11 @@ const footer = () => {
                 Timur 61374
               </h5>
             </div>
-            <div className="flex gap-2 mt-10">
+            <div className="flex gap-2 mt-6">
               <Icon icon="tabler:phone" className="text-primary text-3xl inline-block me-2" />
               <h5 className="text-lg text-black/60">+62 822-3237-4041</h5>
             </div>
-            <div className="flex gap-2 mt-10">
+            <div className="flex gap-2 mt-6">
               <Icon icon="tabler:folder" className="text-primary text-3xl inline-block me-2" />
               <h5 className="text-lg text-black/60">optik.fiqri@gmail.com</h5>
             </div>
@@ -82,15 +82,7 @@ const footer = () => {
 
         <div className="mt-10 lg:flex items-center justify-between">
           <h4 className="text-black/50 text-sm text-center lg:text-start font-normal">
-            @2025 Agency. All Rights Reserved by{' '}
-            <Link
-              href="https://getnextjstemplates.com/"
-              target="_blank"
-              className="hover:text-primary"
-            >
-              {' '}
-              GetNextJsTemplates.com
-            </Link>
+            @2025 Optik Fiqri. All Rights Reserved
           </h4>
           <div className="flex gap-5 mt-5 lg:mt-0 justify-center lg:justify-start">
             <Link href="/" className="text-black/50 text-sm font-normal hover:text-primary">
@@ -101,10 +93,10 @@ const footer = () => {
             </Link>
           </div>
           <h4 className="text-black/50 text-sm text-center lg:text-start font-normal">
-            Distributed by{' '}
-            <Link href="https://themewagon.com/" target="_blank" className="hover:text-primary">
+            Developed by{' '}
+            <Link href="https://dystianen.vercel.app/" target="_blank" className="hover:text-primary">
               {' '}
-              ThemeWagon
+              Devyus
             </Link>
           </h4>
         </div>

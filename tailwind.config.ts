@@ -17,11 +17,11 @@ const config: Config = {
         'testimonial-shadow2': '5.54348px 38.8043px 110.87px rgba(89,104,118,.15)'
       },
       colors: {
-        primary: '#1a21bc',
-        secondary: '#1a21bc',
+        primary: '#0d9488', // Teal representing clarity and lenses
+        secondary: '#0f766e', // Darker teal for contrast
         grey: '#57595f',
         slateGray: '#f6faff',
-        deepSlate: '#d5effa',
+        deepSlate: '#ecfdfc',
         success: '#43c639',
         midnight_text: '#222c44'
       },
@@ -38,7 +38,7 @@ const config: Config = {
     plugin(({ addComponents }) => {
       addComponents({
         '.card-hover': {
-          '@apply cursor-pointer border transition-all duration-200 hover:shadow-lg hover:border-primary':
+          '@apply cursor-pointer border border-primary transition-all duration-200 hover:-translate-y-1':
             {}
         }
       })
