@@ -92,14 +92,14 @@ export default function RefundProgressPage() {
 
 
   return (
-    <Container size="md" my={100} mih={800} pos="relative">
+    <Container size="lg" my={100} mih={800} pos="relative">
       <LoadingOverlay visible={isLoadingStatus} loaderProps={{ type: 'bars' }} />
 
       <Stack gap="xl">
         {/* Header */}
         <Group justify="space-between">
           <Button
-            variant="subtle"
+            variant="light"
             leftSection={<IconArrowLeft size={16} />}
             onClick={() => router.back()}
           >

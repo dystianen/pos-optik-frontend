@@ -1,10 +1,15 @@
 'use client'
 
-import dynamic from 'next/dynamic'
-
-const CancelOrderModal = dynamic(() => import('@/features/order/components/CancelOrderModal').then(mod => mod.CancelOrderModal), { ssr: false })
-const RefundModal = dynamic(() => import('@/features/order/components/RefundModal').then(mod => mod.RefundModal), { ssr: false })
-import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount, useUpdateStatus } from '@/features/order/hooks'
+import {
+  useCancelOrder,
+  useCancelStatus,
+  useDetailOrder,
+  useRefundAccount,
+  useRefundStatus,
+  useSubmitRefund,
+  useUpdateRefundAccount,
+  useUpdateStatus
+} from '@/features/order/hooks'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   ActionIcon,
@@ -22,8 +27,7 @@ import {
   Stack,
   Text,
   Title,
-  Tooltip,
-  UnstyledButton
+  Tooltip
 } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import {
@@ -35,10 +39,24 @@ import {
   IconPackage,
   IconTruck
 } from '@tabler/icons-react'
+import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+
+const CancelOrderModal = dynamic(
+  () => import('@/features/order/components/CancelOrderModal').then((mod) => mod.CancelOrderModal),
+  { ssr: false }
+)
+const RefundModal = dynamic(
+  () => import('@/features/order/components/RefundModal').then((mod) => mod.RefundModal),
+  { ssr: false }
+)
+const ReviewModal = dynamic(
+  () => import('@/features/review/components/ReviewModal').then((mod) => mod.ReviewModal),
+  { ssr: false }
+)
 
 const getStatusColor = (status: string) => {
   const statusColors: Record<string, string> = {
@@ -58,12 +76,14 @@ export default function OrderDetailPage() {
   const clipboard = useClipboard({ timeout: 1500 })
   const [openedCancel, setOpenedCancel] = useState(false)
   const [openedRefund, setOpenedRefund] = useState(false)
+  const [openedReview, setOpenedReview] = useState(false)
 
   const { data: order, isLoading } = useDetailOrder(id)
   const { mutate: cancelOrder } = useCancelOrder()
   const { mutateAsync: submitRefund } = useSubmitRefund()
   const { data: refundAccounts } = useRefundAccount()
-  const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } = useUpdateRefundAccount()
+  const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
+    useUpdateRefundAccount()
   const { mutate: completeOrder, isPending: isCompletingOrder } = useUpdateStatus()
   // Determine request type based on order status
   const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation']
@@ -79,7 +99,8 @@ export default function OrderDetailPage() {
   const { data: refundStatusData } = useRefundStatus(id)
   const { data: cancelStatusData } = useCancelStatus(id)
 
-  const refundStatus = requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
+  const refundStatus =
+    requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
 
   const handleCancelOrder = (payload: any) => {
     cancelOrder(payload, {
@@ -124,6 +145,7 @@ export default function OrderDetailPage() {
       {
         onSuccess: () => {
           toast.success('Pesanan berhasil diselesaikan')
+          setOpenedReview(true)
         },
         onError: (err: any) => {
           toast.error(err?.message || 'Gagal menyelesaikan pesanan')
@@ -238,11 +260,13 @@ export default function OrderDetailPage() {
       <Stack gap="lg">
         {/* Header */}
         <Group>
-          <UnstyledButton size="md" onClick={() => router.back()}>
-            <Group gap={'xs'} c={'primary'}>
-              <IconArrowLeft size={24} /> Back
-            </Group>
-          </UnstyledButton>
+          <Button
+            variant="light"
+            leftSection={<IconArrowLeft size={16} />}
+            onClick={() => router.back()}
+          >
+            Back
+          </Button>
         </Group>
 
         <Box pos={'relative'} mih={400}>
@@ -316,7 +340,9 @@ export default function OrderDetailPage() {
                         </Group>
                         <Divider />
                         <Stack gap="xs">
-                          <Text fw={500} size="sm">{order.shipping.address.recipient_name}</Text>
+                          <Text fw={500} size="sm">
+                            {order.shipping.address.recipient_name}
+                          </Text>
                           <Text size="sm" c="dimmed">
                             {order.shipping.address.phone}
                           </Text>
@@ -483,14 +509,14 @@ export default function OrderDetailPage() {
                     {order.status_code === 'shipped' && !refundStatus?.has_request && (
                       <Button
                         fullWidth
-                        color="teal"
+                        color="primary"
                         loading={isCompletingOrder}
                         onClick={handleCompleteOrder}
                       >
                         Complete Order
                       </Button>
                     )}
-                    
+
                     {requestStatusInfo && requestType && (
                       <Tooltip label={requestStatusInfo.tooltip} withArrow>
                         <Button
@@ -513,7 +539,7 @@ export default function OrderDetailPage() {
                       </Tooltip>
                     )}
 
-                    {refundStatus?.has_request && refundStatus.status === 'approved' && (
+                    {refundStatus?.has_request && refundStatus.status === 'return_approved' && (
                       <Button
                         variant="light"
                         fullWidth
@@ -547,6 +573,10 @@ export default function OrderDetailPage() {
           isLoadingUpdate={isLoadingUpdateRefundAccount}
           onUpdateRefundAccount={handleUpdateRefundAccount}
         />
+      )}
+
+      {order && (
+        <ReviewModal opened={openedReview} onClose={() => setOpenedReview(false)} order={order} />
       )}
     </Container>
   )

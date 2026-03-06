@@ -47,5 +47,9 @@ export const API_ROUTES = {
     BASE: '/shipping-address',
     ADDRESS: '/shipping-address',
     SAVE: '/shipping-address/save'
+  },
+  REVIEWS: {
+    BASE: '/reviews',
+    PRODUCT: (id: string) => `/reviews/product/${id}`
   }
 }

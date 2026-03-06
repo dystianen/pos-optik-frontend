@@ -30,6 +30,9 @@ const removeTokens = async () => {
   cookieStore.delete('accessToken')
   cookieStore.delete('refreshToken')
   cookieStore.delete('user')
+  cookieStore.delete('csaId')
+  cookieStore.delete('orderTab')
+  cookieStore.delete('step')
 }
 
 const setUser = async (data: string) => {

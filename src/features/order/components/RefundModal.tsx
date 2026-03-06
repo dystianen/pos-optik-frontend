@@ -1,13 +1,14 @@
 'use client'
 
-import { Order, RefundAccount, RefundType } from '@/features/order/types'
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/ui/RefundAccountForm'
+import { Order, RefundAccount, RefundType } from '@/features/order/types'
 import { formatCurrency } from '@/utils/format'
 import {
   Button,
   Card,
   Checkbox,
   Divider,
+  FileInput,
   Group,
   Image,
   Modal,
@@ -15,8 +16,7 @@ import {
   Select,
   Stack,
   Text,
-  Textarea,
-  FileInput
+  Textarea
 } from '@mantine/core'
 import { useMemo, useState } from 'react'
 
@@ -222,7 +222,14 @@ export function RefundModal({
 
         {/* Full Refund - Summary */}
         {refundType === 'full' && (
-          <Card padding="md" bg="blue.0">
+          <Card
+            withBorder
+            p="md"
+            style={{
+              borderColor: 'var(--mantine-color-primary-6)',
+              backgroundColor: 'var(--mantine-color-primary-0)'
+            }}
+          >
             <Group justify="space-between">
               <Text fw={500}>Total Refund Amount:</Text>
               <Text fw={700} size="lg" c="primary">
@@ -271,7 +278,7 @@ export function RefundModal({
           refundAccount={refundAccounts}
           isLoadingFetch={false}
           isLoadingUpdate={isLoadingUpdate}
-          onUpdate={onUpdateRefundAccount || (() => { })}
+          onUpdate={onUpdateRefundAccount || (() => {})}
           subtitle="Bank account for refund"
         />
 

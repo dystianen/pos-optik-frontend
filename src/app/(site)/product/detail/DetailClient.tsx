@@ -5,6 +5,7 @@ import { useAddCart } from '@/features/cart/hooks'
 import type { PrescriptionPayload } from '@/features/cart/types'
 import { useProductAttribute, useProductDetail, useRecommendations } from '@/features/product/hooks'
 import type { TGalleryDetail, Variant } from '@/features/product/types'
+import { ReviewSection } from '@/features/review/components/ReviewSection'
 import { formatCurrency } from '@/utils/format'
 import {
   Badge,
@@ -225,6 +226,10 @@ const DetailClient = ({ productId }: { productId: string }) => {
                       ))}
                     </Stack>
                   </Box>
+
+                  <Divider my="xl" />
+
+                  <ReviewSection productId={productId} />
                 </Card>
               )}
             </Grid.Col>
