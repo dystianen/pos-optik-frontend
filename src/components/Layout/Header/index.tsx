@@ -1,20 +1,20 @@
 'use client'
-import dynamic from 'next/dynamic'
-
-const Search = dynamic(() => import('@/components/ui/Search'), { ssr: false })
-const Cart = dynamic(() => import('@/components/ui/ShoppingCart'), { ssr: false })
-const Wishlist = dynamic(() => import('@/components/ui/Wishlist'), { ssr: false })
-import { useMenu } from '@/features/menu/hooks'
 import { TUser } from '@/features/auth/types'
+import { useMenu } from '@/features/menu/hooks'
 import { removeTokens } from '@/utils/auth-server'
 import { Group, Menu, Skeleton, Text, UnstyledButton } from '@mantine/core'
 import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { memo, useCallback, useEffect, useState } from 'react'
 import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
+
+const Search = dynamic(() => import('@/components/ui/Search'), { ssr: false })
+const Cart = dynamic(() => import('@/components/ui/ShoppingCart'), { ssr: false })
+const Wishlist = dynamic(() => import('@/components/ui/Wishlist'), { ssr: false })
 
 const Header = ({ user }: { user: TUser | null }) => {
   const router = useRouter()
@@ -46,8 +46,9 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
-        }`}
+      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
+        sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
+      }`}
     >
       <div>
         <div className="container mx-auto flex items-center justify-between lg:max-w-screen-xl">
@@ -70,48 +71,53 @@ const Header = ({ user }: { user: TUser | null }) => {
           </nav>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <div className="flex items-center">
-              <Search />
-              <Wishlist />
-              <Cart />
-            </div>
-
             {user?.name ? (
-              <Menu width={200} position="bottom-end" shadow="md">
-                <Menu.Target>
-                  <UnstyledButton className="p-1">
-                    <Group gap="xs">
-                      <IconUserFilled color="#1a21bc" size={24} className="md:w-[28px] md:h-[28px]" />
-                      <Text size="sm" className="hidden md:block font-medium">
-                        {user.name}
-                      </Text>
-                    </Group>
-                  </UnstyledButton>
-                </Menu.Target>
+              <>
+                <div className="flex items-center">
+                  <Search />
+                  <Wishlist />
+                  <Cart />
+                </div>
 
-                <Menu.Dropdown>
-                  <Menu.Item
-                    onClick={handleRedirectToOrders}
-                    leftSection={<IconTruckDelivery size={16} />}
-                  >
-                    My Orders
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={handleLogout}
-                    leftSection={<IconPower size={16} />}
-                    c="red"
-                  >
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+                <Menu width={200} position="bottom-end" shadow="md">
+                  <Menu.Target>
+                    <UnstyledButton className="p-1">
+                      <Group gap="xs">
+                        <IconUserFilled
+                          color="#1a21bc"
+                          size={24}
+                          className="md:w-[28px] md:h-[28px]"
+                        />
+                        <Text size="sm" className="hidden md:block font-medium">
+                          {user.name}
+                        </Text>
+                      </Group>
+                    </UnstyledButton>
+                  </Menu.Target>
+
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={handleRedirectToOrders}
+                      leftSection={<IconTruckDelivery size={16} />}
+                    >
+                      My Orders
+                    </Menu.Item>
+                    <Menu.Item onClick={handleLogout} leftSection={<IconPower size={16} />} c="red">
+                      Logout
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </>
             ) : (
-              <Link
-                href="/signin"
-                className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
-              >
-                Sign In
-              </Link>
+              <div className="flex items-center gap-4">
+                <Search />
+                <Link
+                  href="/signin"
+                  className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
+                >
+                  Sign In
+                </Link>
+              </div>
             )}
 
             <button
@@ -120,16 +126,19 @@ const Header = ({ user }: { user: TUser | null }) => {
               aria-label="Toggle mobile menu"
             >
               <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? 'rotate-45 translate-y-2' : ''
-                  }`}
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
+                  navbarOpen ? 'rotate-45 translate-y-2' : ''
+                }`}
               ></span>
               <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? 'opacity-0' : ''
-                  }`}
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
+                  navbarOpen ? 'opacity-0' : ''
+                }`}
               ></span>
               <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${navbarOpen ? '-rotate-45 -translate-y-2' : ''
-                  }`}
+                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
+                  navbarOpen ? '-rotate-45 -translate-y-2' : ''
+                }`}
               ></span>
             </button>
           </div>
@@ -138,8 +147,9 @@ const Header = ({ user }: { user: TUser | null }) => {
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
         )}
         <div
-          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${navbarOpen ? 'translate-x-0' : 'translate-x-full'
-            } z-50`}
+          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
+            navbarOpen ? 'translate-x-0' : 'translate-x-full'
+          } z-50`}
         >
           <div className="flex items-center justify-between p-4">
             <Logo />

@@ -14,7 +14,7 @@ import {
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
 import { useRouter } from 'nextjs-toploader/app'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 const Search = () => {
   const router = useRouter()
@@ -24,26 +24,32 @@ const Search = () => {
 
   const { data: products } = useSearchProduct(debouncedSearch)
 
-  const productLookup =
-    products
-      ?.flatMap((cat: any) => cat.products)
-      .reduce((acc: any, product: any) => {
-        acc[product.product_name] = {
-          image: product.product_image_url,
-          price: product.product_price,
-          product_id: product.product_id
-        }
-        return acc
-      }, {}) ?? {}
+  const productLookup = useMemo(
+    () =>
+      products
+        ?.flatMap((cat: any) => cat.products)
+        .reduce((acc: any, product: any) => {
+          acc[product.product_name] = {
+            image: product.product_image_url,
+            price: product.product_price,
+            product_id: product.product_id
+          }
+          return acc
+        }, {}) ?? {},
+    [products]
+  )
 
-  const autocompleteData =
-    products?.flatMap((category: any) =>
-      category.products.map((product: any) => ({
-        value: product.product_name,
-        group: category.category_name,
-        category_name: category.category_name
-      }))
-    ) ?? []
+  const autocompleteData = useMemo(
+    () =>
+      products?.flatMap((category: any) =>
+        category.products.map((product: any) => ({
+          value: product.product_name,
+          group: category.category_name,
+          category_name: category.category_name
+        }))
+      ) ?? [],
+    [products]
+  )
 
   const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({ option }) => {
     const product = productLookup[option.value]
