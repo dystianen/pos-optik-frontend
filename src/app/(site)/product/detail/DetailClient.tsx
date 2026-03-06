@@ -132,187 +132,197 @@ const DetailClient = ({ productId }: { productId: string }) => {
       : ''
 
   return (
-    <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
-      {isLoadingPage ? (
-        <ProductDetailSkeleton />
-      ) : (
-        <>
-          <Text fw={600} fz={'h3'} mb={'sm'}>
-            Product Details
-          </Text>
-          <Grid>
-            <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
-              {product && (
-                <Card withBorder padding="lg" w={'100%'}>
-                  <Card.Section>
-                    <Grid>
-                      <Grid.Col span={{ md: 2 }}>
-                        <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
-                          {galleryImage.map((item, index) => (
-                            <UnstyledButton key={index} onClick={() => handleSelectGallery(item)}>
-                              <Card
-                                p={6}
-                                withBorder
-                                className={clsx(
-                                  'card-hover',
-                                  primaryImage?.url === item.url && 'border-primary'
-                                )}
-                              >
-                                <div style={{ position: 'relative', height: 60, width: 60 }}>
-                                  <Image
-                                    src={item.url}
-                                    alt={item.alt_text}
-                                    fill
-                                    style={{ objectFit: 'contain' }}
-                                  />
-                                </div>
-                              </Card>
-                            </UnstyledButton>
-                          ))}
-                        </Stack>
-                      </Grid.Col>
-                      <Grid.Col span={{ md: 10 }}>
-                        {primaryImage.url !== '' && (
-                          <div style={{ position: 'relative', height: 400, width: '100%' }}>
-                            <Image
-                              src={primaryImage.url}
-                              alt={primaryImage.alt_text}
-                              fill
-                              style={{ objectFit: 'contain' }}
-                              priority
-                            />
-                          </div>
-                        )}
-                      </Grid.Col>
-                    </Grid>
-                  </Card.Section>
-
-                  <Box mt={'md'}>
-                    <Group justify="space-between">
-                      <Box>
-                        <Text fw={600} c="primary" style={{ textTransform: 'uppercase' }}>
-                          {product.product_brand}
-                        </Text>
-                        <Text fw={500}>
-                          {product.product_name} {variantLabel}
-                        </Text>
-                      </Box>
-
-                      <Tooltip label="Select variant first" disabled={!!selectedVariant}>
-                        <Button
-                          mt="md"
-                          onClick={handleAddCart}
-                          disabled={!selectedVariant}
-                          loading={loading}
-                        >
-                          Add to Cart
-                        </Button>
-                      </Tooltip>
-                    </Group>
-
-                    <Text size="xl" fw={600} c="primary">
-                      {formatCurrency(price)}
-                    </Text>
-
-                    <Stack mt={'lg'} gap={'xs'}>
-                      <Text size="sm" fw={500}>
-                        Product Description
-                      </Text>
-
-                      {attributes?.map((attr) => (
-                        <Text size="sm" c="dimmed" key={attr.attribute_id}>
-                          {attr.attribute_name} : {attr.values.join(', ')}
-                        </Text>
-                      ))}
-                    </Stack>
-                  </Box>
-
-                  <Divider my="xl" />
-
-                  <ReviewSection productId={productId} />
-                </Card>
-              )}
-            </Grid.Col>
-            <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
-              <Stack gap={'md'}>
-                {variants.length > 0 ? (
-                  <>
-                    <Card withBorder>
-                      <Text fw={600} fz="lg" mb="sm">
-                        Product Variants
-                      </Text>
-                      <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
-                        {variants.map((item, index) => {
-                          const renderProps =
-                            Number(item.stock) === 0
-                              ? {
-                                  className: '',
-                                  cardClass: 'opacity-50 cursor-not-allowed',
-                                  badge: (
-                                    <Badge
-                                      size="sm"
-                                      color="red"
-                                      variant="light"
-                                      leftSection={<IconCircleX size={14} />}
-                                    >
-                                      Out of Stock
-                                    </Badge>
-                                  ),
-                                  onClick: undefined
-                                }
-                              : {
-                                  className: 'card-hover',
-                                  cardClass: clsx(
+    <>
+      <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
+        {isLoadingPage ? (
+          <ProductDetailSkeleton />
+        ) : (
+          <>
+            <Text fw={600} fz={'h3'} mb={'sm'}>
+              Product Details
+            </Text>
+            <Grid>
+              <Grid.Col span={{ base: 12, md: 8, lg: 8 }}>
+                {product && (
+                  <Card withBorder padding="lg" w={'100%'}>
+                    <Card.Section>
+                      <Grid>
+                        <Grid.Col span={{ md: 2 }}>
+                          <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
+                            {galleryImage.map((item, index) => (
+                              <UnstyledButton key={index} onClick={() => handleSelectGallery(item)}>
+                                <Card
+                                  p={6}
+                                  withBorder
+                                  className={clsx(
                                     'card-hover',
-                                    primaryImage?.url === item.image.url && 'border-primary'
-                                  ),
-                                  badge: (
-                                    <Badge size="sm" color="green" variant="light">
-                                      Stok: {item.stock}
-                                    </Badge>
-                                  ),
-                                  onClick: () => handleSelectVariant(item)
-                                }
-
-                          return (
-                            <UnstyledButton key={index} onClick={renderProps.onClick}>
-                              <Card withBorder p={'xs'} className={renderProps.cardClass}>
-                                <Card.Section p="md">
-                                  <div style={{ position: 'relative', height: 50, width: '100%' }}>
+                                    primaryImage?.url === item.url && 'border-primary'
+                                  )}
+                                >
+                                  <div style={{ position: 'relative', height: 60, width: 60 }}>
                                     <Image
-                                      src={item.image.url}
-                                      alt={item.image.alt_text}
+                                      src={item.url}
+                                      alt={item.alt_text}
                                       fill
                                       style={{ objectFit: 'contain' }}
                                     />
                                   </div>
-                                </Card.Section>
-                                <Stack gap={2}>
-                                  <Text fz={'10'} lineClamp={1} mt={'xs'}>
-                                    {item.variant_name}
-                                  </Text>
-                                  <Text fz={'10'} c="primary">
-                                    {formatCurrency(item.price)}
-                                  </Text>
-                                  <Box>{renderProps.badge}</Box>
-                                </Stack>
-                              </Card>
-                            </UnstyledButton>
-                          )
-                        })}
-                      </SimpleGrid>
-                    </Card>
+                                </Card>
+                              </UnstyledButton>
+                            ))}
+                          </Stack>
+                        </Grid.Col>
+                        <Grid.Col span={{ md: 10 }}>
+                          {primaryImage.url !== '' && (
+                            <div style={{ position: 'relative', height: 400, width: '100%' }}>
+                              <Image
+                                src={primaryImage.url}
+                                alt={primaryImage.alt_text}
+                                fill
+                                style={{ objectFit: 'contain' }}
+                                priority
+                              />
+                            </div>
+                          )}
+                        </Grid.Col>
+                      </Grid>
+                    </Card.Section>
 
-                    <Divider my="sm" />
-                  </>
-                ) : null}
+                    <Box mt={'md'}>
+                      <Group justify="space-between">
+                        <Box>
+                          <Text fw={600} c="primary" style={{ textTransform: 'uppercase' }}>
+                            {product.product_brand}
+                          </Text>
+                          <Text fw={500}>
+                            {product.product_name} {variantLabel}
+                          </Text>
+                        </Box>
 
-                <CartLensForm value={prescription} onChange={setPrescription} />
-              </Stack>
-            </Grid.Col>
-          </Grid>
-        </>
-      )}
+                        <Tooltip label="Select variant first" disabled={!!selectedVariant}>
+                          <Button
+                            mt="md"
+                            onClick={handleAddCart}
+                            disabled={!selectedVariant}
+                            loading={loading}
+                          >
+                            Add to Cart
+                          </Button>
+                        </Tooltip>
+                      </Group>
+
+                      <Text size="xl" fw={600} c="primary">
+                        {formatCurrency(price)}
+                      </Text>
+
+                      <Stack mt={'lg'} gap={'xs'}>
+                        <Text size="sm" fw={500}>
+                          Product Description
+                        </Text>
+
+                        {attributes?.map((attr) => (
+                          <Text size="sm" c="dimmed" key={attr.attribute_id}>
+                            {attr.attribute_name} : {attr.values.join(', ')}
+                          </Text>
+                        ))}
+                      </Stack>
+                    </Box>
+
+                    <Divider my="xl" />
+
+                    <ReviewSection productId={productId} />
+                  </Card>
+                )}
+              </Grid.Col>
+              <Grid.Col span={{ base: 12, md: 4, lg: 4 }}>
+                <Stack gap={'md'}>
+                  {variants.length > 0 ? (
+                    <>
+                      <Card withBorder>
+                        <Text fw={600} fz="lg" mb="sm">
+                          Product Variants
+                        </Text>
+                        <SimpleGrid cols={{ base: 3, sm: 5, md: 3 }} mt={'sm'}>
+                          {variants.map((item, index) => {
+                            const renderProps =
+                              Number(item.stock) === 0
+                                ? {
+                                    className: '',
+                                    cardClass: 'opacity-50 cursor-not-allowed',
+                                    badge: (
+                                      <Badge
+                                        size="sm"
+                                        color="red"
+                                        variant="light"
+                                        leftSection={<IconCircleX size={14} />}
+                                      >
+                                        Out of Stock
+                                      </Badge>
+                                    ),
+                                    onClick: undefined
+                                  }
+                                : {
+                                    className: 'card-hover',
+                                    cardClass: clsx(
+                                      'card-hover',
+                                      primaryImage?.url === item.image.url && 'border-primary'
+                                    ),
+                                    badge: (
+                                      <Badge size="sm" color="green" variant="light">
+                                        Stok: {item.stock}
+                                      </Badge>
+                                    ),
+                                    onClick: () => handleSelectVariant(item)
+                                  }
+
+                            return (
+                              <UnstyledButton key={index} onClick={renderProps.onClick}>
+                                <Card withBorder p={'xs'} className={renderProps.cardClass}>
+                                  <Card.Section p="md">
+                                    <div
+                                      style={{ position: 'relative', height: 50, width: '100%' }}
+                                    >
+                                      <Image
+                                        src={item.image.url}
+                                        alt={item.image.alt_text}
+                                        fill
+                                        style={{ objectFit: 'contain' }}
+                                      />
+                                    </div>
+                                  </Card.Section>
+                                  <Stack gap={2}>
+                                    <Text fz={'10'} lineClamp={1} mt={'xs'}>
+                                      {item.variant_name}
+                                    </Text>
+                                    <Text fz={'10'} c="primary">
+                                      {formatCurrency(item.price)}
+                                    </Text>
+                                    <Box>{renderProps.badge}</Box>
+                                  </Stack>
+                                </Card>
+                              </UnstyledButton>
+                            )
+                          })}
+                        </SimpleGrid>
+                      </Card>
+
+                      <Divider my="sm" />
+                    </>
+                  ) : null}
+
+                  <CartLensForm value={prescription} onChange={setPrescription} />
+                </Stack>
+              </Grid.Col>
+            </Grid>
+          </>
+        )}
+
+        <ModalAuthentication
+          opened={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          onLogin={handleLogin}
+        />
+      </Container>
 
       <SectionCarousel
         title="Recommendations"
@@ -320,13 +330,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
         data={recommendations ?? []}
         isLoading={isLoadingRecommendations}
       />
-
-      <ModalAuthentication
-        opened={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        onLogin={handleLogin}
-      />
-    </Container>
+    </>
   )
 }
 
