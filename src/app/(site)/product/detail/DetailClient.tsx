@@ -146,7 +146,6 @@ const DetailClient = ({ productId }: { productId: string }) => {
                                 p={6}
                                 withBorder
                                 className={clsx(
-                                  'card-hover',
                                   primaryImage?.url === item.url && 'border-primary'
                                 )}
                               >
