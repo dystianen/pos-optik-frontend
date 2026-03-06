@@ -2,7 +2,7 @@
 
 import { getQueryClient } from '@/lib/reactQueryClient'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { Alert, Badge, Button, Card, Input, MantineProvider, Paper, TextInput, createTheme } from '@mantine/core'
+import { Alert, Badge, Button, Card, Input, MantineProvider, Paper, TextInput, createTheme, useMantineTheme } from '@mantine/core'
 import { ToastContainer } from 'react-toastify'
 import NextTopLoader from 'nextjs-toploader'
 import React from 'react'
@@ -71,7 +71,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme}>
-        <NextTopLoader color="#6556FF" showSpinner={false} />
+        <NextTopLoader color="#0d9488" showSpinner={false} />
         {children}
         <ToastContainer
           position="bottom-right"

@@ -3,7 +3,7 @@ import { TUser } from '@/features/auth/types'
 import { useMenu } from '@/features/menu/hooks'
 import { removeTokens } from '@/utils/auth-server'
 import { Group, Menu, Skeleton, Text, UnstyledButton, useMantineTheme } from '@mantine/core'
-import { IconPower, IconTruckDelivery, IconUserFilled } from '@tabler/icons-react'
+import { IconPower, IconTruckDelivery, IconUser, IconUserFilled } from '@tabler/icons-react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
@@ -84,10 +84,9 @@ const Header = ({ user }: { user: TUser | null }) => {
                   <Menu.Target>
                     <UnstyledButton className="p-1">
                       <Group gap="xs">
-                        <IconUserFilled
+                        <IconUser
                           color={theme.colors.primary[8]}
                           size={24}
-                          className="md:w-[28px] md:h-[28px]"
                         />
                         <Text size="sm" className="hidden md:block font-medium">
                           {user.name}

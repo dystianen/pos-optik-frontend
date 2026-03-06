@@ -14,7 +14,7 @@ const HeaderLink: React.FC<{ item: TMenu }> = ({ item }) => {
     <Link
       href={href}
       className={`relative py-2 text-base font-medium transition-colors duration-200 hover:text-primary ${
-        isActive ? 'text-black' : 'text-gray-500'
+        isActive ? 'text-primary' : 'text-gray-500'
       }`}
     >
       {item.category_name}
