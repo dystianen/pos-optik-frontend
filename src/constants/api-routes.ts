@@ -44,7 +44,7 @@ export const API_ROUTES = {
     STATUS: (id: string) => `/cancel/status/${id}`
   },
   SHIPPING: {
-    BASE: '/shipping',
+    BASE: '/shipping-address',
     ADDRESS: '/shipping-address',
     SAVE: '/shipping-address/save'
   }

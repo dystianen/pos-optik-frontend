@@ -1,4 +1,4 @@
-import { PrescriptionPayload } from './cart'
+import { PrescriptionPayload } from '@/features/cart/types'
 import { GeneralResponse } from '@/types/general'
 
 export type TReqCheckout = {

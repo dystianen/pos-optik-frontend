@@ -1,6 +1,6 @@
 'use client'
 
-import { Order, RefundAccount, RefundRequest, RefundType } from '@/features/order/types'
+import { Order, RefundAccount, RefundType } from '@/features/order/types'
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/ui/RefundAccountForm'
 import { formatCurrency } from '@/utils/format'
 import {
@@ -222,7 +222,7 @@ export function RefundModal({
 
         {/* Full Refund - Summary */}
         {refundType === 'full' && (
-          <Card shadow="sm" padding="md" withBorder bg="blue.0">
+          <Card padding="md" bg="blue.0">
             <Group justify="space-between">
               <Text fw={500}>Total Refund Amount:</Text>
               <Text fw={700} size="lg" c="primary">

@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic'
 
 const CancelOrderModal = dynamic(() => import('@/features/order/components/CancelOrderModal').then(mod => mod.CancelOrderModal), { ssr: false })
 const RefundModal = dynamic(() => import('@/features/order/components/RefundModal').then(mod => mod.RefundModal), { ssr: false })
-import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount } from '@/features/order/hooks'
+import { useCancelOrder, useCancelStatus, useDetailOrder, useRefundAccount, useRefundStatus, useSubmitRefund, useUpdateRefundAccount, useUpdateStatus } from '@/features/order/hooks'
 import { formatCurrency, formatDate } from '@/utils/format'
 import {
   ActionIcon,
@@ -63,8 +63,8 @@ export default function OrderDetailPage() {
   const { mutate: cancelOrder } = useCancelOrder()
   const { mutateAsync: submitRefund } = useSubmitRefund()
   const { data: refundAccounts } = useRefundAccount()
-  const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
-    useUpdateRefundAccount()
+  const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } = useUpdateRefundAccount()
+  const { mutate: completeOrder, isPending: isCompletingOrder } = useUpdateStatus()
   // Determine request type based on order status
   const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation']
   const REFUND_STATUSES = ['shipped', 'delivered']
@@ -113,6 +113,25 @@ export default function OrderDetailPage() {
     })
   }
 
+  const handleCompleteOrder = () => {
+    completeOrder(
+      {
+        orderId: id,
+        payload: {
+          status_id: '8d434de4-ba22-4698-8438-8318ef3f6d8f' // COMPLETED UUID
+        }
+      },
+      {
+        onSuccess: () => {
+          toast.success('Pesanan berhasil diselesaikan')
+        },
+        onError: (err: any) => {
+          toast.error(err?.message || 'Gagal menyelesaikan pesanan')
+        }
+      }
+    )
+  }
+
   const requestStatusInfo = (() => {
     if (!refundStatus) return null
 
@@ -124,7 +143,7 @@ export default function OrderDetailPage() {
         return {
           disabled: false,
           label: 'Request Refund',
-          color: 'blue',
+          color: 'yellow',
           tooltip: 'You can request a return/refund for this order'
         }
       }
@@ -461,10 +480,22 @@ export default function OrderDetailPage() {
                     </Card>
 
                     {/* Action Button / Status Info */}
+                    {order.status_code === 'shipped' && !refundStatus?.has_request && (
+                      <Button
+                        fullWidth
+                        color="teal"
+                        loading={isCompletingOrder}
+                        onClick={handleCompleteOrder}
+                      >
+                        Complete Order
+                      </Button>
+                    )}
+                    
                     {requestStatusInfo && requestType && (
                       <Tooltip label={requestStatusInfo.tooltip} withArrow>
                         <Button
                           fullWidth
+                          variant={order.status_code === 'shipped' ? 'outline' : 'filled'}
                           color={requestStatusInfo.color}
                           disabled={requestStatusInfo.disabled}
                           onClick={() => {

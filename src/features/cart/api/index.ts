@@ -19,7 +19,7 @@ export const deleteCart = async (id: string) => {
 
 export const addCart = async (payload: { product_id: string; quantity: number; lens_id?: string; attributes?: any[] }) => {
   const response = await apiClient.post(`${API_ROUTES.CART.BASE}/add`, payload)
-  return response.data.data
+  return response.data
 }
 
 export const getTotalCart = async () => {

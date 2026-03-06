@@ -74,8 +74,8 @@ export function RefundAccountForm({
           withBorder
           p="md"
           style={{
-            borderColor: 'var(--mantine-color-blue-6)',
-            backgroundColor: 'var(--mantine-color-blue-0)'
+            borderColor: 'var(--mantine-color-primary-6)',
+            backgroundColor: 'var(--mantine-color-primary-0)'
           }}
         >
           <Group align="center" justify="space-between" wrap="nowrap">

@@ -1,5 +1,5 @@
-import * as orderApi from '../api'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import * as orderApi from '../api'
 
 export function useSummaryOrders() {
   return useMutation({
@@ -54,6 +54,7 @@ export function useUpdateStatus() {
       orderApi.updateStatus(orderId, payload),
     onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS', variables.orderId] })
+      queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER', variables.orderId] })
     }
   })
 }
@@ -79,9 +80,10 @@ export function useCancelOrder() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: orderApi.cancelOrder,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER'] })
-      queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS'] })
+    onSuccess: (_data, variables) => {
+      const orderId = variables.order_id
+      queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER', orderId] })
+      queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS', orderId] })
     }
   })
 }
