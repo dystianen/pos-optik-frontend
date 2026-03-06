@@ -11,7 +11,7 @@ const footer = () => {
         <div className="grid grid-cols-1 gap-y-10 gap-x-16 sm:grid-cols-2 lg:grid-cols-12 xl:gap-x-8">
           <div className="col-span-4 md:col-span-12 lg:col-span-4">
             <Logo />
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mt-3">
               <Link href="#" className="hover:text-primary text-black text-3xl">
                 <Icon icon="tabler:brand-facebook" />
               </Link>
