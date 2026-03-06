@@ -52,7 +52,7 @@ const Cart = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                boxShadow: '0 4px 12px rgba(57, 61, 223, 0.25)'
+                boxShadow: '0 4px 12px rgba(57, 223, 201, 0.25)'
               }}
             >
               <IconShoppingBag size={24} color="white" />
@@ -96,17 +96,17 @@ const Cart = () => {
               >
                 <Grid align="center">
                   <Grid.Col span={8}>
-                    <Text fw={600} size="sm" c="primary.7">
+                    <Text fw={600} size="sm" c="primary.9">
                       Product
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={3}>
-                    <Text fw={600} size="sm" c="primary.7">
+                    <Text fw={600} size="sm" c="primary.9">
                       Subtotal
                     </Text>
                   </Grid.Col>
                   <Grid.Col span={1}>
-                    <Text fw={600} size="sm" c="primary.7" ta="center">
+                    <Text fw={600} size="sm" c="primary.9" ta="center">
                       Action
                     </Text>
                   </Grid.Col>
@@ -211,7 +211,7 @@ const Cart = () => {
                     <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
                       Total Price
                     </Text>
-                    <Text fw={700} size="xl" c="primary.4" mt={4}>
+                    <Text fw={700} size="xl" c="primary.8" mt={4}>
                       {formatCurrency(cart?.summary.total_price || '0')}
                     </Text>
                   </Box>

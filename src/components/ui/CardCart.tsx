@@ -191,7 +191,7 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
             <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
               Subtotal
             </Text>
-            <Text fw={700} size="lg" c="primary.4">
+            <Text fw={700} size="lg" c="primary.8">
               {formatCurrency(item.subtotal)}
             </Text>
           </Stack>
