@@ -1,10 +1,14 @@
+"use client"
+import { useMenu } from '@/features/menu/hooks'
+import { formatSlug } from '@/utils/format'
 import { Icon } from '@iconify/react/dist/iconify.js'
 import { Box } from '@mantine/core'
 import Link from 'next/link'
 import Logo from '../Header/Logo'
-import { headerData } from '../Header/Navigation/menuData'
 
 const footer = () => {
+  const { data: menu, isLoading: isLoadingMenu } = useMenu()
+
   return (
     <footer className="bg-deepSlate py-10 mt-10">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
@@ -29,11 +33,15 @@ const footer = () => {
           <div className="col-span-2">
             <h3 className="mb-4 text-2xl font-medium">Links</h3>
             <ul>
-              {headerData.map((item, index) => (
-                <li key={index} className="mb-2 text-black/50 hover:text-primary w-fit">
-                  <Link href={item.href}>{item.label}</Link>
-                </li>
-              ))}
+              {menu?.map((item, index) => {
+                const slug = formatSlug(item.category_name)
+                const href = `/product/${slug}`
+                return (
+                  <li key={index} className="mb-2 text-black/50 hover:text-primary w-fit">
+                    <Link href={href}>{item.category_name}</Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
           <div className="col-span-2">
@@ -94,7 +102,11 @@ const footer = () => {
           </div>
           <h4 className="text-black/50 text-sm text-center lg:text-start font-normal">
             Developed by{' '}
-            <Link href="https://dystianen.vercel.app/" target="_blank" className="hover:text-primary">
+            <Link
+              href="https://dystianen.vercel.app/"
+              target="_blank"
+              className="hover:text-primary"
+            >
               {' '}
               Devyus
             </Link>

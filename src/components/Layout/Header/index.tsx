@@ -3,7 +3,7 @@ import { TUser } from '@/features/auth/types'
 import { useMenu } from '@/features/menu/hooks'
 import { removeTokens } from '@/utils/auth-server'
 import { Group, Menu, Skeleton, Text, UnstyledButton, useMantineTheme } from '@mantine/core'
-import { IconPower, IconTruckDelivery, IconUser, IconUserFilled } from '@tabler/icons-react'
+import { IconPower, IconTruckDelivery, IconUser } from '@tabler/icons-react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
@@ -47,7 +47,7 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-40 w-full pb-5 px-3 transition-all duration-300 bg-white ${
+      className={`fixed top-0 z-[1000] w-full pb-5 px-3 transition-all duration-300 bg-white ${
         sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
       }`}
     >
@@ -84,13 +84,8 @@ const Header = ({ user }: { user: TUser | null }) => {
                   <Menu.Target>
                     <UnstyledButton className="p-1">
                       <Group gap="xs">
-                        <IconUser
-                          color={theme.colors.primary[8]}
-                          size={25}
-                        />
-                        <Text className="hidden md:block font-medium">
-                          {user.name}
-                        </Text>
+                        <IconUser color={theme.colors.primary[8]} size={25} />
+                        <Text className="hidden md:block font-medium">{user.name}</Text>
                       </Group>
                     </UnstyledButton>
                   </Menu.Target>
@@ -147,9 +142,9 @@ const Header = ({ user }: { user: TUser | null }) => {
           <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
         )}
         <div
-          className={`lg:hidden fixed top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
+          className={`lg:hidden fixed z-[1000] top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
             navbarOpen ? 'translate-x-0' : 'translate-x-full'
-          } z-50`}
+          }`}
         >
           <div className="flex items-center justify-between p-4">
             <Logo />
