@@ -19,6 +19,7 @@ import {
 import { IconPlayerPlay, IconStarFilled } from '@tabler/icons-react'
 import { useState } from 'react'
 import { useProductReviews } from '../hooks'
+import { ReviewSectionSkeleton } from './ReviewSkeleton'
 
 type ReviewSectionProps = {
   productId: string
@@ -27,19 +28,13 @@ type ReviewSectionProps = {
 export function ReviewSection({ productId }: ReviewSectionProps) {
   const [page, setPage] = useState(1)
   const [rating, setRating] = useState<number | null>(null)
-  
+
   const { data, isLoading } = useProductReviews(productId, { page, rating: rating ?? '' })
   const [previewMedia, setPreviewMedia] = useState<{ url: string; type: 'image' | 'video' } | null>(
     null
   )
 
-  if (isLoading) {
-    return (
-      <Card withBorder padding="lg" mt="xl">
-        <Text>Loading reviews...</Text>
-      </Card>
-    )
-  }
+  if (isLoading) return <ReviewSectionSkeleton />
 
   const reviews = data?.items || []
   const summary = data?.summary || {
@@ -47,9 +42,15 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
     total_reviews: 0,
     rating_distribution: { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 }
   }
-  const ratingDistribution = summary.rating_distribution || { '5': 0, '4': 0, '3': 0, '2': 0, '1': 0 }
+  const ratingDistribution = summary.rating_distribution || {
+    '5': 0,
+    '4': 0,
+    '3': 0,
+    '2': 0,
+    '1': 0
+  }
   const totalReviewsGlobal = Number(summary.total_reviews || 0)
-  
+
   const pagination = data?.pagination || { total: 0, per_page: 10, current_page: 1, last_page: 1 }
 
   return (
@@ -92,7 +93,6 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
             </Group>
             {[5, 4, 3, 2, 1].map((star) => {
               const count = Number(ratingDistribution[String(star)] || 0)
-              console.log("🚀 ~ ReviewSection ~ count:", count)
               const percentage = totalReviewsGlobal > 0 ? (count / totalReviewsGlobal) * 100 : 0
               const isActive = rating === star
 
@@ -113,7 +113,7 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
                       <IconStarFilled size={14} color="#fab005" />
                     </Group>
                     <Progress
-                      color={"primary"}
+                      color={'primary'}
                       size="sm"
                       value={percentage}
                       style={{ flex: 1 }}
@@ -211,13 +211,13 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
                   <Divider variant="dashed" mt="sm" />
                 </div>
               ))}
-              
+
               {pagination.last_page > 1 && (
                 <Group justify="center" mt="xl">
-                  <Pagination 
-                    total={pagination.last_page} 
-                    value={page} 
-                    onChange={setPage} 
+                  <Pagination
+                    total={pagination.last_page}
+                    value={page}
+                    onChange={setPage}
                     color="primary"
                     radius="xl"
                   />
@@ -226,7 +226,9 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
             </>
           ) : (
             <Text c="dimmed" ta="center" py="xl">
-              {rating ? `No reviews with ${rating} stars found.` : 'Be the first to review this product.'}
+              {rating
+                ? `No reviews with ${rating} stars found.`
+                : 'Be the first to review this product.'}
             </Text>
           )}
         </Stack>
