@@ -101,6 +101,7 @@ export default function OrderDetailPage() {
 
   const refundStatus =
     requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
+  console.log('🚀 ~ OrderDetailPage ~ refundStatus:', refundStatus)
 
   const handleCancelOrder = (payload: any) => {
     cancelOrder(payload, {
@@ -158,7 +159,7 @@ export default function OrderDetailPage() {
     if (!refundStatus) return null
 
     const isRefund = requestType === 'refund'
-    const typeLabel = isRefund ? 'Return' : 'Cancellation'
+    const typeLabel = isRefund ? 'Refund' : 'Cancellation'
 
     if (!refundStatus.has_request) {
       if (isRefund) {
@@ -506,16 +507,18 @@ export default function OrderDetailPage() {
                     </Card>
 
                     {/* Action Button / Status Info */}
-                    {order.status_code === 'shipped' && !refundStatus?.has_request && (
-                      <Button
-                        fullWidth
-                        color="primary"
-                        loading={isCompletingOrder}
-                        onClick={handleCompleteOrder}
-                      >
-                        Complete Order
-                      </Button>
-                    )}
+                    {order.status_code === 'shipped' &&
+                      (!refundStatus?.has_request ||
+                        refundStatus?.status === 'request_rejected') && (
+                        <Button
+                          fullWidth
+                          color="primary"
+                          loading={isCompletingOrder}
+                          onClick={handleCompleteOrder}
+                        >
+                          Complete Order
+                        </Button>
+                      )}
 
                     {requestStatusInfo && requestType && (
                       <Tooltip label={requestStatusInfo.tooltip} withArrow>
