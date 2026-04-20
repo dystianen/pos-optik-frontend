@@ -6,6 +6,7 @@ import type { PrescriptionPayload } from '@/features/cart/types'
 import { useProductAttribute, useProductDetail, useRecommendations } from '@/features/product/hooks'
 import type { TGalleryDetail, Variant } from '@/features/product/types'
 import { ReviewSection } from '@/features/review/components/ReviewSection'
+import { useMediaQueryFromBreakpoints } from '@/hooks/useMediaQueryFromBreakpoints'
 import { formatCurrency } from '@/utils/format'
 import {
   Badge,
@@ -14,6 +15,7 @@ import {
   Card,
   Container,
   Divider,
+  Flex,
   Grid,
   Group,
   SimpleGrid,
@@ -45,6 +47,7 @@ type TImage = {
 
 const DetailClient = ({ productId }: { productId: string }) => {
   const router = useRouter()
+  const isMobile = useMediaQueryFromBreakpoints()
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [primaryImage, setPrimaryImage] = useState<TImage>({
@@ -158,7 +161,14 @@ const DetailClient = ({ productId }: { productId: string }) => {
                     <Card.Section>
                       <Grid>
                         <Grid.Col span={{ md: 2 }}>
-                          <Stack mt={'sm'} mx={'sm'} justify="start" w={'max-content'}>
+                          <Flex
+                            direction={{ base: 'row', md: 'column' }}
+                            mt={'sm'}
+                            mx={'sm'}
+                            justify="start"
+                            w={'max-content'}
+                            gap={'md'}
+                          >
                             {galleryImage.map((item, index) => (
                               <UnstyledButton key={index} onClick={() => handleSelectGallery(item)}>
                                 <Card
@@ -180,11 +190,17 @@ const DetailClient = ({ productId }: { productId: string }) => {
                                 </Card>
                               </UnstyledButton>
                             ))}
-                          </Stack>
+                          </Flex>
                         </Grid.Col>
                         <Grid.Col span={{ md: 10 }}>
                           {primaryImage.url !== '' && (
-                            <div style={{ position: 'relative', height: 400, width: '100%' }}>
+                            <div
+                              style={{
+                                position: 'relative',
+                                height: isMobile ? 300 : 400,
+                                width: '100%'
+                              }}
+                            >
                               <Image
                                 src={primaryImage.url}
                                 alt={primaryImage.alt_text}

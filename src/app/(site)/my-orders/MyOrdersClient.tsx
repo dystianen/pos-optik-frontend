@@ -1,7 +1,4 @@
 'use client'
-import dynamic from 'next/dynamic'
-
-const OrderCard = dynamic(() => import('@/features/order/components/OrderCard').then(mod => mod.OrderCard), { ssr: false })
 import { useOrders } from '@/features/order/hooks'
 import {
   Box,
@@ -23,6 +20,12 @@ import {
   IconTruck,
   IconX
 } from '@tabler/icons-react'
+import dynamic from 'next/dynamic'
+
+const OrderCard = dynamic(
+  () => import('@/features/order/components/OrderCard').then((mod) => mod.OrderCard),
+  { ssr: false }
+)
 
 const MyOrdersClient = () => {
   const [orderTab, setOrderTab] = useLocalStorage<string | null>({
@@ -38,7 +41,16 @@ const MyOrdersClient = () => {
         {/* Header */}
         <Title order={2}>My Orders</Title>
 
-        <Tabs value={orderTab} onChange={setOrderTab}>
+        <Tabs
+          value={orderTab}
+          onChange={setOrderTab}
+          styles={{
+            list: {
+              flexWrap: 'nowrap',
+              overflowX: 'auto'
+            }
+          }}
+        >
           <Tabs.List grow>
             <Tabs.Tab value="all">
               <Group justify="center">

@@ -5,7 +5,7 @@ import { useToggleWishlist } from '@/features/product/hooks'
 import { TProduct } from '@/features/product/types'
 import { formatCurrency } from '@/utils/format'
 import { ActionIcon, Badge, Card, Divider, Group, Stack, Text } from '@mantine/core'
-import { IconHeart, IconHeartFilled, IconShoppingBag } from '@tabler/icons-react'
+import { IconHeart, IconHeartFilled, IconPackage, IconShoppingBag } from '@tabler/icons-react'
 import { useQueryClient } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -81,12 +81,13 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
     <>
       <Card
         withBorder
-        className={`group relative overflow-hidden transition-all duration-300 
+        onClick={handleDetail}
+        className={`group relative overflow-hidden transition-all duration-300 cursor-pointer
         ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-focus'}`}
       >
         {/* IMAGE */}
         <Card.Section onMouseEnter={handlePrefetch}>
-          <div className="relative h-[150px] flex items-center justify-center overflow-hidden">
+          <div className="relative h-[120px] flex items-center justify-center overflow-hidden">
             <Image
               src={item.product_image_url}
               alt={item.product_name}
@@ -103,7 +104,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
               variant="white"
               radius="xl"
               size="sm"
-              className="absolute top-2 right-2 shadow-md opacity-0 group-hover:opacity-100 transition"
+              className="absolute top-2 right-2 shadow-md opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
               onClick={(e) => {
                 e.stopPropagation()
                 handleAddWishlist()
@@ -116,8 +117,8 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
               )}
             </ActionIcon>
 
-            {/* Quick view button */}
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
+            {/* Quick view button - Desktop Only */}
+            <div className="absolute bottom-2 left-0 right-0 hidden sm:flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
@@ -147,10 +148,16 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
             {formatCurrency(item.product_price)}
           </Text>
 
-          <Group gap="xs" mt="xs">
+          <Group gap={4} mt="xs" wrap="nowrap">
             {stock > 0 ? (
-              <Badge size="xs" color="green" variant="light">
-                Stock {stock}
+              <Badge
+                size="xs"
+                color="green"
+                variant="light"
+                leftSection={<IconPackage size={12} />}
+              >
+                <span className="hidden sm:inline">Stock </span>
+                {stock}
               </Badge>
             ) : (
               <Badge size="xs" color="red" variant="light">
@@ -164,7 +171,8 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
               variant="light"
               leftSection={<IconShoppingBag size={12} />}
             >
-              Terjual {totalSold}
+              <span className="hidden sm:inline">Terjual </span>
+              {totalSold}
             </Badge>
           </Group>
         </Stack>

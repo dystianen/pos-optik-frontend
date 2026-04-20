@@ -1,4 +1,4 @@
-import { Box, Card, Grid, Group, SimpleGrid, Skeleton, Stack } from '@mantine/core'
+import { Box, Card, Flex, Grid, Group, SimpleGrid, Skeleton, Stack } from '@mantine/core'
 
 export function ProductDetailSkeleton() {
   return (
@@ -15,11 +15,18 @@ export function ProductDetailSkeleton() {
               <Grid>
                 {/* Thumbnails */}
                 <Grid.Col span={{ md: 2 }}>
-                  <Stack mt="sm" mx="sm" w="max-content">
+                  <Flex
+                    direction={{ base: 'row', md: 'column' }}
+                    mt={'sm'}
+                    mx={'sm'}
+                    justify="start"
+                    w={'max-content'}
+                    gap={'md'}
+                  >
                     {Array.from({ length: 4 }).map((_, i) => (
-                      <Skeleton key={i} height={80} width={80} radius="md" />
+                      <Skeleton key={i} height={60} width={60} radius="md" />
                     ))}
-                  </Stack>
+                  </Flex>
                 </Grid.Col>
 
                 {/* Main Image */}

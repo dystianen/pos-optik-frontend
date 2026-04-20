@@ -18,7 +18,7 @@ export default function HomeClient() {
   return (
     <main>
       <Stack gap={'xl'}>
-        <Container size={'xl'} mt={100}>
+        <Container size={'xl'} mt={{ base: 70, md: 100 }}>
           <Carousel
             withIndicators
             w="100%"
@@ -37,21 +37,29 @@ export default function HomeClient() {
                 color: 'white'
               },
               slide: {
-                height: 400
+                height: 'var(--carousel-height)'
               }
             }}
+            vars={(theme) => ({
+              root: {
+                '--carousel-height': '200px',
+                [`@media (minWidth: ${theme.breakpoints.sm})`]: {
+                  '--carousel-height': '400px'
+                }
+              }
+            })}
           >
             <Carousel.Slide>
-              <Image src="/images/banner/banner-4.jpg" />
+              <Image src="/images/banner/banner-4.jpg" fit="cover" w={'100%'} h={'100%'} />
             </Carousel.Slide>
             <Carousel.Slide>
-              <Image src="/images/banner/banner-1.jpg" />
+              <Image src="/images/banner/banner-1.jpg" fit="cover" w={'100%'} h={'100%'} />
             </Carousel.Slide>
             <Carousel.Slide>
-              <Image src="/images/banner/banner-2.jpg" />
+              <Image src="/images/banner/banner-2.jpg" fit="cover" w={'100%'} h={'100%'} />
             </Carousel.Slide>
             <Carousel.Slide>
-              <Image src="/images/banner/banner-3.jpg" />
+              <Image src="/images/banner/banner-3.jpg" fit="cover" w={'100%'} h={'100%'} />
             </Carousel.Slide>
           </Carousel>
         </Container>

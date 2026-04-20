@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { memo, useCallback, useEffect, useState } from 'react'
-import MobileHeaderLink from '../Header/Navigation/MobileHeaderLink'
 import Logo from './Logo'
 import HeaderLink from './Navigation/HeaderLink'
 
@@ -47,13 +46,20 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-[99] w-full pb-5 px-3 transition-all duration-300 bg-white ${
-        sticky ? ' shadow-lg py-3' : 'shadow-none py-4'
+      className={`fixed top-0 z-[99] w-full md:pb-5 px-3 transition-all duration-300 bg-white ${
+        sticky ? ' shadow-lg py-3' : 'shadow-none py-3 md:py-4'
       }`}
     >
       <div>
-        <div className="container mx-auto flex items-center justify-between lg:max-w-screen-xl">
-          <Logo />
+        <div className="container mx-auto flex items-center justify-between gap-4 lg:max-w-screen-xl">
+          <div className="hidden md:block">
+            <Logo />
+          </div>
+
+          <div className="flex-grow md:hidden">
+            <Search />
+          </div>
+
           <nav className="hidden flex-grow items-center justify-center gap-8 lg:flex">
             {isLoadingMenu ? (
               <>
@@ -71,15 +77,15 @@ const Header = ({ user }: { user: TUser | null }) => {
             )}
           </nav>
 
-          <div className="flex items-center gap-2 md:gap-4">
-            {user?.name ? (
-              <>
-                <div className="flex items-center">
-                  <Search />
-                  <Wishlist />
-                  <Cart />
-                </div>
+          {user?.name ? (
+            <div className="flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2">
+                <Search />
+                <Wishlist />
+              </div>
+              <Cart />
 
+              <div className="hidden md:block">
                 <Menu
                   width={200}
                   position="bottom-end"
@@ -107,85 +113,22 @@ const Header = ({ user }: { user: TUser | null }) => {
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
-              </>
-            ) : (
-              <div className="flex items-center gap-4">
-                <Search />
-                <Link
-                  href="/signin"
-                  className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
-                >
-                  Sign In
-                </Link>
               </div>
-            )}
-
-            <button
-              onClick={() => setNavbarOpen(!navbarOpen)}
-              className="flex lg:hidden flex-col items-center justify-center w-10 h-10 gap-1.5 focus:outline-none"
-              aria-label="Toggle mobile menu"
-            >
-              <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
-                  navbarOpen ? 'rotate-45 translate-y-2' : ''
-                }`}
-              ></span>
-              <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
-                  navbarOpen ? 'opacity-0' : ''
-                }`}
-              ></span>
-              <span
-                className={`block w-6 h-0.5 bg-black transition-all duration-300 ${
-                  navbarOpen ? '-rotate-45 -translate-y-2' : ''
-                }`}
-              ></span>
-            </button>
-          </div>
-        </div>
-        {navbarOpen && (
-          <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-60 z-40" />
-        )}
-        <div
-          className={`lg:hidden fixed z-[1000] top-0 right-0 h-full w-full bg-white shadow-lg transform transition-transform duration-300 max-w-xs ${
-            navbarOpen ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          <div className="flex items-center justify-between p-4">
-            <Logo />
-            <button
-              onClick={() => setNavbarOpen(false)}
-              className="bg-[url('/images/closed.svg')] bg-no-repeat bg-contain w-5 h-5"
-              aria-label="Close menu"
-            ></button>
-          </div>
-          <nav className="flex flex-col items-start p-4">
-            {menu?.map((item, index) => (
-              <MobileHeaderLink key={index} item={item} />
-            ))}
-            <div className="mt-4 flex flex-col space-y-4 w-full">
-              {user?.name ? (
-                <>
-                  <button
-                    onClick={() => {
-                      handleLogout()
-                      setNavbarOpen(false)
-                    }}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                  >
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  href="/signin"
-                  className="bg-primary text-white hover:bg-primary/15 hover:text-primary w-max px-6 py-3 rounded-full text-lg font-medium text-center"
-                >
-                  Sign In/Sign Up
-                </Link>
-              )}
             </div>
-          </nav>
+          ) : (
+            <div className="flex items-center gap-2 md:gap-4">
+              <div className="hidden md:block">
+                <Search />
+              </div>
+              <Cart />
+              <Link
+                href="/signin"
+                className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
+              >
+                Sign In
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </header>

@@ -2,115 +2,121 @@
 import { useMenu } from '@/features/menu/hooks'
 import { formatSlug } from '@/utils/format'
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { Box } from '@mantine/core'
+import { Box, Container, Grid, Group, Stack, Text } from '@mantine/core'
 import Link from 'next/link'
 import Logo from '../Header/Logo'
 
 const footer = () => {
-  const { data: menu, isLoading: isLoadingMenu } = useMenu()
+  const { data: menu } = useMenu()
 
   return (
-    <footer className="bg-deepSlate py-10 mt-10">
+    <footer className="bg-deepSlate py-10 pb-32 lg:pb-10 mt-10">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
-        <div className="grid grid-cols-1 gap-y-10 gap-x-16 sm:grid-cols-2 lg:grid-cols-12 xl:gap-x-8">
-          <div className="col-span-4 md:col-span-12 lg:col-span-4">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-x-8 gap-y-8">
+          {/* Logo Section */}
+          <div className="col-span-2 lg:col-span-4 flex flex-col items-center lg:items-start">
             <Logo />
-            <div className="flex items-center gap-4 mt-3">
-              <Link href="#" className="hover:text-primary text-black text-3xl">
-                <Icon icon="tabler:brand-facebook" />
+            <div className="flex items-center gap-4 mt-4">
+              <Link href="#" className="hover:text-primary text-black transition-colors">
+                <Icon icon="tabler:brand-facebook" width="24" />
               </Link>
-              <Link href="#" className="hover:text-primary text-black text-3xl">
-                <Icon icon="tabler:brand-twitter" />
+              <Link href="#" className="hover:text-primary text-black transition-colors">
+                <Icon icon="tabler:brand-twitter" width="24" />
               </Link>
               <Link
                 href="https://www.instagram.com/optik_fiqri/"
-                className="hover:text-primary text-black text-3xl"
+                className="hover:text-primary text-black transition-colors"
+                target="_blank"
               >
-                <Icon icon="tabler:brand-instagram" />
+                <Icon icon="tabler:brand-instagram" width="24" />
               </Link>
             </div>
           </div>
-          <div className="col-span-2">
-            <h3 className="mb-4 text-2xl font-medium">Links</h3>
-            <ul>
-              {menu?.map((item, index) => {
-                const slug = formatSlug(item.category_name)
-                const href = `/product/${slug}`
-                return (
-                  <li key={index} className="mb-2 text-black/50 hover:text-primary w-fit">
-                    <Link href={href}>{item.category_name}</Link>
-                  </li>
-                )
-              })}
-            </ul>
+
+          {/* Links Section */}
+          <div className="col-span-1 lg:col-span-2">
+            <Text fw={600} fz="lg" mb="md" className="text-black text-center lg:text-left">
+              Links
+            </Text>
+            <Stack gap={8} align="center" className="lg:items-start">
+              {menu?.map((item, index) => (
+                <Link
+                  key={index}
+                  href={`/product/${formatSlug(item.category_name)}`}
+                  className="text-black/60 hover:text-primary text-sm transition-colors text-center lg:text-left"
+                >
+                  {item.category_name}
+                </Link>
+              ))}
+            </Stack>
           </div>
-          <div className="col-span-2">
-            <h3 className="mb-4 text-2xl font-medium">Other</h3>
-            <ul>
-              <li className="mb-2 text-black/50 hover:text-primary w-fit">
-                <Link href="#">About Us</Link>
-              </li>
-              <li className="mb-2 text-black/50 hover:text-primary w-fit">
-                <Link href="#">Our Team</Link>
-              </li>
-              <li className="mb-2 text-black/50 hover:text-primary w-fit">
-                <Link href="#">career</Link>
-              </li>
-              <li className="mb-2 text-black/50 hover:text-primary w-fit">
-                <Link href="#">Services</Link>
-              </li>
-              <li className="mb-2 text-black/50 hover:text-primary w-fit">
-                <Link href="#">Contact</Link>
-              </li>
-            </ul>
+
+          {/* Other Section */}
+          <div className="col-span-1 lg:col-span-2">
+            <Text fw={600} fz="lg" mb="md" className="text-black text-center lg:text-left">
+              Other
+            </Text>
+            <Stack gap={8} align="center" className="lg:items-start">
+              {['About Us', 'Our Team', 'Career', 'Services', 'Contact'].map((label) => (
+                <Link
+                  key={label}
+                  href="#"
+                  className="text-black/60 hover:text-primary text-sm transition-colors text-center lg:text-left"
+                >
+                  {label}
+                </Link>
+              ))}
+            </Stack>
           </div>
-          <div className="col-span-4 md:col-span-4 lg:col-span-4">
-            <div className="flex items-center gap-2">
-              <Box>
-                <Icon
-                  icon="tabler:brand-google-maps"
-                  className="text-primary text-3xl inline-block me-2"
-                />
-              </Box>
-              <h5 className="text-lg text-black/60">
-                Jl. Raya Pacet No.25, Njarum, Pandanarum, Kec. Pacet, Kabupaten Mojokerto, Jawa
-                Timur 61374
-              </h5>
-            </div>
-            <div className="flex gap-2 mt-6">
-              <Icon icon="tabler:phone" className="text-primary text-3xl inline-block me-2" />
-              <h5 className="text-lg text-black/60">+62 822-3237-4041</h5>
-            </div>
-            <div className="flex gap-2 mt-6">
-              <Icon icon="tabler:folder" className="text-primary text-3xl inline-block me-2" />
-              <h5 className="text-lg text-black/60">optik.fiqri@gmail.com</h5>
-            </div>
+
+          {/* Contact Section */}
+          <div className="col-span-2 lg:col-span-4 mt-4 lg:mt-0">
+            <Stack gap="md" align="center" className="lg:items-start text-center lg:text-left">
+              <div className="flex flex-col items-center lg:items-start gap-2">
+                <Icon icon="tabler:brand-google-maps" className="text-primary text-2xl" />
+                <Text fz="sm" c="dimmed" maw={300}>
+                  Jl. Raya Pacet No.25, Njarum, Pandanarum, Kec. Pacet, Kabupaten Mojokerto, Jawa Timur 61374
+                </Text>
+              </div>
+              
+              <Group gap="xs" wrap="nowrap">
+                <Icon icon="tabler:phone" className="text-primary text-xl" />
+                <Text fz="sm" c="dimmed">
+                  +62 822-3237-4041
+                </Text>
+              </Group>
+
+              <Group gap="xs" wrap="nowrap">
+                <Icon icon="tabler:mail" className="text-primary text-xl" />
+                <Text fz="sm" c="dimmed">
+                  optik.fiqri@gmail.com
+                </Text>
+              </Group>
+            </Stack>
           </div>
         </div>
 
-        <div className="mt-10 lg:flex items-center justify-between">
-          <h4 className="text-black/50 text-sm text-center lg:text-start font-normal">
-            @2025 Optik Fiqri. All Rights Reserved
-          </h4>
-          <div className="flex gap-5 mt-5 lg:mt-0 justify-center lg:justify-start">
-            <Link href="/" className="text-black/50 text-sm font-normal hover:text-primary">
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-black/5 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <Text fz="xs" c="dimmed">
+            &copy; 2025 Optik Fiqri. All Rights Reserved
+          </Text>
+          
+          <Group gap="xl">
+            <Link href="#" className="text-black/40 hover:text-primary text-xs transition-colors">
               Privacy policy
             </Link>
-            <Link href="/" className="text-black/50 text-sm font-normal hover:text-primary">
+            <Link href="#" className="text-black/40 hover:text-primary text-xs transition-colors">
               Terms & conditions
             </Link>
-          </div>
-          <h4 className="text-black/50 text-sm text-center lg:text-start font-normal">
+          </Group>
+
+          <Text fz="xs" c="dimmed">
             Developed by{' '}
-            <Link
-              href="https://dystianen.vercel.app/"
-              target="_blank"
-              className="hover:text-primary"
-            >
-              {' '}
+            <Link href="https://dystianen.vercel.app/" target="_blank" className="hover:text-primary transition-colors">
               Devyus
             </Link>
-          </h4>
+          </Text>
         </div>
       </div>
     </footer>

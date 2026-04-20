@@ -18,9 +18,9 @@ const SectionCarousel = ({ title, data, exploreTo, isLoading }: TSectionCarousel
   const skeletonCount = 5
 
   return (
-    <Container size={'xl'} mt={'xl'} w="100%">
-      <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-midnight_text text-4xl lg:text-5xl font-semibold mb-5 sm:mb-0">
+    <Container size={'xl'} mt={{ base: 0, sm: 'xl' }} w="100%">
+      <div className="flex justify-between items-center align-center mb-3 lg:mb-10">
+        <h2 className="text-midnight_text text-xl sm:text-4xl lg:text-5xl font-semibold">
           {title}.
         </h2>
         {exploreTo && (

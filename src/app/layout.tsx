@@ -1,5 +1,6 @@
 import Footer from '@/components/Layout/Footer'
 import Header from '@/components/Layout/Header'
+import BottomNavigation from '@/components/Layout/BottomNavigation'
 import ScrollToTop from '@/components/ScrollToTop'
 import Providers from '@/components/Providers'
 import { ColorSchemeScript, mantineHtmlProps } from '@mantine/core'
@@ -51,8 +52,11 @@ export default async function RootLayout({
       <body className={`${font.className} ${logoFont.variable}`}>
         <Providers>
           <Header user={user} />
-          {children}
+          <main className="pb-24 lg:pb-0">
+            {children}
+          </main>
           <Footer />
+          <BottomNavigation />
           <ScrollToTop />
         </Providers>
       </body>

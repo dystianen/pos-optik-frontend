@@ -1,17 +1,7 @@
 import { useSearchProduct } from '@/features/product/hooks'
 import { formatCurrency, formatSlug } from '@/utils/format'
-import {
-  ActionIcon,
-  Autocomplete,
-  AutocompleteProps,
-  Avatar,
-  Box,
-  Group,
-  Popover,
-  Stack,
-  Text
-} from '@mantine/core'
-import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
+import { Autocomplete, AutocompleteProps, Avatar, Group, Stack, Text } from '@mantine/core'
+import { useDebouncedValue } from '@mantine/hooks'
 import { IconSearch } from '@tabler/icons-react'
 import { useRouter } from 'nextjs-toploader/app'
 import { useMemo, useState } from 'react'
@@ -20,7 +10,6 @@ const Search = () => {
   const router = useRouter()
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
-  const [opened, { toggle }] = useDisclosure(false)
 
   const { data: products } = useSearchProduct(debouncedSearch)
 
@@ -73,55 +62,22 @@ const Search = () => {
   }
 
   return (
-    <>
-      <Autocomplete
-        className="hidden md:block"
-        w={{ lg: 300 }}
-        value={search}
-        onChange={setSearch}
-        data={autocompleteData}
-        renderOption={renderAutocompleteOption}
-        placeholder="Search eyewear, lenses, brands..."
-        leftSection={<IconSearch size={18} />}
-        maxDropdownHeight={320}
-        mr={'lg'}
-        radius={'md'}
-        onOptionSubmit={(value) => {
-          const selected = autocompleteData.find((item: any) => item.value === value)
-          if (!selected) return
-          router.push(`/product/${formatSlug(selected.category_name)}?search=${search}`)
-        }}
-      />
-
-      <Box maw={400} mx="auto" className="block md:hidden">
-        <Popover width={'90%'} position="bottom" withArrow shadow="xl">
-          <Popover.Target>
-            <ActionIcon variant="transparent" onClick={toggle}>
-              <IconSearch />
-            </ActionIcon>
-          </Popover.Target>
-          <Popover.Dropdown>
-            <Autocomplete
-              w={{ base: '100%', lg: 300 }}
-              value={search}
-              onChange={setSearch}
-              data={autocompleteData}
-              renderOption={renderAutocompleteOption}
-              placeholder="Search eyewear, lenses, brands..."
-              leftSection={<IconSearch size={18} />}
-              maxDropdownHeight={320}
-              mr={'lg'}
-              radius={'md'}
-              onOptionSubmit={(value) => {
-                const selected = autocompleteData.find((item: any) => item.value === value)
-                if (!selected) return
-                router.push(`/product/${formatSlug(selected.category_name)}?search=${search}`)
-              }}
-            />
-          </Popover.Dropdown>
-        </Popover>
-      </Box>
-    </>
+    <Autocomplete
+      w="100%"
+      value={search}
+      onChange={setSearch}
+      data={autocompleteData}
+      renderOption={renderAutocompleteOption}
+      placeholder="Search eyewear..."
+      leftSection={<IconSearch size={18} />}
+      maxDropdownHeight={320}
+      radius={'md'}
+      onOptionSubmit={(value) => {
+        const selected = autocompleteData.find((item: any) => item.value === value)
+        if (!selected) return
+        router.push(`/product/${formatSlug(selected.category_name)}?search=${search}`)
+      }}
+    />
   )
 }
 
