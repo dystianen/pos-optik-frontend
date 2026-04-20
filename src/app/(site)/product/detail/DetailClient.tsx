@@ -75,14 +75,25 @@ const DetailClient = ({ productId }: { productId: string }) => {
 
   useEffect(() => {
     if (!product) return
-    if (product.gallery.length > 0) {
+    const productVariants = product.variants || []
+    setVariants(productVariants)
+
+    // Auto-select first in-stock variant
+    const firstInStock = productVariants.find((v) => Number(v.stock) > 0)
+
+    if (firstInStock) {
+      setSelectedVariant(firstInStock)
+      setPrimaryImage({
+        url: firstInStock.image.url,
+        alt_text: firstInStock.image.alt_text
+      })
+    } else if (product.gallery.length > 0) {
       setPrimaryImage({
         url: product.gallery[0].url,
         alt_text: product.gallery[0].alt_text
       })
-      setGalleryImage(product.gallery)
     }
-    setVariants(product.variants)
+    setGalleryImage(product.gallery)
   }, [product])
 
   const handleAddCart = async () => {
@@ -116,7 +127,6 @@ const DetailClient = ({ productId }: { productId: string }) => {
 
   const handleSelectGallery = useCallback((item: TGalleryDetail) => {
     setPrimaryImage({ url: item.url, alt_text: item.alt_text })
-    setSelectedVariant(null)
   }, [])
 
   const handleSelectVariant = useCallback((variant: Variant) => {
@@ -199,11 +209,14 @@ const DetailClient = ({ productId }: { productId: string }) => {
                           </Text>
                         </Box>
 
-                        <Tooltip label="Select variant first" disabled={!!selectedVariant}>
+                        <Tooltip
+                          label="Select variant first"
+                          disabled={variants.length === 0 || !!selectedVariant}
+                        >
                           <Button
                             mt="md"
                             onClick={handleAddCart}
-                            disabled={!selectedVariant}
+                            disabled={variants.length > 0 && !selectedVariant}
                             loading={loading}
                           >
                             Add to Cart

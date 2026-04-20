@@ -73,7 +73,9 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
 
       function handleLogout() {
         removeTokens()
-        window.location.href = '/signin'
+        if (typeof window !== 'undefined') {
+          window.location.href = '/signin'
+        }
       }
 
       return Promise.reject(error)
