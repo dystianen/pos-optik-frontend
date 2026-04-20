@@ -58,9 +58,9 @@ const Cart = () => {
               <IconShoppingBag size={24} color="white" />
             </Box>
             <Box>
-              <Title order={1} fw={700}>
+              <Text fw={600} fz={'h3'}>
                 Shopping Cart
-              </Title>
+              </Text>
               <Group gap={8} mt={4}>
                 <Text size="sm" c="dimmed">
                   {isLoading ? 'Loading...' : `${cart?.items?.length || 0} items`}

@@ -16,7 +16,7 @@ const Wishlist = () => {
   const { data: wishlist, isLoading } = useWishlist({ search: debouncedSearch })
 
   return (
-    <Container size="xl" my="xl" mt={100} w="100%">
+    <Container size="xl" mt={{ base: 70, md: 100 }}>
       <div className="sm:flex justify-between items-center mb-10">
         <h2 className="text-2xl font-semibold mb-5 sm:mb-0">Wishlist</h2>
         <TextInput

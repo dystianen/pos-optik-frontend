@@ -26,7 +26,6 @@ import {
   LoadingOverlay,
   Stack,
   Text,
-  Title,
   Tooltip
 } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
@@ -257,7 +256,7 @@ export default function OrderDetailPage() {
   })()
 
   return (
-    <Container size="xl" my={100} mih={900} pos={'relative'}>
+    <Container size="xl" mt={{ base: 70, md: 100 }} mih={900} pos={'relative'}>
       <Stack gap="lg">
         {/* Header */}
         <Group>
@@ -276,7 +275,9 @@ export default function OrderDetailPage() {
             <>
               <Group justify="space-between" align="start" mb={'lg'}>
                 <div>
-                  <Title order={2}>Order Details</Title>
+                  <Text fw={600} fz={'h3'} mb={'sm'}>
+                    Order Details
+                  </Text>
                   <Text size="sm" c="dimmed" mt="xs">
                     {formatDate(order.order_date)}
                   </Text>

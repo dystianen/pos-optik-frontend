@@ -11,3 +11,8 @@ export const register = async (payload: TPayloadRegister) => {
   const response = await apiClient.post<TResRegister>(API_ROUTES.AUTH.REGISTER, payload)
   return response.data.data
 }
+
+export const getProfile = async () => {
+  const response = await apiClient.get<TResProfile>(API_ROUTES.AUTH.PROFILE)
+  return response.data.data
+}

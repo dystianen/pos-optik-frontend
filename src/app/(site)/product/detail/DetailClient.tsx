@@ -146,7 +146,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
 
   return (
     <>
-      <Container size={'xl'} my={'xl'} mt={100} w={'100%'}>
+      <Container size={'xl'} mt={{ base: 70, md: 100 }}>
         {isLoadingPage ? (
           <ProductDetailSkeleton />
         ) : (

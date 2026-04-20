@@ -4,7 +4,8 @@ export const API_ROUTES = {
     LOGIN: '/auth/login',
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
-    REFRESH: '/auth/refresh'
+    REFRESH: '/auth/refresh',
+    PROFILE: '/auth/profile'
   },
   PRODUCTS: {
     BASE: '/products',

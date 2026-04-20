@@ -44,6 +44,10 @@ const Header = ({ user }: { user: TUser | null }) => {
     router.push('/my-orders')
   }, [])
 
+  const handleRedirectToProfile = useCallback(() => {
+    router.push('/profile')
+  }, [])
+
   return (
     <header
       className={`fixed top-0 z-[99] w-full md:pb-5 px-3 transition-all duration-300 bg-white ${
@@ -102,6 +106,12 @@ const Header = ({ user }: { user: TUser | null }) => {
                   </Menu.Target>
 
                   <Menu.Dropdown>
+                    <Menu.Item
+                      onClick={handleRedirectToProfile}
+                      leftSection={<IconUser size={16} />}
+                    >
+                      My Profile
+                    </Menu.Item>
                     <Menu.Item
                       onClick={handleRedirectToOrders}
                       leftSection={<IconTruckDelivery size={16} />}

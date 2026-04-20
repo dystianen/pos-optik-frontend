@@ -29,23 +29,15 @@ export default function HomeClient() {
             emblaOptions={{
               loop: true
             }}
-            styles={{
+            classNames={{
+              slide: 'h-[200px] sm:h-[400px]'
+            }}
+            styles={(theme) => ({
               viewport: {
                 borderRadius: 15
               },
               control: {
                 color: 'white'
-              },
-              slide: {
-                height: 'var(--carousel-height)'
-              }
-            }}
-            vars={(theme) => ({
-              root: {
-                '--carousel-height': '200px',
-                [`@media (minWidth: ${theme.breakpoints.sm})`]: {
-                  '--carousel-height': '400px'
-                }
               }
             })}
           >

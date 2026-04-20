@@ -1,16 +1,6 @@
 'use client'
 import { useOrders } from '@/features/order/hooks'
-import {
-  Box,
-  Center,
-  Container,
-  Group,
-  LoadingOverlay,
-  Stack,
-  Tabs,
-  Text,
-  Title
-} from '@mantine/core'
+import { Box, Center, Container, Group, LoadingOverlay, Stack, Tabs, Text } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import {
   IconAlertCircle,
@@ -36,10 +26,12 @@ const MyOrdersClient = () => {
   const { data, isLoading } = useOrders({ statusId: orderTab })
 
   return (
-    <Container size="xl" py="xl" mt={60}>
-      <Stack gap="lg">
+    <Container size="xl" mt={{ base: 70, md: 100 }}>
+      <Stack gap="md">
         {/* Header */}
-        <Title order={2}>My Orders</Title>
+        <Text fw={600} fz={'h3'}>
+          My Orders
+        </Text>
 
         <Tabs
           value={orderTab}
