@@ -153,7 +153,7 @@ export function ReviewSection({ productId }: ReviewSectionProps) {
                         {formatDate(review.created_at)}
                       </Text>
                     </Group>
-                    <Text size="sm" pl={56} c="dark.3" style={{ lineHeight: 1.6 }}>
+                    <Text size="sm" pl={{ base: 0, sm: 56 }} c="dark.3" style={{ lineHeight: 1.6 }}>
                       {review.comment}
                     </Text>
                     {review.media && review.media.length > 0 && (
