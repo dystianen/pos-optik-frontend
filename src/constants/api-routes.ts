@@ -14,6 +14,7 @@ export const API_ROUTES = {
     NEW_EYEWEAR: '/products/new-eyewear',
     BEST_SELLER: '/products/best-seller',
     RECOMMENDATIONS: (id: string) => `/products/recommendations/${id}`,
+    MY_RECOMMENDATIONS: '/products/my-recommendations',
     ATTRIBUTES: (id: string) => `/products/${id}/attributes`
   },
   ORDERS: {

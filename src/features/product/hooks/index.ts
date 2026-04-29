@@ -54,6 +54,13 @@ export function useRecommendations({
   })
 }
 
+export function useMyRecommendations({ limit }: { limit?: number }) {
+  return useQuery({
+    queryKey: ['MY_RECOMMENDATIONS', limit],
+    queryFn: () => productApi.getMyRecommendations({ limit })
+  })
+}
+
 export function useProductCategory() {
   return useQuery({
     queryKey: ['PRODUCT_CATEGORY'],
@@ -106,6 +113,7 @@ export function useToggleWishlist() {
       queryClient.setQueriesData({ queryKey: ['BEST_SELLER'] }, updateProductInList)
       queryClient.setQueriesData({ queryKey: ['NEW_EYEWEAR'] }, updateProductInList)
       queryClient.setQueriesData({ queryKey: ['RECOMMENDATIONS'] }, updateProductInList)
+      queryClient.setQueriesData({ queryKey: ['MY_RECOMMENDATIONS'] }, updateProductInList)
       
       // 2. Update halaman detailnya kalau ada yg buka
       queryClient.setQueriesData({ queryKey: ['product_id', productId] }, (oldData: any) => {
@@ -130,6 +138,7 @@ export function useToggleWishlist() {
       queryClient.invalidateQueries({ queryKey: ['BEST_SELLER'] })
       queryClient.invalidateQueries({ queryKey: ['NEW_EYEWEAR'] })
       queryClient.invalidateQueries({ queryKey: ['RECOMMENDATIONS'] })
+      queryClient.invalidateQueries({ queryKey: ['MY_RECOMMENDATIONS'] })
       queryClient.invalidateQueries({ queryKey: ['product_id', context?.productId] })
     }
   })

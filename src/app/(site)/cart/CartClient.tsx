@@ -1,8 +1,10 @@
 'use client'
 
+import SectionCarousel from '@/components/Home/SectionCarousel'
 import CardCart from '@/components/ui/CardCart'
 import CardCartSkeleton from '@/components/ui/Skeleton/CardCartSkeleton'
 import { useCart } from '@/features/cart/hooks'
+import { useMyRecommendations } from '@/features/product/hooks'
 import { formatCurrency } from '@/utils/format'
 import {
   Badge,
@@ -20,13 +22,19 @@ import {
   rem
 } from '@mantine/core'
 import { IconLock, IconShoppingBag, IconShoppingCart } from '@tabler/icons-react'
+import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useState } from 'react'
 
 const Cart = () => {
   const router = useRouter()
+  const isLoggedIn = hasCookie('user')
   const { data: cart, isLoading } = useCart()
   const [loading, setLoading] = useState(false)
+
+  const { data: myRecommendations, isLoading: isLoadingMyRecs } = useMyRecommendations({
+    limit: 10
+  })
 
   const handleCheckout = useCallback(() => {
     setLoading(true)
@@ -251,6 +259,15 @@ const Cart = () => {
             </Paper>
           </Grid.Col>
         </Grid>
+
+        {isLoggedIn && myRecommendations && myRecommendations.length > 0 && (
+          <SectionCarousel
+            title="Just For You"
+            exploreTo="/recommendations"
+            data={myRecommendations}
+            isLoading={isLoadingMyRecs}
+          />
+        )}
       </Stack>
     </Container>
   )

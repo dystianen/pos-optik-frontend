@@ -58,6 +58,16 @@ export const getRecommendations = async ({
   return response.data.data
 }
 
+export const getMyRecommendations = async ({ limit }: { limit?: number }) => {
+  const params = new URLSearchParams()
+  if (limit) params.append('limit', limit.toString())
+
+  const response = await apiClient.get<TResProducts>(
+    `${API_ROUTES.PRODUCTS.MY_RECOMMENDATIONS}?${params.toString()}`
+  )
+  return response.data.data
+}
+
 export const getNewEyeWear = async ({ limit, search }: { limit?: number; search?: string }) => {
   const params = new URLSearchParams()
   if (limit) params.append('limit', limit.toString())

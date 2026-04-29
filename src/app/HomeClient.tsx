@@ -1,17 +1,23 @@
 'use client'
 import SectionCarousel from '@/components/Home/SectionCarousel'
-import { useBestSeller, useNewEyeWear } from '@/features/product/hooks'
+import { useBestSeller, useMyRecommendations, useNewEyeWear } from '@/features/product/hooks'
 import { Carousel } from '@mantine/carousel'
 import { Container, Image, Stack } from '@mantine/core'
+import { hasCookie } from 'cookies-next/client'
 import Autoplay from 'embla-carousel-autoplay'
 import { useRef } from 'react'
 
 export default function HomeClient() {
   const autoplay = useRef(Autoplay({ delay: 3000 }))
+  const isLoggedIn = hasCookie('user')
+
   const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useNewEyeWear({
     limit: 10
   })
   const { data: bestSeller, isLoading: isLoadingBestSeller } = useBestSeller({
+    limit: 10
+  })
+  const { data: myRecommendations, isLoading: isLoadingMyRecs } = useMyRecommendations({
     limit: 10
   })
 
@@ -67,6 +73,14 @@ export default function HomeClient() {
           data={bestSeller ?? []}
           isLoading={isLoadingBestSeller}
         />
+        {isLoggedIn && myRecommendations && myRecommendations.length > 0 && (
+          <SectionCarousel
+            title="Just For You"
+            exploreTo="/recommendations"
+            data={myRecommendations}
+            isLoading={isLoadingMyRecs}
+          />
+        )}
       </Stack>
     </main>
   )

@@ -2,9 +2,10 @@
 
 import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
-import { useRecommendations } from '@/features/product/hooks'
+import { useMyRecommendations, useProduct } from '@/features/product/hooks'
 import { Container, Grid, Stack, Text, TextInput } from '@mantine/core'
 import { useDebouncedValue } from '@mantine/hooks'
+import { IconSearch } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
@@ -12,17 +13,29 @@ const Recommendations = () => {
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
-  const { data: products, isLoading } = useRecommendations({ productId: '', search: debouncedSearch })
+  // Jika ada search, gunakan general product search
+  // Jika tidak ada search, gunakan personalized recommendations
+  const { data: myRecs, isLoading: isLoadingRecs } = useMyRecommendations({ limit: 20 })
+  const { data: searchResult, isLoading: isLoadingSearch } = useProduct({
+    category: null,
+    search: debouncedSearch
+  })
+
+  const isLoading = debouncedSearch ? isLoadingSearch : isLoadingRecs
+  const products = debouncedSearch ? searchResult : myRecs
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">
       <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">Recommendations</h2>
+        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">
+          {debouncedSearch ? `Search Results for "${debouncedSearch}"` : 'Just For You'}
+        </h2>
         <TextInput
-          placeholder="Search..."
+          placeholder="Search products..."
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
           className="sm:w-72"
+          leftSection={<IconSearch size={18} />}
         />
       </div>
 
