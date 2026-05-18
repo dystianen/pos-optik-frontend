@@ -54,10 +54,11 @@ export function useRecommendations({
   })
 }
 
-export function useMyRecommendations({ limit }: { limit?: number }) {
+export function useMyRecommendations({ limit, enabled = true }: { limit?: number; enabled?: boolean } = {}) {
   return useQuery({
     queryKey: ['MY_RECOMMENDATIONS', limit],
-    queryFn: () => productApi.getMyRecommendations({ limit })
+    queryFn: () => productApi.getMyRecommendations({ limit }),
+    enabled
   })
 }
 

@@ -33,7 +33,8 @@ const Cart = () => {
   const [loading, setLoading] = useState(false)
 
   const { data: myRecommendations, isLoading: isLoadingMyRecs } = useMyRecommendations({
-    limit: 10
+    limit: 10,
+    enabled: isLoggedIn
   })
 
   const handleCheckout = useCallback(() => {
