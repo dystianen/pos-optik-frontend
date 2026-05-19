@@ -18,6 +18,7 @@ import {
   Flex,
   Grid,
   Group,
+  Modal,
   SimpleGrid,
   Stack,
   Text,
@@ -49,6 +50,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
   const router = useRouter()
   const isMobile = useMediaQueryFromBreakpoints()
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [imageModalOpen, setImageModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [primaryImage, setPrimaryImage] = useState<TImage>({
     url: '',
@@ -195,11 +197,14 @@ const DetailClient = ({ productId }: { productId: string }) => {
                         <Grid.Col span={{ md: 10 }}>
                           {primaryImage.url !== '' && (
                             <div
+                              onClick={() => setImageModalOpen(true)}
                               style={{
                                 position: 'relative',
                                 height: isMobile ? 300 : 400,
-                                width: '100%'
+                                width: '100%',
+                                cursor: 'pointer'
                               }}
+                              title="Click to zoom image"
                             >
                               <Image
                                 src={primaryImage.url}
@@ -351,6 +356,28 @@ const DetailClient = ({ productId }: { productId: string }) => {
           onClose={() => setAuthModalOpen(false)}
           onLogin={handleLogin}
         />
+
+        <Modal
+          opened={imageModalOpen}
+          onClose={() => setImageModalOpen(false)}
+          size="lg"
+          centered
+          title="Product Image Detail"
+          styles={{
+            header: {
+              borderBottom: '1px solid var(--mantine-color-default-border)'
+            }
+          }}
+        >
+          <div style={{ position: 'relative', height: isMobile ? 350 : 500, width: '100%' }}>
+            <Image
+              src={primaryImage.url}
+              alt={primaryImage.alt_text}
+              fill
+              style={{ objectFit: 'contain' }}
+            />
+          </div>
+        </Modal>
       </Container>
 
       <SectionCarousel
