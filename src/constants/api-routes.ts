@@ -24,7 +24,8 @@ export const API_ROUTES = {
     SUBMIT: (id: string) => `/orders/submit/${id}`,
     PAYMENT: '/orders/payment',
     STATUS: (id: string) => `/orders/${id}/status`,
-    CHECK_PAYMENT: (id: string) => `/orders/check-payment-status/${id}`
+    CHECK_PAYMENT: (id: string) => `/orders/check-payment-status/${id}`,
+    EXPIRE: (id: string) => `/online-sales/${id}/expire`
   },
   CART: {
     BASE: '/cart',

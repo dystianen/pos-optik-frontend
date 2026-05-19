@@ -1,8 +1,10 @@
 'use client'
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/ui/RefundAccountForm'
+import { PaymentCountdown } from '@/features/order/components/PaymentCountdown'
 import { usePayment, useRefundAccount, useUpdateRefundAccount } from '@/features/order/hooks'
 import {
   ActionIcon,
+  Alert,
   Button,
   Card,
   FileInput,
@@ -15,8 +17,8 @@ import {
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useClipboard, useLocalStorage } from '@mantine/hooks'
-import { IconCheck, IconClipboard } from '@tabler/icons-react'
-import { useCallback, useEffect } from 'react'
+import { IconAlertCircle, IconCheck, IconClipboard } from '@tabler/icons-react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 type FormValues = {
@@ -36,6 +38,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   const clipboard = useClipboard({ timeout: 1500 })
   const [checkoutOrderRaw] = useLocalStorage({ key: 'checkout_order' })
   const checkoutOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
+  const [isExpired, setIsExpired] = useState(false)
 
   const { mutate: payment, isPending: isLoadingSubmit } = usePayment()
   const { data: refundAccount, isLoading: isLoadingRefundAccount } = useRefundAccount()
@@ -140,6 +143,30 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   return (
     <Card shadow="md" p="xl">
       <Stack align="center" gap="lg">
+        {/* Payment Countdown */}
+        {checkoutOrder?.order_id && checkoutOrder?.created_at && (
+          <PaymentCountdown
+            orderId={checkoutOrder.order_id}
+            createdAt={checkoutOrder.created_at}
+            onExpired={() => {
+              setIsExpired(true)
+              toast.error('Waktu pembayaran habis. Pesanan dibatalkan otomatis.')
+            }}
+          />
+        )}
+
+        {isExpired && (
+          <Alert
+            icon={<IconAlertCircle size={16} />}
+            color="red"
+            variant="light"
+            title="Pembayaran Tidak Dapat Dilanjutkan"
+            w="100%"
+          >
+            Pesanan telah kadaluarsa. Silakan buat pesanan baru.
+          </Alert>
+        )}
+
         <Image src="/images/payment.svg" h={360} fit="contain" />
 
         <Group gap="xs">
@@ -165,6 +192,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
                 placeholder="Select image"
                 accept="image/png,image/jpeg,image/webp"
                 radius="md"
+                disabled={isExpired}
                 {...form.getInputProps('proof')}
               />
             </Card>
@@ -190,7 +218,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
             </Card>
 
             <Group>
-              <Button type="submit" loading={isLoadingSubmit}>
+              <Button type="submit" loading={isLoadingSubmit} disabled={isExpired}>
                 Submit Payment
               </Button>
             </Group>

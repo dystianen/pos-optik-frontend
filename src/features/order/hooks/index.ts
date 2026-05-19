@@ -129,3 +129,14 @@ export function useShipItem() {
     }
   })
 }
+
+export function useExpireOrder() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (orderId: string) => orderApi.expireOrder(orderId),
+    onSuccess: (_data, orderId) => {
+      queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER', orderId] })
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
+    }
+  })
+}

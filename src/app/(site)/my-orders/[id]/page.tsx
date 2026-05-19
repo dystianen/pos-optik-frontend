@@ -56,6 +56,10 @@ const ReviewModal = dynamic(
   () => import('@/features/review/components/ReviewModal').then((mod) => mod.ReviewModal),
   { ssr: false }
 )
+const PaymentCountdown = dynamic(
+  () => import('@/features/order/components/PaymentCountdown').then((mod) => mod.PaymentCountdown),
+  { ssr: false }
+)
 
 const getStatusColor = (status: string) => {
   const statusColors: Record<string, string> = {
@@ -447,7 +451,34 @@ export default function OrderDetailPage() {
                           <Text fw={600}>Payment Information</Text>
                         </Group>
                         <Divider />
-                        {order.payment.method ? (
+
+                        {/* Countdown for pending orders */}
+                        {order.status_code === 'pending' && order.order_date && (
+                          <>
+                            <PaymentCountdown
+                              orderId={order.order_id}
+                              createdAt={order.order_date}
+                              onExpired={() => {
+                                toast.info('Waktu pembayaran habis. Pesanan dibatalkan otomatis.')
+                              }}
+                            />
+                            <Divider />
+                            <Button
+                              variant="light"
+                              color="blue"
+                              size="sm"
+                              fullWidth
+                              leftSection={<IconCreditCard size={14} />}
+                              onClick={() => {
+                                router.push(`/checkout`)
+                              }}
+                            >
+                              Go to Payment Page
+                            </Button>
+                          </>
+                        )}
+
+                        {order.payment.method && (
                           <>
                             <Group justify="space-between">
                               <Text size="sm" c="dimmed">
@@ -468,10 +499,6 @@ export default function OrderDetailPage() {
                               </Group>
                             )}
                           </>
-                        ) : (
-                          <Text size="sm" c="dimmed" ta="center">
-                            No payment yet
-                          </Text>
                         )}
                       </Stack>
                     </Card>

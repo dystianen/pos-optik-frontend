@@ -65,6 +65,7 @@ export interface OrderItem {
 export interface Order {
   order_id: string
   order_date: string
+  created_at: string
   status: string
   status_code: string
   items: OrderItem[]

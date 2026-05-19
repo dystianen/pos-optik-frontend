@@ -95,3 +95,8 @@ export const updateRefundAccount = async (payload: FormValuesUpdate) => {
   const response = await apiClient.post<TResRefundAccount>(API_ROUTES.REFUND.SAVE_ACCOUNT, payload)
   return response.data.data
 }
+
+export const expireOrder = async (orderId: string) => {
+  const response = await apiClient.post(API_ROUTES.ORDERS.EXPIRE(orderId))
+  return response.data
+}
