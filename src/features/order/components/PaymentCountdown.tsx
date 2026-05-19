@@ -86,7 +86,9 @@ export function PaymentCountdown({
         variant="light"
         title="Payment Deadline Expired"
       >
-        <Text size="sm">Waktu pembayaran telah habis. Pesanan ini telah otomatis dibatalkan.</Text>
+        <Text size="sm">
+          The payment time has expired. This order has been automatically cancelled.
+        </Text>
       </Alert>
     )
   }
@@ -98,11 +100,11 @@ export function PaymentCountdown({
           <IconClock size={14} />
         </ThemeIcon>
         <Text size="sm" fw={600} c={isUrgent ? 'orange' : 'dimmed'}>
-          Batas Waktu Pembayaran
+          Payment Deadline
         </Text>
         {isUrgent && (
           <Badge color="orange" variant="light" size="xs">
-            Segera!
+            Hurry up!
           </Badge>
         )}
       </Group>
@@ -120,7 +122,7 @@ export function PaymentCountdown({
             {time.hours}
           </Text>
           <Text size="xs" c="dimmed">
-            Jam
+            Hours
           </Text>
         </Stack>
         <Text size="xl" fw={700} c="dimmed" style={{ lineHeight: 1 }}>
@@ -137,7 +139,7 @@ export function PaymentCountdown({
             {time.minutes}
           </Text>
           <Text size="xs" c="dimmed">
-            Menit
+            Minutes
           </Text>
         </Stack>
         <Text size="xl" fw={700} c="dimmed" style={{ lineHeight: 1 }}>
@@ -154,7 +156,7 @@ export function PaymentCountdown({
             {time.seconds}
           </Text>
           <Text size="xs" c="dimmed">
-            Detik
+            Seconds
           </Text>
         </Stack>
       </Group>
@@ -172,19 +174,19 @@ export function PaymentCountdown({
         <Group gap="xs">
           <IconAlertTriangle size={14} color="orange" />
           <Text size="xs" c="orange">
-            Segera lakukan pembayaran sebelum waktu habis
+            Please make payment before time runs out
           </Text>
         </Group>
       )}
 
       <Text size="xs" c="dimmed" ta="center">
-        Pesanan akan otomatis dibatalkan jika pembayaran tidak diterima dalam {deadlineHours} jam
-        sejak order dibuat
+        The order will be automatically cancelled if payment is not received within {deadlineHours}{' '}
+        hours from the time the order was created
       </Text>
 
       {isExpiring && (
         <Text size="xs" c="dimmed" ta="center">
-          Memproses expiry...
+          Processing expiry...
         </Text>
       )}
     </Stack>

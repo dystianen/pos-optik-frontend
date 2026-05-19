@@ -104,7 +104,6 @@ export default function OrderDetailPage() {
 
   const refundStatus =
     requestType === 'refund' ? refundStatusData : requestType === 'cancel' ? cancelStatusData : null
-  console.log('🚀 ~ OrderDetailPage ~ refundStatus:', refundStatus)
 
   const handleCancelOrder = (payload: any) => {
     cancelOrder(payload, {
@@ -459,7 +458,9 @@ export default function OrderDetailPage() {
                               orderId={order.order_id}
                               createdAt={order.order_date}
                               onExpired={() => {
-                                toast.info('Waktu pembayaran habis. Pesanan dibatalkan otomatis.')
+                                toast.info(
+                                  'Payment time has expired. Order has been automatically cancelled.'
+                                )
                               }}
                             />
                             <Divider />
