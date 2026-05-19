@@ -1,5 +1,5 @@
 import { GeneralResponse } from '@/types/general'
-import { TItemCart } from './order'
+import { TItemCart } from '@/features/order/types'
 
 export type PrescriptionPayload = {
   type: 'none' | 'manual'

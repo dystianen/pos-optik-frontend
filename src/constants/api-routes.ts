@@ -5,7 +5,8 @@ export const API_ROUTES = {
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     REFRESH: '/auth/refresh',
-    PROFILE: '/auth/profile'
+    PROFILE: '/auth/profile',
+    FORGOT_PASSWORD: '/auth/forgot-password'
   },
   PRODUCTS: {
     BASE: '/products',

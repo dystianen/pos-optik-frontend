@@ -15,6 +15,12 @@ export function useRegister() {
   })
 }
 
+export function useForgotPassword() {
+  return useMutation({
+    mutationFn: authApi.forgotPassword
+  })
+}
+
 export function useProfile() {
   return useQuery({
     queryKey: ['profile'],

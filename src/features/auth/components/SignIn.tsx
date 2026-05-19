@@ -1,7 +1,5 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
-import { useLogin } from '../hooks'
-import { TPayloadLogin } from '../types'
 import { setAccessToken, setRefreshToken, setUser } from '@/utils/auth-server'
 import { Button, Card, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
@@ -9,6 +7,8 @@ import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+import { useLogin } from '../hooks'
+import { TPayloadLogin } from '../types'
 
 const SignIn = () => {
   const router = useRouter()
@@ -34,9 +34,9 @@ const SignIn = () => {
         setLoading(false)
         router.replace('/')
       },
-      onError: (err) => {
+      onError: (err: any) => {
         setLoading(false)
-        toast.error(err.message)
+        toast.error(err.response.data.errors.customer_email)
       }
     })
   }
@@ -69,6 +69,18 @@ const SignIn = () => {
               {...form.getInputProps('customer_password')}
             />
 
+            <div className="flex justify-end -mt-2">
+              <span
+                onClick={() => {
+                  const email = form.getValues().customer_email
+                  router.push(`/forgot-password?email=${encodeURIComponent(email || '')}`)
+                }}
+                className="text-xs text-primary hover:underline font-medium cursor-pointer"
+              >
+                Forgot Password?
+              </span>
+            </div>
+
             {/* Submit Button */}
             <Group justify="center" mt="md">
               <Button type="submit" w={'100%'} size="lg" loading={loading}>
@@ -89,7 +101,7 @@ const SignIn = () => {
             </p>
 
             <p className="text-sm text-gray-400 text-center">
-              Don't have an account? {" "}
+              Don't have an account?{' '}
               <Link href="/signup" className="pl-2 text-primary hover:underline">
                 Sign Up
               </Link>

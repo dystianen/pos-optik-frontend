@@ -3,6 +3,18 @@ export type TPayloadLogin = {
   customer_password: string
 }
 
+export type TPayloadForgotPassword = {
+  customer_email: string
+  customer_password: string
+  confirm_password: string
+}
+
+export type TResForgotPassword = {
+  success: boolean
+  message: string
+  data: any
+}
+
 export type TPayloadRegister = {
   customer_name: string
   customer_email: string
