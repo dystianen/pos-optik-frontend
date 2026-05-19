@@ -1,6 +1,7 @@
 'use client'
 import { useOrders } from '@/features/order/hooks'
 import { Box, Center, Container, Group, LoadingOverlay, Stack, Tabs, Text } from '@mantine/core'
+import { DatePickerInput } from '@mantine/dates'
 import { useLocalStorage } from '@mantine/hooks'
 import {
   IconAlertCircle,
@@ -10,7 +11,9 @@ import {
   IconTruck,
   IconX
 } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import dynamic from 'next/dynamic'
+import { useState } from 'react'
 
 const OrderCard = dynamic(
   () => import('@/features/order/components/OrderCard').then((mod) => mod.OrderCard),
@@ -23,15 +26,36 @@ const MyOrdersClient = () => {
     defaultValue: 'all'
   })
 
-  const { data, isLoading } = useOrders({ statusId: orderTab })
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null])
+
+  const start_date = dateRange[0] ? dayjs(dateRange[0]).format('YYYY-MM-DD') : null
+  const end_date = dateRange[1] ? dayjs(dateRange[1]).format('YYYY-MM-DD') : null
+
+  const { data, isLoading } = useOrders({
+    statusId: orderTab,
+    start_date,
+    end_date
+  })
 
   return (
     <Container size="xl" mt={{ base: 70, md: 100 }}>
       <Stack gap="md">
-        {/* Header */}
-        <Text fw={600} fz={'h3'}>
-          My Orders
-        </Text>
+        {/* Header & Filter */}
+        <Group justify="space-between" align="center" wrap="wrap">
+          <Text fw={600} fz={'h3'}>
+            My Orders
+          </Text>
+          <Box w={{ base: '100%', sm: 300 }}>
+            <DatePickerInput
+              type="range"
+              label="Filter by Date"
+              placeholder="Pick date range"
+              value={dateRange}
+              onChange={(val) => setDateRange(val as [Date | null, Date | null])}
+              clearable
+            />
+          </Box>
+        </Group>
 
         <Tabs
           value={orderTab}

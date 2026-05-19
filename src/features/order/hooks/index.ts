@@ -8,7 +8,11 @@ export function useSummaryOrders() {
   })
 }
 
-export function useOrders(payload: { statusId: string | null }) {
+export function useOrders(payload: {
+  statusId: string | null
+  start_date?: string | null
+  end_date?: string | null
+}) {
   return useQuery({
     queryKey: ['orders', payload],
     queryFn: () => orderApi.getOrders(payload)

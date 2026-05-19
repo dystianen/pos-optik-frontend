@@ -17,7 +17,11 @@ export const summaryOrders = async (id: string) => {
   return response.data.data
 }
 
-export const getOrders = async (payload: { statusId: string | null }) => {
+export const getOrders = async (payload: {
+  statusId: string | null
+  start_date?: string | null
+  end_date?: string | null
+}) => {
   const response = await apiClient.get<TResOrder>(API_ROUTES.ORDERS.BASE, {
     params: payload
   })
