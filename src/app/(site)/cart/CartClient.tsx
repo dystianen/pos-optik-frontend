@@ -28,11 +28,16 @@ import { useActiveOrder, useCancelOrder } from '@/features/order/hooks'
 import { toast } from 'react-toastify'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const Cart = () => {
   const router = useRouter()
-  const isLoggedIn = hasCookie('user')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    setIsLoggedIn(hasCookie('user'))
+  }, [])
+
   const { data: cart, isLoading } = useCart()
   const [loading, setLoading] = useState(false)
   const [checkingActiveOrder, setCheckingActiveOrder] = useState(false)

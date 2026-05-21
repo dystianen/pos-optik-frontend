@@ -9,11 +9,16 @@ import { IconSearch, IconSparkles } from '@tabler/icons-react'
 import { hasCookie } from 'cookies-next/client'
 import Image from 'next/image'
 import { useRouter } from 'nextjs-toploader/app'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Recommendations = () => {
   const router = useRouter()
-  const isLoggedIn = hasCookie('user')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    setIsLoggedIn(hasCookie('user'))
+  }, [])
+
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
 

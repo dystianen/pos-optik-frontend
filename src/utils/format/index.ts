@@ -8,7 +8,9 @@ export const formatCurrency = (data: string | number) => {
   const price = Number(data)
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
-    currency: 'IDR'
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(price)
 }
 

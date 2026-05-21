@@ -5,11 +5,15 @@ import { Carousel } from '@mantine/carousel'
 import { Container, Image, Stack } from '@mantine/core'
 import { hasCookie } from 'cookies-next/client'
 import Autoplay from 'embla-carousel-autoplay'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function HomeClient() {
   const autoplay = useRef(Autoplay({ delay: 3000 }))
-  const isLoggedIn = hasCookie('user')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    setIsLoggedIn(hasCookie('user'))
+  }, [])
 
   const { data: newEyeWear, isLoading: isLoadingNewEyeWear } = useNewEyeWear({
     limit: 10
