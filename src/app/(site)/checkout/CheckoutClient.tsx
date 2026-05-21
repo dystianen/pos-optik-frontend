@@ -1,13 +1,11 @@
 'use client'
-import dynamic from 'next/dynamic'
-
-const StepPayment = dynamic(() => import('@/features/checkout/components/StepPayment'), { ssr: false })
-const StepPaymentConfirmation = dynamic(() => import('@/features/checkout/components/StepPaymentConfirmation'), { ssr: false })
-const StepResultPayment = dynamic(() => import('@/features/checkout/components/StepResultPayment'), { ssr: false })
-const StepSummaryOrder = dynamic(() => import('@/features/checkout/components/StepSummaryOrder'), { ssr: false })
-import { useSummaryOrders, useActiveOrder } from '@/features/order/hooks'
+import { useActiveOrder, useSummaryOrders } from '@/features/order/hooks'
 import { TSummaryOrders } from '@/features/order/types'
-import { useAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/features/shipping/hooks'
+import {
+  useAllShippingAddress,
+  useGetShippingAddress,
+  useSaveCustomerShipping
+} from '@/features/shipping/hooks'
 import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/types'
 import {
   Alert,
@@ -27,9 +25,25 @@ import {
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
 import { IconEdit, IconInfoCircle } from '@tabler/icons-react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+
+const StepPayment = dynamic(() => import('@/features/checkout/components/StepPayment'), {
+  ssr: false
+})
+const StepPaymentConfirmation = dynamic(
+  () => import('@/features/checkout/components/StepPaymentConfirmation'),
+  { ssr: false }
+)
+const StepResultPayment = dynamic(
+  () => import('@/features/checkout/components/StepResultPayment'),
+  { ssr: false }
+)
+const StepSummaryOrder = dynamic(() => import('@/features/checkout/components/StepSummaryOrder'), {
+  ssr: false
+})
 
 const Orders = () => {
   const router = useRouter()
@@ -63,11 +77,9 @@ const Orders = () => {
 
   const { data: activeOrderData, isLoading: isLoadingActiveOrder } = useActiveOrder()
 
-  const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } =
-    useAllShippingAddress()
+  const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } = useAllShippingAddress()
   const { data: shippingAddress } = useGetShippingAddress(csaId)
-  const { mutate: saveShippingAddress, isPending: isLoadingSave } =
-    useSaveCustomerShipping()
+  const { mutate: saveShippingAddress, isPending: isLoadingSave } = useSaveCustomerShipping()
   const { mutate: summary, isPending: isLoadingSummary } = useSummaryOrders()
 
   const [showForm, setShowForm] = useState(false)
@@ -102,36 +114,6 @@ const Orders = () => {
       })
     }
   }, [activeStep, csaId])
-
-  useEffect(() => {
-    if (isLoadingActiveOrder || !activeOrderData) return
-
-    const localOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
-    
-    if (activeOrderData.hasActivePayment) {
-      const activeOrderId = activeOrderData.order.order_id
-      
-      // Check if user is in step < 2 (trying to checkout new), or local order ID is different
-      const isTryingNewCheckout = activeStep < 2 || !localOrder || localOrder.order_id !== activeOrderId
-      
-      if (isTryingNewCheckout) {
-        // Redirect back to cart so they can resolve the active payment issue
-        toast.warning('Anda memiliki pesanan yang belum diselesaikan. Silakan selesaikan atau batalkan di keranjang.')
-        router.push('/cart')
-      }
-    } else {
-      // Backend does NOT have any active payment (unpaid/pending order).
-      // If frontend step is >= 2 (Payment or Confirmation steps), this means the order has expired or been cancelled/completed on backend.
-      // We must reset the step!
-      if (activeStep >= 2 && activeStep < 4) {
-        setActiveStep(0)
-        setCheckoutOrderRaw(null)
-        toast.info('Sesi pembayaran sebelumnya telah berakhir atau dibatalkan.')
-      }
-    }
-  }, [activeOrderData, isLoadingActiveOrder, activeStep, checkoutOrderRaw, router])
-
-
 
   const handleSaveAddress = (values: TReqCustomerShipping) => {
     const payload = csaId ? { ...values, id: csaId } : { ...values }
@@ -243,11 +225,7 @@ const Orders = () => {
                       <Text fw={600} size="lg">
                         Choose Shipping Address
                       </Text>
-                      <Button
-                        size="xs"
-                        variant="light"
-                        onClick={() => handleSelectAddress(null)}
-                      >
+                      <Button size="xs" variant="light" onClick={() => handleSelectAddress(null)}>
                         + Add New Address
                       </Button>
                     </Group>
@@ -322,11 +300,7 @@ const Orders = () => {
                         Back
                       </Button>
 
-                      <Button
-                        type="submit"
-                        loading={isLoadingSummary}
-                        onClick={nextToSummaryOrder}
-                      >
+                      <Button type="submit" loading={isLoadingSummary} onClick={nextToSummaryOrder}>
                         Next
                       </Button>
                     </Group>
@@ -415,8 +389,6 @@ const Orders = () => {
           <StepResultPayment />
         </Stepper.Completed>
       </Stepper>
-
-
     </Container>
   )
 }

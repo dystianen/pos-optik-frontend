@@ -4,6 +4,7 @@ import SectionCarousel from '@/components/Home/SectionCarousel'
 import CardCart from '@/components/ui/CardCart'
 import CardCartSkeleton from '@/components/ui/Skeleton/CardCartSkeleton'
 import { useCart } from '@/features/cart/hooks'
+import { useActiveOrder, useCancelOrder } from '@/features/order/hooks'
 import { useMyRecommendations } from '@/features/product/hooks'
 import { formatCurrency } from '@/utils/format'
 import {
@@ -22,13 +23,12 @@ import {
   Title,
   rem
 } from '@mantine/core'
-import { IconLock, IconShoppingBag, IconShoppingCart } from '@tabler/icons-react'
 import { useLocalStorage } from '@mantine/hooks'
-import { useActiveOrder, useCancelOrder } from '@/features/order/hooks'
-import { toast } from 'react-toastify'
+import { IconLock, IconShoppingBag, IconShoppingCart } from '@tabler/icons-react'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 const Cart = () => {
   const router = useRouter()
@@ -308,7 +308,7 @@ const Cart = () => {
                   </Box>
                 </Group>
 
-                 <Button
+                <Button
                   fullWidth
                   size="md"
                   color="primary"
@@ -359,30 +359,27 @@ const Cart = () => {
         closeOnClickOutside={false}
         closeOnEscape={false}
         withCloseButton={true}
-        title={<Text fw={700} size="lg">Pembayaran Belum Selesai</Text>}
+        title={
+          <Text fw={700} size="lg">
+            Pembayaran Belum Selesai
+          </Text>
+        }
         centered
-        size="md"
+        size="lg"
         radius="md"
         padding="xl"
       >
         <Stack gap="md">
-          <Text size="sm" c="dimmed" style={{ lineHeight: 1.5 }}>
-            Anda masih memiliki pembayaran pesanan sebelumnya yang belum diselesaikan. Apakah Anda ingin membatalkan pesanan sebelumnya dan melanjutkan dengan checkout baru?
+          <Text c="dimmed" style={{ lineHeight: 1.5 }}>
+            Anda masih memiliki pembayaran pesanan sebelumnya yang belum diselesaikan. Apakah Anda
+            ingin membatalkan pesanan sebelumnya dan melanjutkan dengan checkout baru?
           </Text>
 
           <Group justify="flex-end" mt="md" grow>
-            <Button
-              variant="default"
-              onClick={handleKeepActiveOrder}
-              disabled={isCancellingOrder}
-            >
+            <Button variant="default" onClick={handleKeepActiveOrder} disabled={isCancellingOrder}>
               Lanjutkan Pembayaran Lama
             </Button>
-            <Button
-              color="red"
-              onClick={handleConfirmCancelActive}
-              loading={isCancellingOrder}
-            >
+            <Button color="red" onClick={handleConfirmCancelActive} loading={isCancellingOrder}>
               Batalkan dan Buat Baru
             </Button>
           </Group>
