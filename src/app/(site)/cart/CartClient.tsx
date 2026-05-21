@@ -76,6 +76,8 @@ const Cart = () => {
         setActiveOrderFromBackend(activeOrderData.order)
         setActiveOrderModalOpened(true)
       } else {
+        localStorage.removeItem('step')
+        localStorage.removeItem('checkout_order')
         router.push('/checkout')
       }
     } catch (err) {
