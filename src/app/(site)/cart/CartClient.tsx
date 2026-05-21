@@ -39,18 +39,17 @@ const Cart = () => {
   }, [])
 
   const { data: cart, isLoading } = useCart()
-  const [loading, setLoading] = useState(false)
   const [checkingActiveOrder, setCheckingActiveOrder] = useState(false)
 
   const { refetch: refetchActiveOrder } = useActiveOrder()
   const { mutate: cancelOrder, isPending: isCancellingOrder } = useCancelOrder()
 
-  const [activeStep, setActiveStep] = useLocalStorage({
+  const [, setActiveStep] = useLocalStorage({
     key: 'step',
     defaultValue: 0
   })
 
-  const [checkoutOrderRaw, setCheckoutOrderRaw] = useLocalStorage<string | null>({
+  const [, setCheckoutOrderRaw] = useLocalStorage<string | null>({
     key: 'checkout_order',
     defaultValue: null
   })
@@ -76,8 +75,8 @@ const Cart = () => {
         setActiveOrderFromBackend(activeOrderData.order)
         setActiveOrderModalOpened(true)
       } else {
-        localStorage.removeItem('step')
-        localStorage.removeItem('checkout_order')
+        setCheckoutOrderRaw(null)
+        setActiveStep(0)
         router.push('/checkout')
       }
     } catch (err) {
@@ -314,7 +313,7 @@ const Cart = () => {
                   fullWidth
                   size="md"
                   color="primary"
-                  loading={loading || checkingActiveOrder || isCancellingOrder}
+                  loading={checkingActiveOrder || isCancellingOrder}
                   onClick={handleCheckout}
                   disabled={!cart?.items?.length}
                   variant="gradient"
