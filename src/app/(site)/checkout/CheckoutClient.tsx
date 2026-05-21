@@ -5,7 +5,7 @@ const StepPayment = dynamic(() => import('@/features/checkout/components/StepPay
 const StepPaymentConfirmation = dynamic(() => import('@/features/checkout/components/StepPaymentConfirmation'), { ssr: false })
 const StepResultPayment = dynamic(() => import('@/features/checkout/components/StepResultPayment'), { ssr: false })
 const StepSummaryOrder = dynamic(() => import('@/features/checkout/components/StepSummaryOrder'), { ssr: false })
-import { useSummaryOrders, useActiveOrder, useCancelOrder } from '@/features/order/hooks'
+import { useSummaryOrders, useActiveOrder } from '@/features/order/hooks'
 import { TSummaryOrders } from '@/features/order/types'
 import { useAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/features/shipping/hooks'
 import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/types'
@@ -22,8 +22,7 @@ import {
   Stepper,
   Text,
   Textarea,
-  TextInput,
-  Modal
+  TextInput
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
@@ -63,10 +62,6 @@ const Orders = () => {
   })
 
   const { data: activeOrderData, isLoading: isLoadingActiveOrder } = useActiveOrder()
-  const { mutate: cancelOrder, isPending: isCancellingOrder } = useCancelOrder()
-
-  const [activeOrderModalOpened, setActiveOrderModalOpened] = useState(false)
-  const [activeOrderFromBackend, setActiveOrderFromBackend] = useState<any>(null)
 
   const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } =
     useAllShippingAddress()
@@ -120,9 +115,9 @@ const Orders = () => {
       const isTryingNewCheckout = activeStep < 2 || !localOrder || localOrder.order_id !== activeOrderId
       
       if (isTryingNewCheckout) {
-        // We have an active payment but user is not in the active payment flow. Show modal.
-        setActiveOrderFromBackend(activeOrderData.order)
-        setActiveOrderModalOpened(true)
+        // Redirect back to cart so they can resolve the active payment issue
+        toast.warning('Anda memiliki pesanan yang belum diselesaikan. Silakan selesaikan atau batalkan di keranjang.')
+        router.push('/cart')
       }
     } else {
       // Backend does NOT have any active payment (unpaid/pending order).
@@ -134,46 +129,9 @@ const Orders = () => {
         toast.info('Sesi pembayaran sebelumnya telah berakhir atau dibatalkan.')
       }
     }
-  }, [activeOrderData, isLoadingActiveOrder, activeStep])
+  }, [activeOrderData, isLoadingActiveOrder, activeStep, checkoutOrderRaw, router])
 
-  const handleConfirmCancelActive = () => {
-    if (!activeOrderFromBackend) return
 
-    cancelOrder(
-      {
-        order_id: activeOrderFromBackend.order_id,
-        reason: 'Cancelled to start a new checkout flow',
-        additional_note: ''
-      },
-      {
-        onSuccess: () => {
-          toast.success('Pesanan sebelumnya berhasil dibatalkan.')
-          setActiveOrderModalOpened(false)
-          setActiveOrderFromBackend(null)
-          setCheckoutOrderRaw(null)
-          setActiveStep(0) // reset to shipping
-        },
-        onError: (err: any) => {
-          toast.error(err?.message || 'Gagal membatalkan pesanan sebelumnya.')
-        }
-      }
-    )
-  }
-
-  const handleKeepActiveOrder = () => {
-    if (!activeOrderFromBackend) return
-
-    const payload = {
-      order_id: activeOrderFromBackend.order_id,
-      grand_total: activeOrderFromBackend.grand_total,
-      created_at: new Date(activeOrderFromBackend.created_at.replace(' ', 'T')).getTime()
-    }
-
-    setCheckoutOrderRaw(JSON.stringify(payload))
-    setActiveStep(2) // Move to Payment step
-    setActiveOrderModalOpened(false)
-    setActiveOrderFromBackend(null)
-  }
 
   const handleSaveAddress = (values: TReqCustomerShipping) => {
     const payload = csaId ? { ...values, id: csaId } : { ...values }
@@ -458,41 +416,7 @@ const Orders = () => {
         </Stepper.Completed>
       </Stepper>
 
-      <Modal
-        opened={activeOrderModalOpened}
-        onClose={() => {}}
-        closeOnClickOutside={false}
-        closeOnEscape={false}
-        withCloseButton={false}
-        title={<Text fw={700} size="lg">Pembayaran Belum Selesai</Text>}
-        centered
-        size="md"
-        radius="md"
-        padding="xl"
-      >
-        <Stack gap="md">
-          <Text size="sm" c="dimmed" style={{ lineHeight: 1.5 }}>
-            Anda masih memiliki pembayaran pesanan sebelumnya yang belum diselesaikan. Apakah Anda ingin membatalkan pesanan sebelumnya dan melanjutkan dengan checkout baru?
-          </Text>
 
-          <Group justify="flex-end" mt="md" grow>
-            <Button
-              variant="default"
-              onClick={handleKeepActiveOrder}
-              disabled={isCancellingOrder}
-            >
-              Lanjutkan Pembayaran Lama
-            </Button>
-            <Button
-              color="red"
-              onClick={handleConfirmCancelActive}
-              loading={isCancellingOrder}
-            >
-              Batalkan dan Buat Baru
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
     </Container>
   )
 }

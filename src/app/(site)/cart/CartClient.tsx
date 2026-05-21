@@ -15,6 +15,7 @@ import {
   Divider,
   Grid,
   Group,
+  Modal,
   Paper,
   Stack,
   Text,
@@ -22,6 +23,9 @@ import {
   rem
 } from '@mantine/core'
 import { IconLock, IconShoppingBag, IconShoppingCart } from '@tabler/icons-react'
+import { useLocalStorage } from '@mantine/hooks'
+import { useActiveOrder, useCancelOrder } from '@/features/order/hooks'
+import { toast } from 'react-toastify'
 import { hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useState } from 'react'
@@ -31,19 +35,92 @@ const Cart = () => {
   const isLoggedIn = hasCookie('user')
   const { data: cart, isLoading } = useCart()
   const [loading, setLoading] = useState(false)
+  const [checkingActiveOrder, setCheckingActiveOrder] = useState(false)
+
+  const { refetch: refetchActiveOrder } = useActiveOrder()
+  const { mutate: cancelOrder, isPending: isCancellingOrder } = useCancelOrder()
+
+  const [activeStep, setActiveStep] = useLocalStorage({
+    key: 'step',
+    defaultValue: 0
+  })
+
+  const [checkoutOrderRaw, setCheckoutOrderRaw] = useLocalStorage<string | null>({
+    key: 'checkout_order',
+    defaultValue: null
+  })
+
+  const [activeOrderModalOpened, setActiveOrderModalOpened] = useState(false)
+  const [activeOrderFromBackend, setActiveOrderFromBackend] = useState<any>(null)
 
   const { data: myRecommendations, isLoading: isLoadingMyRecs } = useMyRecommendations({
     limit: 10,
     enabled: isLoggedIn
   })
 
-  const handleCheckout = useCallback(() => {
-    setLoading(true)
-    setTimeout(() => {
+  const handleCheckout = useCallback(async () => {
+    if (!isLoggedIn) {
       router.push('/checkout')
-      setLoading(false)
-    }, 500)
-  }, [router])
+      return
+    }
+
+    setCheckingActiveOrder(true)
+    try {
+      const { data: activeOrderData } = await refetchActiveOrder()
+      if (activeOrderData?.hasActivePayment) {
+        setActiveOrderFromBackend(activeOrderData.order)
+        setActiveOrderModalOpened(true)
+      } else {
+        router.push('/checkout')
+      }
+    } catch (err) {
+      console.error(err)
+      router.push('/checkout')
+    } finally {
+      setCheckingActiveOrder(false)
+    }
+  }, [isLoggedIn, refetchActiveOrder, router])
+
+  const handleConfirmCancelActive = useCallback(() => {
+    if (!activeOrderFromBackend) return
+
+    cancelOrder(
+      {
+        order_id: activeOrderFromBackend.order_id,
+        reason: 'Cancelled to start a new checkout flow',
+        additional_note: ''
+      },
+      {
+        onSuccess: () => {
+          toast.success('Pesanan sebelumnya berhasil dibatalkan.')
+          setActiveOrderModalOpened(false)
+          setActiveOrderFromBackend(null)
+          setCheckoutOrderRaw(null)
+          setActiveStep(0)
+          router.push('/checkout')
+        },
+        onError: (err: any) => {
+          toast.error(err?.message || 'Gagal membatalkan pesanan sebelumnya.')
+        }
+      }
+    )
+  }, [activeOrderFromBackend, cancelOrder, setCheckoutOrderRaw, setActiveStep, router])
+
+  const handleKeepActiveOrder = useCallback(() => {
+    if (!activeOrderFromBackend) return
+
+    const payload = {
+      order_id: activeOrderFromBackend.order_id,
+      grand_total: activeOrderFromBackend.grand_total,
+      created_at: new Date(activeOrderFromBackend.created_at.replace(' ', 'T')).getTime()
+    }
+
+    setCheckoutOrderRaw(JSON.stringify(payload))
+    setActiveStep(2) // Move to Payment step
+    setActiveOrderModalOpened(false)
+    setActiveOrderFromBackend(null)
+    router.push('/checkout')
+  }, [activeOrderFromBackend, setCheckoutOrderRaw, setActiveStep, router])
 
   return (
     <Container size="xl" my={100}>
@@ -226,11 +303,11 @@ const Cart = () => {
                   </Box>
                 </Group>
 
-                <Button
+                 <Button
                   fullWidth
                   size="md"
                   color="primary"
-                  loading={loading}
+                  loading={loading || checkingActiveOrder || isCancellingOrder}
                   onClick={handleCheckout}
                   disabled={!cart?.items?.length}
                   variant="gradient"
@@ -270,6 +347,42 @@ const Cart = () => {
           />
         )}
       </Stack>
+
+      <Modal
+        opened={activeOrderModalOpened}
+        onClose={() => setActiveOrderModalOpened(false)}
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        withCloseButton={true}
+        title={<Text fw={700} size="lg">Pembayaran Belum Selesai</Text>}
+        centered
+        size="md"
+        radius="md"
+        padding="xl"
+      >
+        <Stack gap="md">
+          <Text size="sm" c="dimmed" style={{ lineHeight: 1.5 }}>
+            Anda masih memiliki pembayaran pesanan sebelumnya yang belum diselesaikan. Apakah Anda ingin membatalkan pesanan sebelumnya dan melanjutkan dengan checkout baru?
+          </Text>
+
+          <Group justify="flex-end" mt="md" grow>
+            <Button
+              variant="default"
+              onClick={handleKeepActiveOrder}
+              disabled={isCancellingOrder}
+            >
+              Lanjutkan Pembayaran Lama
+            </Button>
+            <Button
+              color="red"
+              onClick={handleConfirmCancelActive}
+              loading={isCancellingOrder}
+            >
+              Batalkan dan Buat Baru
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Container>
   )
 }
