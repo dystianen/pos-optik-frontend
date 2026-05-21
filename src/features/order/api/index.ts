@@ -100,3 +100,8 @@ export const expireOrder = async (orderId: string) => {
   const response = await apiClient.post(API_ROUTES.ORDERS.EXPIRE(orderId))
   return response.data
 }
+
+export const getActiveOrder = async () => {
+  const response = await apiClient.get(API_ROUTES.ORDERS.ACTIVE)
+  return response.data.data
+}

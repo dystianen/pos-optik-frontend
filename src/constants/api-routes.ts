@@ -20,6 +20,7 @@ export const API_ROUTES = {
   },
   ORDERS: {
     BASE: '/orders',
+    ACTIVE: '/orders/active',
     SUMMARY: (id: string) => `/orders/summary/${id}`,
     SUBMIT: (id: string) => `/orders/submit/${id}`,
     PAYMENT: '/orders/payment',

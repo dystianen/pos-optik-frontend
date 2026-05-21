@@ -140,3 +140,11 @@ export function useExpireOrder() {
     }
   })
 }
+
+export function useActiveOrder() {
+  return useQuery({
+    queryKey: ['ACTIVE_ORDER'],
+    queryFn: orderApi.getActiveOrder,
+    refetchOnWindowFocus: true
+  })
+}

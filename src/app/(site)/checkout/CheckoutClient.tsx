@@ -5,7 +5,7 @@ const StepPayment = dynamic(() => import('@/features/checkout/components/StepPay
 const StepPaymentConfirmation = dynamic(() => import('@/features/checkout/components/StepPaymentConfirmation'), { ssr: false })
 const StepResultPayment = dynamic(() => import('@/features/checkout/components/StepResultPayment'), { ssr: false })
 const StepSummaryOrder = dynamic(() => import('@/features/checkout/components/StepSummaryOrder'), { ssr: false })
-import { useSummaryOrders } from '@/features/order/hooks'
+import { useSummaryOrders, useActiveOrder, useCancelOrder } from '@/features/order/hooks'
 import { TSummaryOrders } from '@/features/order/types'
 import { useAllShippingAddress, useGetShippingAddress, useSaveCustomerShipping } from '@/features/shipping/hooks'
 import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/types'
@@ -22,7 +22,8 @@ import {
   Stepper,
   Text,
   Textarea,
-  TextInput
+  TextInput,
+  Modal
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
@@ -55,6 +56,17 @@ const Orders = () => {
     key: 'csaId',
     defaultValue: ''
   })
+
+  const [checkoutOrderRaw, setCheckoutOrderRaw] = useLocalStorage<string | null>({
+    key: 'checkout_order',
+    defaultValue: null
+  })
+
+  const { data: activeOrderData, isLoading: isLoadingActiveOrder } = useActiveOrder()
+  const { mutate: cancelOrder, isPending: isCancellingOrder } = useCancelOrder()
+
+  const [activeOrderModalOpened, setActiveOrderModalOpened] = useState(false)
+  const [activeOrderFromBackend, setActiveOrderFromBackend] = useState<any>(null)
 
   const { data: shippingAddresses, isLoading: isLoadingShippingAddresses } =
     useAllShippingAddress()
@@ -95,6 +107,73 @@ const Orders = () => {
       })
     }
   }, [activeStep, csaId])
+
+  useEffect(() => {
+    if (isLoadingActiveOrder || !activeOrderData) return
+
+    const localOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
+    
+    if (activeOrderData.hasActivePayment) {
+      const activeOrderId = activeOrderData.order.order_id
+      
+      // Check if user is in step < 2 (trying to checkout new), or local order ID is different
+      const isTryingNewCheckout = activeStep < 2 || !localOrder || localOrder.order_id !== activeOrderId
+      
+      if (isTryingNewCheckout) {
+        // We have an active payment but user is not in the active payment flow. Show modal.
+        setActiveOrderFromBackend(activeOrderData.order)
+        setActiveOrderModalOpened(true)
+      }
+    } else {
+      // Backend does NOT have any active payment (unpaid/pending order).
+      // If frontend step is >= 2 (Payment or Confirmation steps), this means the order has expired or been cancelled/completed on backend.
+      // We must reset the step!
+      if (activeStep >= 2 && activeStep < 4) {
+        setActiveStep(0)
+        setCheckoutOrderRaw(null)
+        toast.info('Sesi pembayaran sebelumnya telah berakhir atau dibatalkan.')
+      }
+    }
+  }, [activeOrderData, isLoadingActiveOrder, activeStep])
+
+  const handleConfirmCancelActive = () => {
+    if (!activeOrderFromBackend) return
+
+    cancelOrder(
+      {
+        order_id: activeOrderFromBackend.order_id,
+        reason: 'Cancelled to start a new checkout flow',
+        additional_note: ''
+      },
+      {
+        onSuccess: () => {
+          toast.success('Pesanan sebelumnya berhasil dibatalkan.')
+          setActiveOrderModalOpened(false)
+          setActiveOrderFromBackend(null)
+          setCheckoutOrderRaw(null)
+          setActiveStep(0) // reset to shipping
+        },
+        onError: (err: any) => {
+          toast.error(err?.message || 'Gagal membatalkan pesanan sebelumnya.')
+        }
+      }
+    )
+  }
+
+  const handleKeepActiveOrder = () => {
+    if (!activeOrderFromBackend) return
+
+    const payload = {
+      order_id: activeOrderFromBackend.order_id,
+      grand_total: activeOrderFromBackend.grand_total,
+      created_at: new Date(activeOrderFromBackend.created_at.replace(' ', 'T')).getTime()
+    }
+
+    setCheckoutOrderRaw(JSON.stringify(payload))
+    setActiveStep(2) // Move to Payment step
+    setActiveOrderModalOpened(false)
+    setActiveOrderFromBackend(null)
+  }
 
   const handleSaveAddress = (values: TReqCustomerShipping) => {
     const payload = csaId ? { ...values, id: csaId } : { ...values }
@@ -162,6 +241,19 @@ const Orders = () => {
     // ❌ User sudah punya alamat → cancel form
     setShowForm(false)
     form.reset()
+  }
+
+  if (isLoadingActiveOrder) {
+    return (
+      <Container my={120} style={{ position: 'relative', minHeight: '400px' }}>
+        <LoadingOverlay
+          visible={true}
+          zIndex={1000}
+          overlayProps={{ radius: 'lg', blur: 5 }}
+          loaderProps={{ type: 'bars' }}
+        />
+      </Container>
+    )
   }
 
   return (
@@ -365,6 +457,42 @@ const Orders = () => {
           <StepResultPayment />
         </Stepper.Completed>
       </Stepper>
+
+      <Modal
+        opened={activeOrderModalOpened}
+        onClose={() => {}}
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        withCloseButton={false}
+        title={<Text fw={700} size="lg">Pembayaran Belum Selesai</Text>}
+        centered
+        size="md"
+        radius="md"
+        padding="xl"
+      >
+        <Stack gap="md">
+          <Text size="sm" c="dimmed" style={{ lineHeight: 1.5 }}>
+            Anda masih memiliki pembayaran pesanan sebelumnya yang belum diselesaikan. Apakah Anda ingin membatalkan pesanan sebelumnya dan melanjutkan dengan checkout baru?
+          </Text>
+
+          <Group justify="flex-end" mt="md" grow>
+            <Button
+              variant="default"
+              onClick={handleKeepActiveOrder}
+              disabled={isCancellingOrder}
+            >
+              Lanjutkan Pembayaran Lama
+            </Button>
+            <Button
+              color="red"
+              onClick={handleConfirmCancelActive}
+              loading={isCancellingOrder}
+            >
+              Batalkan dan Buat Baru
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Container>
   )
 }
