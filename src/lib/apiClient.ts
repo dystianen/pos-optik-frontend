@@ -1,5 +1,6 @@
 import { getAccessToken, getRefreshToken, removeTokens, setAccessToken } from '@/utils/auth-server'
 import axios, { AxiosInstance } from 'axios'
+import { toApiError } from './axiosErrorHelper'
 
 const apiClient = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_BASE_URL}/api`,
@@ -78,7 +79,8 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
         }
       }
 
-      return Promise.reject(error)
+      // Normalize every error into ApiError so callers never need to touch `error.response`
+      return Promise.reject(toApiError(error))
     }
   )
 }

@@ -1,24 +1,18 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import * as authApi from '../api'
 import { deleteCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
+import * as authApi from '../api'
 
 export function useLogin() {
-  return useMutation({
-    mutationFn: authApi.login
-  })
+  return useMutation({ mutationFn: authApi.login })
 }
 
 export function useRegister() {
-  return useMutation({
-    mutationFn: authApi.register
-  })
+  return useMutation({ mutationFn: authApi.register })
 }
 
 export function useForgotPassword() {
-  return useMutation({
-    mutationFn: authApi.forgotPassword
-  })
+  return useMutation({ mutationFn: authApi.forgotPassword })
 }
 
 export function useProfile() {

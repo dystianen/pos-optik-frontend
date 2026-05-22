@@ -34,9 +34,13 @@ const SignIn = () => {
         setLoading(false)
         router.replace('/')
       },
-      onError: (err: any) => {
+      onError: (err) => {
         setLoading(false)
-        toast.error(err.response.data.errors.customer_email)
+        if (err.errors) {
+          form.setErrors(err.errors)
+        } else {
+          toast.error(err.message || 'Login failed')
+        }
       }
     })
   }

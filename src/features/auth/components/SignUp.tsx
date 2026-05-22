@@ -1,7 +1,5 @@
 'use client'
 import Logo from '@/components/Layout/Header/Logo'
-import { useRegister } from '../hooks'
-import { TPayloadRegister } from '../types'
 import { Button, Card, Group, Select, Stack, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
@@ -9,6 +7,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
+import { useRegister } from '../hooks'
+import { TPayloadRegister } from '../types'
 
 const SignUp = () => {
   const router = useRouter()
@@ -41,8 +41,12 @@ const SignUp = () => {
         router.push('/signin')
       },
       onError: (err) => {
-        toast.error(err.message || 'Registration failed')
         setLoading(false)
+        if (err.errors) {
+          form.setErrors(err.errors)
+        } else {
+          toast.error(err.message || 'Registration failed')
+        }
       }
     })
   }
@@ -124,7 +128,7 @@ const SignUp = () => {
             </p>
 
             <p className="text-sm text-gray-400 text-center">
-              Already have an account? {" "}
+              Already have an account?{' '}
               <Link href="/signin" className="pl-2 text-primary hover:underline">
                 Sign In
               </Link>
