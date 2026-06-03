@@ -70,6 +70,7 @@ export interface TDetailProduct {
   deleted_at: null
   gallery: TGalleryDetail[]
   variants: Variant[]
+  is_prescription_supported: boolean
 }
 
 export type TResDetailProduct = GeneralResponse<TDetailProduct>

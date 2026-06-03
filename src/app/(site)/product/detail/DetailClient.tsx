@@ -344,7 +344,9 @@ const DetailClient = ({ productId }: { productId: string }) => {
                     </>
                   ) : null}
 
-                  <CartLensForm value={prescription} onChange={setPrescription} />
+                  {product?.is_prescription_supported && (
+                    <CartLensForm value={prescription} onChange={setPrescription} />
+                  )}
                 </Stack>
               </Grid.Col>
             </Grid>
