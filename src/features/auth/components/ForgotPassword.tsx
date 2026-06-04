@@ -14,6 +14,7 @@ const ForgotPassword = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const emailParam = searchParams.get('email') || ''
+  const redirectTo = searchParams.get('redirectTo') || ''
   const [loading, setLoading] = useState(false)
 
   const form = useForm({
@@ -46,7 +47,7 @@ const ForgotPassword = () => {
       onSuccess: (res) => {
         setLoading(false)
         toast.success(res.message || 'Password updated successfully')
-        router.replace('/signin')
+        router.replace(redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : '/signin')
       },
       onError: (err) => {
         setLoading(false)
@@ -105,7 +106,10 @@ const ForgotPassword = () => {
 
             <p className="text-sm text-gray-400 text-center mt-2">
               Remember your password?{' '}
-              <Link href="/signin" className="pl-2 text-primary hover:underline font-semibold">
+              <Link
+                href={redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : "/signin"}
+                className="pl-2 text-primary hover:underline font-semibold"
+              >
                 Sign In
               </Link>
             </p>

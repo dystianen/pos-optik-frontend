@@ -4,7 +4,7 @@ import { Button, Card, Group, Select, Stack, TextInput } from '@mantine/core'
 import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useRegister } from '../hooks'
@@ -12,6 +12,8 @@ import { TPayloadRegister } from '../types'
 
 const SignUp = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || ''
   const [loading, setLoading] = useState(false)
 
   const { mutate: submitRegister } = useRegister()
@@ -38,7 +40,7 @@ const SignUp = () => {
       onSuccess: () => {
         toast.success('Successfully registered')
         setLoading(false)
-        router.push('/signin')
+        router.push(redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : '/signin')
       },
       onError: (err) => {
         setLoading(false)
@@ -129,7 +131,10 @@ const SignUp = () => {
 
             <p className="text-sm text-gray-400 text-center">
               Already have an account?{' '}
-              <Link href="/signin" className="pl-2 text-primary hover:underline">
+              <Link
+                href={redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : "/signin"}
+                className="pl-2 text-primary hover:underline"
+              >
                 Sign In
               </Link>
             </p>

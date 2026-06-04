@@ -75,7 +75,13 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
       function handleLogout() {
         removeTokens()
         if (typeof window !== 'undefined') {
-          window.location.href = '/signin'
+          const currentPath = window.location.pathname
+          if (currentPath !== '/signin' && currentPath !== '/signup') {
+            const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+            window.location.href = `/signin?redirectTo=${redirectTo}`
+          } else {
+            window.location.href = '/signin'
+          }
         }
       }
 

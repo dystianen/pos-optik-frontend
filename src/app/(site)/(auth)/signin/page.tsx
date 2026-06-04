@@ -1,6 +1,7 @@
 import Signin from "@/features/auth/components/SignIn";
 import Breadcrumb from "@/components/Breadcrumb";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: 'Sign In'
@@ -11,7 +12,9 @@ const SigninPage = () => {
     <>
       <Breadcrumb pageName="Sign In Page" />
 
-      <Signin />
+      <Suspense fallback={null}>
+        <Signin />
+      </Suspense>
     </>
   );
 };

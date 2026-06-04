@@ -127,8 +127,13 @@ const DetailClient = ({ productId }: { productId: string }) => {
   }
 
   const handleLogin = useCallback(() => {
-    router.push('/signin')
-  }, [])
+    if (typeof window !== 'undefined') {
+      const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+      router.push(`/signin?redirectTo=${redirectTo}`)
+    } else {
+      router.push('/signin')
+    }
+  }, [router])
 
   const handleSelectGallery = useCallback((item: TGalleryDetail) => {
     setPrimaryImage({ url: item.url, alt_text: item.alt_text })

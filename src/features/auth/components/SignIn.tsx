@@ -5,6 +5,7 @@ import { Button, Card, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
+import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useLogin } from '../hooks'
@@ -12,6 +13,8 @@ import { TPayloadLogin } from '../types'
 
 const SignIn = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || '/'
   const [loading, setLoading] = useState(false)
 
   const form = useForm({
@@ -32,7 +35,7 @@ const SignIn = () => {
         setRefreshToken(refresh_token)
         setUser(JSON.stringify(user))
         setLoading(false)
-        router.replace('/')
+        router.replace(redirectTo)
       },
       onError: (err) => {
         setLoading(false)
@@ -77,7 +80,8 @@ const SignIn = () => {
               <span
                 onClick={() => {
                   const email = form.getValues().customer_email
-                  router.push(`/forgot-password?email=${encodeURIComponent(email || '')}`)
+                  const redirectQuery = redirectTo !== '/' ? `&redirectTo=${encodeURIComponent(redirectTo)}` : ''
+                  router.push(`/forgot-password?email=${encodeURIComponent(email || '')}${redirectQuery}`)
                 }}
                 className="text-xs text-primary hover:underline font-medium cursor-pointer"
               >
@@ -106,7 +110,10 @@ const SignIn = () => {
 
             <p className="text-sm text-gray-400 text-center">
               Don't have an account?{' '}
-              <Link href="/signup" className="pl-2 text-primary hover:underline">
+              <Link
+                href={redirectTo !== '/' ? `/signup?redirectTo=${encodeURIComponent(redirectTo)}` : "/signup"}
+                className="pl-2 text-primary hover:underline"
+              >
                 Sign Up
               </Link>
             </p>

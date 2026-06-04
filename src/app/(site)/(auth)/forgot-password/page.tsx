@@ -1,6 +1,7 @@
 import ForgotPassword from "@/features/auth/components/ForgotPassword";
 import Breadcrumb from "@/components/Breadcrumb";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: 'Forgot Password'
@@ -11,7 +12,9 @@ const ForgotPasswordPage = () => {
     <>
       <Breadcrumb pageName="Forgot Password Page" />
 
-      <ForgotPassword />
+      <Suspense fallback={null}>
+        <ForgotPassword />
+      </Suspense>
     </>
   );
 };

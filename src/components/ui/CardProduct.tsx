@@ -39,8 +39,13 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
   }, [item.product_id, queryClient, stock])
 
   const handleLogin = useCallback(() => {
-    router.push('/signin')
-  }, [])
+    if (typeof window !== 'undefined') {
+      const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+      router.push(`/signin?redirectTo=${redirectTo}`)
+    } else {
+      router.push('/signin')
+    }
+  }, [router])
 
   const handleDetail = useCallback(() => {
     if (stock === 0) return

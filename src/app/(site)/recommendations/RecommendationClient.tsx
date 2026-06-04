@@ -94,7 +94,14 @@ const Recommendations = () => {
             </Text>
             
             <Button
-              onClick={() => router.push('/signin')}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+                  router.push(`/signin?redirectTo=${redirectTo}`)
+                } else {
+                  router.push('/signin')
+                }
+              }}
               fullWidth
               size="md"
               color="primary"

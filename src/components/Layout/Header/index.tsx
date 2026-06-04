@@ -132,6 +132,15 @@ const Header = ({ user }: { user: TUser | null }) => {
               </div>
               <Link
                 href="/signin"
+                onClick={(e) => {
+                  e.preventDefault()
+                  if (typeof window !== 'undefined') {
+                    const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+                    router.push(`/signin?redirectTo=${redirectTo}`)
+                  } else {
+                    router.push('/signin')
+                  }
+                }}
                 className="hidden bg-primary px-6 py-2.5 text-base font-medium text-white hover:bg-primary/90 rounded-full lg:block transition-all"
               >
                 Sign In
