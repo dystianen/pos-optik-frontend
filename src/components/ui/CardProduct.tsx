@@ -145,7 +145,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
             {item.product_brand}
           </Text>
 
-          <Text fw={600} fz={14} lineClamp={2}>
+          <Text fw={600} fz={14} lineClamp={1}>
             {item.product_name}
           </Text>
 
