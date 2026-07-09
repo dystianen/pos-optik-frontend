@@ -32,6 +32,11 @@ const ProductsClient = ({ slug }: { slug: string }) => {
   const [search, setSearch] = useState(querySearch)
   const [debouncedSearch] = useDebouncedValue(search, 300)
 
+  // Sync state dengan query search dari URL (misal pas click subcategory di header)
+  useEffect(() => {
+    setSearch(querySearch)
+  }, [querySearch])
+
   // Gunakan ref untuk skip effect pertama kali (saat mount)
   const isFirstRender = useRef(true)
 

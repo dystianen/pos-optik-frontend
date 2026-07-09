@@ -330,7 +330,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
                                     </div>
                                   </Card.Section>
                                   <Stack gap={2}>
-                                    <Text fz={'10'} lineClamp={1} mt={'xs'}>
+                                    <Text fz={'10'} lineClamp={2} mt={'xs'}>
                                       {item.variant_name}
                                     </Text>
                                     <Text fz={'10'} c="primary">
