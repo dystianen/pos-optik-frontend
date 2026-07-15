@@ -1,6 +1,6 @@
 'use client'
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/ui/RefundAccountForm'
-import { PaymentCountdown } from '@/features/order/components/PaymentCountdown'
+import { PaymentCountdown, getRemainingSeconds, DEADLINE_HOURS } from '@/features/order/components/PaymentCountdown'
 import { usePayment, useRefundAccount, useUpdateRefundAccount } from '@/features/order/hooks'
 import {
   ActionIcon,
@@ -13,11 +13,14 @@ import {
   LoadingOverlay,
   Stack,
   Text,
-  Tooltip
+  Tooltip,
+  Modal,
+  ThemeIcon
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useClipboard, useLocalStorage } from '@mantine/hooks'
-import { IconAlertCircle, IconCheck, IconClipboard } from '@tabler/icons-react'
+import { IconAlertCircle, IconAlertTriangle, IconCheck, IconClipboard } from '@tabler/icons-react'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -35,10 +38,23 @@ export type FormValuesUpdate = {
 }
 
 const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
+  const router = useRouter()
   const clipboard = useClipboard({ timeout: 1500 })
-  const [checkoutOrderRaw] = useLocalStorage({ key: 'checkout_order' })
+  const [checkoutOrderRaw, , removeCheckoutOrder] = useLocalStorage<string | null>({
+    key: 'checkout_order',
+    defaultValue: null
+  })
+  const [, setStep] = useLocalStorage({
+    key: 'step',
+    defaultValue: 0
+  })
   const checkoutOrder = checkoutOrderRaw ? JSON.parse(checkoutOrderRaw) : null
-  const [isExpired, setIsExpired] = useState(false)
+  const [isExpired, setIsExpired] = useState(() => {
+    if (checkoutOrder?.created_at) {
+      return getRemainingSeconds(checkoutOrder.created_at, DEADLINE_HOURS) === 0
+    }
+    return false
+  })
 
   const { mutate: payment, isPending: isLoadingSubmit } = usePayment()
   const { data: refundAccount, isLoading: isLoadingRefundAccount } = useRefundAccount()
@@ -94,6 +110,11 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
     (values: FormValues) => {
       if (!values.proof) return
 
+      if (isExpired) {
+        toast.error('Payment time has expired. This order has been automatically cancelled.')
+        return
+      }
+
       if (!checkoutOrder) {
         toast.error('Order expired, please checkout again')
         return
@@ -120,7 +141,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
         }
       })
     },
-    [checkoutOrder, payment, nextStep]
+    [checkoutOrder, payment, nextStep, isExpired]
   )
 
   const handleEditRefundAccount = useCallback(
@@ -141,31 +162,78 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
   const bankLabel = 'BCA'
 
   return (
-    <Card shadow="md" p="xl">
-      <Stack align="center" gap="lg">
-        {/* Payment Countdown */}
-        {checkoutOrder?.order_id && checkoutOrder?.created_at && (
-          <PaymentCountdown
-            orderId={checkoutOrder.order_id}
-            createdAt={checkoutOrder.created_at}
-            onExpired={() => {
-              setIsExpired(true)
-              toast.error('Waktu pembayaran habis. Pesanan dibatalkan otomatis.')
-            }}
-          />
-        )}
+    <>
+      <Modal
+        opened={isExpired}
+        onClose={() => {}}
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        withCloseButton={false}
+        centered
+        radius="lg"
+        size="md"
+        padding="xl"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 8,
+        }}
+      >
+        <Stack align="center" gap="lg" py="md">
+          <ThemeIcon color="red" size={60} radius="xl" variant="light">
+            <IconAlertTriangle size={36} />
+          </ThemeIcon>
 
-        {isExpired && (
-          <Alert
-            icon={<IconAlertCircle size={16} />}
+          <Stack gap="xs" align="center">
+            <Text fw={700} size="xl" ta="center" c="red.8">
+              Payment Time Expired
+            </Text>
+            <Text size="sm" c="dimmed" ta="center" px="md" style={{ lineHeight: 1.5 }}>
+              The time limit to complete your payment has passed. Unfortunately, this order has been automatically cancelled.
+            </Text>
+          </Stack>
+
+          <Button
             color="red"
-            variant="light"
-            title="Pembayaran Tidak Dapat Dilanjutkan"
-            w="100%"
+            size="md"
+            radius="md"
+            fullWidth
+            onClick={() => {
+              setStep(0)
+              removeCheckoutOrder()
+              router.push('/cart')
+            }}
+            mt="md"
           >
-            Pesanan telah kadaluarsa. Silakan buat pesanan baru.
-          </Alert>
-        )}
+            Back to Cart
+          </Button>
+        </Stack>
+      </Modal>
+
+      <Card shadow="md" p="xl">
+        <Stack align="center" gap="lg">
+          {/* Payment Countdown */}
+          {checkoutOrder?.order_id && checkoutOrder?.created_at && !isExpired && (
+            <PaymentCountdown
+              orderId={checkoutOrder.order_id}
+              createdAt={checkoutOrder.created_at}
+              onExpired={() => {
+                setIsExpired(true)
+                toast.error('Payment time has expired. This order has been automatically cancelled.')
+              }}
+            />
+          )}
+
+          {isExpired && (
+            <Alert
+              icon={<IconAlertCircle size={16} />}
+              color="red"
+              variant="light"
+              title="Payment Cannot Be Continued"
+              w="100%"
+            >
+              The order has expired. Please place a new order.
+            </Alert>
+          )}
 
         <Image src="/images/payment.svg" h={360} fit="contain" />
 
@@ -226,6 +294,7 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
         </form>
       </Stack>
     </Card>
+  </>
   )
 }
 

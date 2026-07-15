@@ -14,9 +14,9 @@ interface PaymentCountdownProps {
   onExpired?: () => void
 }
 
-const DEADLINE_HOURS = 12
+export const DEADLINE_HOURS = 1
 
-function getRemainingSeconds(createdAt: string | number, deadlineHours: number): number {
+export function getRemainingSeconds(createdAt: string | number, deadlineHours: number): number {
   let createdMs: number
   if (typeof createdAt === 'number') {
     createdMs = createdAt
@@ -58,7 +58,17 @@ export function PaymentCountdown({
 
   useEffect(() => {
     // Immediately recalculate in case of SSR mismatch
-    setRemaining(getRemainingSeconds(createdAt, deadlineHours))
+    const secs = getRemainingSeconds(createdAt, deadlineHours)
+    setRemaining(secs)
+
+    if (secs === 0) {
+      if (!hasExpiredRef.current) {
+        hasExpiredRef.current = true
+        onExpired?.()
+        expireOrder(orderId)
+      }
+      return
+    }
 
     const interval = setInterval(() => {
       const secs = getRemainingSeconds(createdAt, deadlineHours)

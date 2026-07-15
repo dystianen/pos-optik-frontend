@@ -96,8 +96,16 @@ const Orders = () => {
     // Kalau user SUDAH punya alamat → tampilkan list
     if (shippingAddresses && hasAddress) {
       setShowForm(false)
+      
+      // Auto select the first address if csaId is empty or not in shippingAddresses
+      const exists = shippingAddresses.some((address) => address.csa_id === csaId)
+      if (!csaId || !exists) {
+        const topAddress = shippingAddresses[0]
+        setCsaId(topAddress.csa_id)
+        form.setValues(topAddress)
+      }
     }
-  }, [shippingAddresses, hasAddress])
+  }, [shippingAddresses, hasAddress, csaId])
 
   useEffect(() => {
     if (csaId && shippingAddress) {

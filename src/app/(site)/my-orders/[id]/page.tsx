@@ -41,8 +41,9 @@ import {
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import { useRouter } from 'nextjs-toploader/app'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
+import { getRemainingSeconds, DEADLINE_HOURS } from '@/features/order/components/PaymentCountdown'
 
 const CancelOrderModal = dynamic(
   () => import('@/features/order/components/CancelOrderModal').then((mod) => mod.CancelOrderModal),
@@ -83,14 +84,22 @@ export default function OrderDetailPage() {
 
   const { data: order, isLoading } = useDetailOrder(id)
   const { mutate: cancelOrder } = useCancelOrder()
+
+  const [isPaymentExpired, setIsPaymentExpired] = useState(false)
+
+  useEffect(() => {
+    if (order?.order_date) {
+      setIsPaymentExpired(getRemainingSeconds(order.order_date, DEADLINE_HOURS) === 0)
+    }
+  }, [order?.order_date])
   const { mutateAsync: submitRefund } = useSubmitRefund()
   const { data: refundAccounts } = useRefundAccount()
   const { mutate: updateRefundAccount, isPending: isLoadingUpdateRefundAccount } =
     useUpdateRefundAccount()
   const { mutate: completeOrder, isPending: isCompletingOrder } = useUpdateStatus()
   // Determine request type based on order status
-  const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation']
-  const REFUND_STATUSES = ['shipped', 'delivered']
+  const CANCEL_STATUSES = ['paid', 'processing', 'waiting_confirmation', 'cancelled']
+  const REFUND_STATUSES = ['shipped', 'delivered', 'refunded', 'partially_refunded']
 
   const requestType = (() => {
     if (!order) return null
@@ -109,9 +118,10 @@ export default function OrderDetailPage() {
     cancelOrder(payload, {
       onSuccess: () => {
         toast.success('Cancel order submitted')
+        setOpenedCancel(false)
       },
-      onError: (err) => {
-        toast.error(err.message)
+      onError: (err: any) => {
+        toast.error(err?.message || 'Failed to submit cancel order')
       }
     })
   }
@@ -458,24 +468,29 @@ export default function OrderDetailPage() {
                               orderId={order.order_id}
                               createdAt={order.order_date}
                               onExpired={() => {
+                                setIsPaymentExpired(true)
                                 toast.info(
                                   'Payment time has expired. Order has been automatically cancelled.'
                                 )
                               }}
                             />
-                            <Divider />
-                            <Button
-                              variant="light"
-                              color="blue"
-                              size="sm"
-                              fullWidth
-                              leftSection={<IconCreditCard size={14} />}
-                              onClick={() => {
-                                router.push(`/checkout`)
-                              }}
-                            >
-                              Go to Payment Page
-                            </Button>
+                            {!isPaymentExpired && (
+                              <>
+                                <Divider />
+                                <Button
+                                  variant="light"
+                                  color="blue"
+                                  size="sm"
+                                  fullWidth
+                                  leftSection={<IconCreditCard size={14} />}
+                                  onClick={() => {
+                                    router.push(`/checkout`)
+                                  }}
+                                >
+                                  Go to Payment Page
+                                </Button>
+                              </>
+                            )}
                           </>
                         )}
 

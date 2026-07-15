@@ -88,6 +88,7 @@ export function useCancelOrder() {
       const orderId = variables.order_id
       queryClient.invalidateQueries({ queryKey: ['DETAIL_ORDER', orderId] })
       queryClient.invalidateQueries({ queryKey: ['CHECK_STATUS', orderId] })
+      queryClient.invalidateQueries({ queryKey: ['CANCEL_STATUS', orderId] })
     }
   })
 }

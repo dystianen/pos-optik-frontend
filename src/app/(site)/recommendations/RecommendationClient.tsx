@@ -54,7 +54,7 @@ const Recommendations = () => {
       {isLoading ? (
         <Grid>
           {Array.from({ length: 8 }).map((_, i) => (
-            <Grid.Col key={i} span={{ base: 6, xs: 4, md: 3 }}>
+            <Grid.Col key={i} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
               <CardProductSkeleton />
             </Grid.Col>
           ))}
@@ -118,7 +118,7 @@ const Recommendations = () => {
       ) : products && products.length > 0 ? (
         <Grid>
           {products.map((item, index: number) => (
-            <Grid.Col key={index} span={{ base: 6, xs: 4, md: 3 }}>
+            <Grid.Col key={index} span={{ base: 6, xs: 4, md: 3, lg: 2 }}>
               <CardProduct item={item} />
             </Grid.Col>
           ))}

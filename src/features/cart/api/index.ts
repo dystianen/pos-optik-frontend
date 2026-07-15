@@ -7,8 +7,10 @@ export const getCart = async () => {
   return response.data.data
 }
 
-export const updateCart = async (payload: { cart_id: number; product_id: string; qty: number }) => {
-  const response = await apiClient.post(`${API_ROUTES.CART.BASE}/update`, payload)
+export const updateCart = async (payload: { cart_item_id: string; quantity: number }) => {
+  const response = await apiClient.put(`${API_ROUTES.CART.BASE}/update/${payload.cart_item_id}`, {
+    quantity: payload.quantity
+  })
   return response.data.data
 }
 

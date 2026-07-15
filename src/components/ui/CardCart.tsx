@@ -1,8 +1,9 @@
 'use client'
 
-import { useDeleteCart as useDeleteItemCart } from '@/features/cart/hooks'
+import { useDeleteCart as useDeleteItemCart, useUpdateCart } from '@/features/cart/hooks'
 import { TItemCart } from '@/features/order/types'
 import { formatCurrency } from '@/utils/format'
+import { toast } from 'react-toastify'
 
 import {
   ActionIcon,
@@ -22,7 +23,7 @@ import {
 } from '@mantine/core'
 import { IconChevronDown, IconChevronUp, IconEye, IconTrash } from '@tabler/icons-react'
 import Image from 'next/image'
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 
 type TCardCart = {
   item: TItemCart
@@ -31,11 +32,38 @@ type TCardCart = {
 
 const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
   const [openRx, setOpenRx] = useState(false)
+  const [localQty, setLocalQty] = useState(item.quantity)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const { mutate: deleteItem, isPending } = useDeleteItemCart()
+  const { mutate: updateCartItem, isPending: isUpdating } = useUpdateCart()
 
-  const handleDeleteItemCart = useCallback(() => {
-    deleteItem(item.cart_item_id)
-  }, [deleteItem, item.cart_item_id])
+  // Sync localQty if item.quantity changes from outside (refetch)
+  useEffect(() => {
+    setLocalQty(item.quantity)
+  }, [item.quantity])
+
+  const handleChangeQty = useCallback(
+    (delta: number) => {
+      const next = Math.max(1, localQty + delta)
+      setLocalQty(next)
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      debounceRef.current = setTimeout(() => {
+        updateCartItem(
+          {
+            cart_item_id: item.cart_item_id,
+            quantity: next
+          },
+          {
+            onError: (err: any) => {
+              setLocalQty(item.quantity)
+              toast.error(err?.response?.data?.message || err?.message || 'Gagal mengubah jumlah barang.')
+            }
+          }
+        )
+      }, 400)
+    },
+    [localQty, item.cart_item_id, item.quantity, updateCartItem]
+  )
 
   const prescription = item.prescription
 
@@ -83,10 +111,62 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                 </Badge>
               )}
 
-              <Group gap={8}>
-                <Text size="sm" c="dimmed" fw={500}>
-                  Qty: {item.quantity}
-                </Text>
+              <Group gap={8} align="center">
+                {/* Quantity Stepper */}
+                {!hideAction && (
+                  <Group gap={0} style={{ border: '1.5px solid var(--mantine-color-default-border)', borderRadius: 6, overflow: 'hidden' }}>
+                    <ActionIcon
+                      id={`cart-qty-decrease-${item.cart_item_id}`}
+                      variant="subtle"
+                      color="gray"
+                      size="sm"
+                      radius={0}
+                      onClick={() => handleChangeQty(-1)}
+                      disabled={localQty <= 1}
+                      style={{ width: 28, height: 28 }}
+                    >
+                      <Text fw={700} size="md">−</Text>
+                    </ActionIcon>
+                    <Box
+                      style={{
+                        width: 36,
+                        height: 28,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        borderLeft: '1px solid var(--mantine-color-default-border)',
+                        borderRight: '1px solid var(--mantine-color-default-border)',
+                        fontWeight: 700,
+                        fontSize: 13,
+                        animation: isUpdating ? 'qty-blink 0.8s ease-in-out infinite' : 'none'
+                      }}
+                    >
+                      <style>{`
+                        @keyframes qty-blink {
+                          0%, 100% { opacity: 1; }
+                          50% { opacity: 0.25; }
+                        }
+                      `}</style>
+                      {localQty}
+                    </Box>
+                    <ActionIcon
+                      id={`cart-qty-increase-${item.cart_item_id}`}
+                      variant="subtle"
+                      color="gray"
+                      size="sm"
+                      radius={0}
+                      onClick={() => handleChangeQty(1)}
+                      style={{ width: 28, height: 28 }}
+                    >
+                      <Text fw={700} size="md">+</Text>
+                    </ActionIcon>
+                  </Group>
+                )}
+                {hideAction && (
+                  <Text size="sm" c="dimmed" fw={500}>
+                    Qty: {localQty}
+                  </Text>
+                )}
                 <Text size="sm" c="dimmed">
                   •
                 </Text>
@@ -191,7 +271,11 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
             <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
               Subtotal
             </Text>
-            <Text fw={700} size="lg" c="primary.8">
+            <Text fw={700} size="lg" c="primary.8"
+              style={{
+                animation: isUpdating ? 'qty-blink 0.8s ease-in-out infinite' : 'none'
+              }}
+            >
               {formatCurrency(item.subtotal)}
             </Text>
           </Stack>
@@ -205,7 +289,7 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
               color="red"
               size="lg"
               radius="md"
-              onClick={handleDeleteItemCart}
+              onClick={() => deleteItem(item.cart_item_id)}
               loading={isPending}
               style={{
                 transition: 'all 0.2s ease'

@@ -62,6 +62,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
   const [prescription, setPrescription] = useState<PrescriptionPayload>({
     type: 'none'
   })
+  const [quantity, setQuantity] = useState<number>(1)
 
   const { data: product, isLoading: isLoadingPage } = useProductDetail(productId)
   const { data: attributes } = useProductAttribute(productId || '')
@@ -108,7 +109,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
       const payload = {
         product_id: product!.product_id,
         variant_id: selectedVariant?.variant_id ?? null,
-        quantity: 1,
+        quantity,
         prescription
       }
       addToCart(payload, {
@@ -142,6 +143,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
   const handleSelectVariant = useCallback((variant: Variant) => {
     setPrimaryImage({ url: variant.image.url, alt_text: variant.image.alt_text })
     setSelectedVariant(variant)
+    setQuantity((q) => Math.min(Number(variant.stock), q))
   }, [])
 
   const price = selectedVariant?.price ?? product?.product_price ?? '0'
@@ -225,7 +227,7 @@ const DetailClient = ({ productId }: { productId: string }) => {
                     </Card.Section>
 
                     <Box mt={'md'}>
-                      <Group justify="space-between">
+                      <Group justify="space-between" align="flex-start" wrap='nowrap'>
                         <Box>
                           <Text fw={600} c="primary" style={{ textTransform: 'uppercase' }}>
                             {product.product_brand}
@@ -233,26 +235,137 @@ const DetailClient = ({ productId }: { productId: string }) => {
                           <Text fw={500}>
                             {product.product_name} {variantLabel}
                           </Text>
+                          <Text mt={'md'} size="xl" fw={600} c="primary">
+                            {formatCurrency(Number(price) * quantity)}
+                          </Text>
                         </Box>
 
-                        <Tooltip
-                          label="Select variant first"
-                          disabled={variants.length === 0 || !!selectedVariant}
-                        >
-                          <Button
-                            mt="md"
-                            onClick={handleAddCart}
-                            disabled={variants.length > 0 && !selectedVariant}
-                            loading={loading}
+                        <Stack gap={16} align="flex-end">
+                          {/* Quantity Stepper */}
+                          <Box
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 0,
+                              border: '1.5px solid var(--mantine-color-default-border)',
+                              borderRadius: 8,
+                              overflow: 'hidden',
+                              width: 'fit-content'
+                            }}
                           >
-                            Add to Cart
-                          </Button>
-                        </Tooltip>
-                      </Group>
+                            <button
+                              id="qty-decrease-btn"
+                              onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                              disabled={quantity <= 1}
+                              style={{
+                                width: 34,
+                                height: 34,
+                                border: 'none',
+                                background:
+                                  quantity <= 1
+                                    ? 'var(--mantine-color-gray-1)'
+                                    : 'var(--mantine-color-primary-0)',
+                                cursor: quantity <= 1 ? 'not-allowed' : 'pointer',
+                                fontSize: 18,
+                                fontWeight: 700,
+                                color:
+                                  quantity <= 1
+                                    ? 'var(--mantine-color-gray-5)'
+                                    : 'var(--mantine-color-primary-7)',
+                                transition: 'all 0.15s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                            >
+                              −
+                            </button>
+                            <Box
+                              style={{
+                                width: 44,
+                                height: 34,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 700,
+                                fontSize: 15,
+                                background: 'white',
+                                borderLeft: '1.5px solid var(--mantine-color-default-border)',
+                                borderRight: '1.5px solid var(--mantine-color-default-border)'
+                              }}
+                            >
+                              {quantity}
+                            </Box>
+                            <button
+                              id="qty-increase-btn"
+                              onClick={() =>
+                                setQuantity((q) => {
+                                  const maxStock = selectedVariant
+                                    ? Number(selectedVariant.stock)
+                                    : product
+                                      ? Number(product.product_stock)
+                                      : Infinity
+                                  return Math.min(maxStock, q + 1)
+                                })
+                              }
+                              disabled={
+                                selectedVariant
+                                  ? quantity >= Number(selectedVariant.stock)
+                                  : product
+                                    ? quantity >= Number(product.product_stock)
+                                    : false
+                              }
+                              style={{
+                                width: 34,
+                                height: 34,
+                                border: 'none',
+                                background:
+                                  (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
+                                  (!selectedVariant &&
+                                    product &&
+                                    quantity >= Number(product.product_stock))
+                                    ? 'var(--mantine-color-gray-1)'
+                                    : 'var(--mantine-color-primary-0)',
+                                cursor:
+                                  (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
+                                  (!selectedVariant &&
+                                    product &&
+                                    quantity >= Number(product.product_stock))
+                                    ? 'not-allowed'
+                                    : 'pointer',
+                                fontSize: 18,
+                                fontWeight: 700,
+                                color:
+                                  (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
+                                  (!selectedVariant &&
+                                    product &&
+                                    quantity >= Number(product.product_stock))
+                                    ? 'var(--mantine-color-gray-5)'
+                                    : 'var(--mantine-color-primary-7)',
+                                transition: 'all 0.15s ease',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}
+                            >
+                              +
+                            </button>
+                          </Box>
 
-                      <Text size="xl" fw={600} c="primary">
-                        {formatCurrency(price)}
-                      </Text>
+                          <Tooltip
+                            label="Select variant first"
+                            disabled={variants.length === 0 || !!selectedVariant}
+                          >
+                            <Button
+                              onClick={handleAddCart}
+                              disabled={variants.length > 0 && !selectedVariant}
+                              loading={loading}
+                            >
+                              Add to Cart
+                            </Button>
+                          </Tooltip>
+                        </Stack>
+                      </Group>
 
                       <Stack mt={'lg'} gap={'xs'}>
                         <Text size="sm" fw={500}>
