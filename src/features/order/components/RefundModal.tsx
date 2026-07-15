@@ -254,10 +254,10 @@ export function RefundModal({
 
         {/* Evidence Upload */}
         <FileInput
-          label="Evidence (Optional)"
+          label="Evidence"
           placeholder="Upload photo/video evidence"
-          description="Max size 5MB"
           clearable
+          required
           value={evidence}
           onChange={setEvidence}
           accept="image/*,video/*"
@@ -297,7 +297,7 @@ export function RefundModal({
               !reason ||
               (refundType === 'partial' && selectedItems.size === 0) ||
               !refundNote ||
-              refundNote.length < 10
+              !evidence
             }
           >
             Submit Refund Request
