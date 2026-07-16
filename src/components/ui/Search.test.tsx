@@ -22,6 +22,7 @@ const mockProducts = [
       {
         product_id: 'p1',
         product_name: 'Test Glass',
+        product_brand: 'Test Brand',
         product_price: 150000,
         product_image_url: '/img.jpg'
       }
@@ -53,22 +54,32 @@ describe('Search Component', () => {
     vi.mocked(useSearchProduct).mockReturnValue({ data: mockProducts } as any)
   })
 
-  it('renders search input correctly', () => {
+  it('renders search trigger correctly', () => {
     renderWithProviders(<Search />)
-    const input = screen.getByPlaceholderText('Search eyewear, lenses, brands...')
-    expect(input).toBeInTheDocument()
+    const trigger = screen.getByText('Search eyewear...')
+    expect(trigger).toBeInTheDocument()
   })
 
-  it('updates input value on change', () => {
+  it('opens modal on trigger click and allows typing', async () => {
     renderWithProviders(<Search />)
-    const input = screen.getByPlaceholderText('Search eyewear, lenses, brands...') as HTMLInputElement
+    const trigger = screen.getByText('Search eyewear...')
+    fireEvent.click(trigger)
+
+    const input = (await screen.findByPlaceholderText(
+      'Search by brand, name, or attributes...'
+    )) as HTMLInputElement
+    expect(input).toBeInTheDocument()
+
     fireEvent.change(input, { target: { value: 'Glass' } })
     expect(input.value).toBe('Glass')
   })
 
   it('calls useSearchProduct with input value', async () => {
     renderWithProviders(<Search />)
-    const input = screen.getByPlaceholderText('Search eyewear, lenses, brands...')
+    const trigger = screen.getByText('Search eyewear...')
+    fireEvent.click(trigger)
+
+    const input = await screen.findByPlaceholderText('Search by brand, name, or attributes...')
     fireEvent.change(input, { target: { value: 'Glass' } })
 
     // Wait for debounce (300ms in code)
@@ -77,19 +88,18 @@ describe('Search Component', () => {
     })
   })
 
-  it('navigates to category page when option is selected', async () => {
+  it('navigates to product detail page when product is clicked', async () => {
     renderWithProviders(<Search />)
-    const input = screen.getByPlaceholderText('Search eyewear, lenses, brands...')
+    const trigger = screen.getByText('Search eyewear...')
+    fireEvent.click(trigger)
+
+    const input = await screen.findByPlaceholderText('Search by brand, name, or attributes...')
     fireEvent.change(input, { target: { value: 'Glass' } })
 
-    // Open dropdown by focusing or clicking
-    fireEvent.focus(input)
+    // Wait for the product option to appear
+    const productItem = await screen.findByText('Test Glass')
+    fireEvent.click(productItem)
 
-    // Wait for the option to appear
-    const option = await screen.findByText('Test Glass')
-    fireEvent.click(option)
-
-    // router.push(`/product/${formatSlug(selected.category_name)}?search=${search}`)
-    expect(mockPush).toHaveBeenCalledWith('/product/eyewear?search=Glass')
+    expect(mockPush).toHaveBeenCalledWith('/product/detail?id=p1')
   })
 })

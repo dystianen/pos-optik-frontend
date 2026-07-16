@@ -21,5 +21,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { slug } = await params
-  return <ProductsClient slug={slug} />
+  return <ProductsClient key={slug} slug={slug} />
 }

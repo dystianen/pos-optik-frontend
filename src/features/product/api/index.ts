@@ -4,7 +4,8 @@ import type {
   TResAttribute,
   TResCategories,
   TResDetailProduct,
-  TResProducts
+  TResProducts,
+  TResProductsPaginated
 } from '../types'
 
 export const getSearchProduct = async ({ q }: { q: string }) => {
@@ -17,18 +18,36 @@ export const getSearchProduct = async ({ q }: { q: string }) => {
 export const getProduct = async ({
   limit,
   search,
-  category
+  category,
+  brand,
+  min_price,
+  max_price,
+  stock,
+  rating,
+  page
 }: {
   limit?: number
   search?: string
   category: string | null
+  brand?: string
+  min_price?: number
+  max_price?: number
+  stock?: string
+  rating?: number
+  page?: number
 }) => {
   const params = new URLSearchParams()
   if (limit) params.append('limit', limit.toString())
   if (search) params.append('search', search)
   if (category) params.append('category', category)
+  if (brand) params.append('brand', brand)
+  if (min_price !== undefined && min_price !== null) params.append('min_price', min_price.toString())
+  if (max_price !== undefined && max_price !== null) params.append('max_price', max_price.toString())
+  if (stock) params.append('stock', stock)
+  if (rating !== undefined && rating !== null) params.append('rating', rating.toString())
+  if (page) params.append('page', page.toString())
 
-  const response = await apiClient.get<TResProducts>(`${API_ROUTES.PRODUCTS.BASE}?${params.toString()}`)
+  const response = await apiClient.get<TResProductsPaginated>(`${API_ROUTES.PRODUCTS.BASE}?${params.toString()}`)
   return response.data.data
 }
 

@@ -43,6 +43,20 @@ export type TProduct = {
 
 export type TResProducts = GeneralResponse<TProduct[]>
 
+export interface TPagination {
+  total: number
+  per_page: number
+  current_page: number
+  last_page: number
+  from: number
+  to: number
+}
+
+export type TResProductsPaginated = GeneralResponse<{
+  items: TProduct[]
+  pagination: TPagination
+}>
+
 export interface TGalleryDetail {
   product_image_id: string
   url: string

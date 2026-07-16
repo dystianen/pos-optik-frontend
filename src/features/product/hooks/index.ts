@@ -1,10 +1,44 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import * as productApi from '../api'
 
-export function useProduct(payload: { limit?: number; search?: string; category: string | null }) {
+export function useProduct(payload: {
+  limit?: number
+  search?: string
+  category: string | null
+  brand?: string
+  min_price?: number
+  max_price?: number
+  stock?: string
+  rating?: number
+}) {
   return useQuery({
     queryKey: ['products', payload],
-    queryFn: () => productApi.getProduct(payload)
+    queryFn: async () => {
+      const res = await productApi.getProduct(payload)
+      return res.items
+    }
+  })
+}
+
+export function useInfiniteProducts(payload: {
+  limit?: number
+  search?: string
+  category: string | null
+  brand?: string
+  min_price?: number
+  max_price?: number
+  stock?: string
+  rating?: number
+}) {
+  return useInfiniteQuery({
+    queryKey: ['products_infinite', payload],
+    queryFn: ({ pageParam = 1 }) => productApi.getProduct({ ...payload, page: pageParam }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { pagination } = lastPage
+      if (!pagination) return undefined
+      return pagination.current_page < pagination.last_page ? pagination.current_page + 1 : undefined
+    }
   })
 }
 
