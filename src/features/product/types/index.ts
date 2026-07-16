@@ -39,6 +39,8 @@ export type TProduct = {
   updated_at: Date
   score: number
   is_wishlist: string
+  avg_rating: string
+  total_reviews: string
 }
 
 export type TResProducts = GeneralResponse<TProduct[]>

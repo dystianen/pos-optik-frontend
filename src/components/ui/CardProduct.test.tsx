@@ -85,7 +85,7 @@ describe('CardProduct Component', () => {
     renderWithProviders(<CardProduct item={mockProduct as any} />)
 
     // Find the button (ActionIcon) for wishlist
-    const wishlistBtn = screen.getByRole('button')
+    const wishlistBtn = screen.getByRole('button', { name: /wishlist/i })
     fireEvent.click(wishlistBtn)
 
     expect(mockMutate).toHaveBeenCalledWith('123', expect.any(Object))

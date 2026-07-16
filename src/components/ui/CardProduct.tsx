@@ -4,8 +4,8 @@ import * as productApi from '@/features/product/api'
 import { useToggleWishlist } from '@/features/product/hooks'
 import { TProduct } from '@/features/product/types'
 import { formatCurrency } from '@/utils/format'
-import { ActionIcon, Badge, Card, Divider, Group, Stack, Text } from '@mantine/core'
-import { IconHeart, IconHeartFilled, IconPackage, IconShoppingBag, IconEye } from '@tabler/icons-react'
+import { ActionIcon, Card, Group, Stack, Text } from '@mantine/core'
+import { IconHeart, IconHeartFilled, IconStar } from '@tabler/icons-react'
 import { useQueryClient } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -27,6 +27,8 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
 
   const stock = Number(item.product_stock)
   const totalSold = Number(item.total_sold ?? 0)
+  const avgRating = Number(item.avg_rating ?? 0)
+  const totalReviews = Number(item.total_reviews ?? 0)
 
   // Prefetch detail on hover
   const handlePrefetch = useCallback(() => {
@@ -63,7 +65,6 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
     // 2. Call API & Global Optimistic Update via React Query
     toggleWishlist(item.product_id, {
       onSuccess: (res) => {
-        // Handle true/false atau 1/0
         const isAdded =
           res.data.is_wishlist === true ||
           res.data.is_wishlist === 1 ||
@@ -76,7 +77,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
         }
       },
       onError: (err) => {
-        // Rollback klu error
+        // Rollback on error
         setIsWishlistLocal(item.is_wishlist === '1')
       }
     })
@@ -85,101 +86,97 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
   return (
     <>
       <Card
-        withBorder
+        padding="md"
+        radius="lg"
         onClick={handleDetail}
-        className={`group relative overflow-hidden transition-all duration-300 cursor-pointer
-        ${stock === 0 ? 'opacity-50 cursor-not-allowed' : 'card-focus'}`}
+        className={`group relative overflow-hidden transition-all duration-300 cursor-pointer bg-white border border-gray-100/80 hover:border-transparent hover:shadow-[0_12px_30px_rgba(0,0,0,0.06)] hover:-translate-y-1.5
+        ${stock === 0 ? 'opacity-60 cursor-not-allowed' : ''}`}
       >
-        {/* IMAGE */}
+        {/* IMAGE CONTAINER */}
         <Card.Section onMouseEnter={handlePrefetch}>
-          <div className="relative h-[120px] flex items-center justify-center overflow-hidden">
+          <div className="relative aspect-[4/3] w-full bg-gray-50/70 rounded-xl flex items-center justify-center overflow-hidden mb-3">
             <Image
               src={item.product_image_url}
               alt={item.product_name}
               fill
-              className="object-contain transition-transform duration-500 group-hover:scale-110"
+              className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 15vw"
             />
 
-            {/* gradient hover */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition" />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-300" />
 
-            {/* Wishlist floating */}
+            {/* Wishlist Button */}
             <ActionIcon
               variant="white"
               radius="xl"
-              size="sm"
-              className="absolute top-2 right-2 shadow-md opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition"
+              size="md"
+              aria-label="Wishlist"
+              className="absolute top-3 right-3 shadow-sm border border-gray-100 opacity-100 transition hover:scale-105 active:scale-95 z-10"
               onClick={(e) => {
                 e.stopPropagation()
                 handleAddWishlist()
               }}
             >
               {isWishlistLocal ? (
-                <IconHeartFilled size={16} color="red" />
+                <IconHeartFilled size={16} className="text-red-500 animate-fade-in" />
               ) : (
-                <IconHeart size={16} />
+                <IconHeart size={16} className="text-gray-400 hover:text-red-500 transition-colors" />
               )}
             </ActionIcon>
-
-            {/* Quick view button - Desktop Only */}
-            {/* <div className="absolute bottom-2 left-0 right-0 hidden sm:flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleDetail()
-                }}
-                className="bg-white text-midnight_text hover:text-white text-xs px-3.5 py-1.5 font-semibold rounded-full shadow hover:bg-primary transition flex items-center gap-1.5"
-              >
-                <IconEye size={14} />
-                <span>View Product</span>
-              </button>
-            </div> */}
           </div>
         </Card.Section>
 
-        <Divider />
-
         {/* CONTENT */}
-        <Stack gap={2} mt="sm">
-          <Text fz={11} fw={600} c="dimmed" tt="uppercase">
-            {item.product_brand}
-          </Text>
+        <Stack gap={3}>
+          {/* Brand & Rating Row */}
+          <Group justify="space-between" align="center" gap={4} wrap="nowrap">
+            <Text fz={10} fw={700} c="dimmed" className="tracking-wider uppercase truncate">
+              {item.product_brand}
+            </Text>
+            {/* Rating */}
+            <Group gap={2} wrap="nowrap" style={{ flexShrink: 0 }}>
+              <IconStar size={12} className="text-amber-400 fill-amber-400" />
+              <Text fz={11} fw={700} c="dark.6">
+                {avgRating > 0 ? avgRating.toFixed(1) : '0.0'}
+              </Text>
+              {totalReviews > 0 && (
+                <Text fz={10} c="dimmed">
+                  ({totalReviews})
+                </Text>
+              )}
+            </Group>
+          </Group>
 
-          <Text fw={600} fz={14} lineClamp={1}>
+          {/* Product Name */}
+          <Text fw={600} fz={14} c="dark.7" className="group-hover:text-primary transition-colors line-clamp-1">
             {item.product_name}
           </Text>
 
-          <Text fw={700} fz={15} c="primary">
+          {/* Price */}
+          <Text fw={700} fz={15} c="primary" className="mt-0.5">
             {formatCurrency(item.product_price)}
           </Text>
 
-          <Group gap={4} mt="xs" wrap="nowrap">
+          {/* Footer Metadata */}
+          <Group justify="space-between" align="center" mt="xs" pt="xs" className="border-t border-gray-100/60">
             {stock > 0 ? (
-              <Badge
-                size="xs"
-                color="green"
-                variant="light"
-                leftSection={<IconPackage size={12} />}
-              >
-                <span className="hidden sm:inline">Stock </span>
-                {stock}
-              </Badge>
+              <Text fz={11} c="gray.6" className="flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                Stock {stock}
+              </Text>
             ) : (
-              <Badge size="xs" color="red" variant="light">
+              <Text fz={11} c="red.6" fw={600} className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block"></span>
                 Out of Stock
-              </Badge>
+              </Text>
             )}
 
-            <Badge
-              size="xs"
-              color="blue"
-              variant="light"
-              leftSection={<IconShoppingBag size={12} />}
-            >
-              <span className="hidden sm:inline">Terjual </span>
-              {totalSold}
-            </Badge>
+            {totalSold > 0 && (
+              <Text fz={11} c="gray.5" fw={500}>
+                Terjual {totalSold}
+              </Text>
+            )}
           </Group>
         </Stack>
       </Card>
@@ -192,5 +189,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
     </>
   )
 })
+
+CardProduct.displayName = 'CardProduct'
 
 export default CardProduct

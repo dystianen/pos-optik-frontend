@@ -56,13 +56,13 @@ describe('Search Component', () => {
 
   it('renders search trigger correctly', () => {
     renderWithProviders(<Search />)
-    const trigger = screen.getByText('Search eyewear...')
+    const trigger = screen.getByText('Search anything...')
     expect(trigger).toBeInTheDocument()
   })
 
   it('opens modal on trigger click and allows typing', async () => {
     renderWithProviders(<Search />)
-    const trigger = screen.getByText('Search eyewear...')
+    const trigger = screen.getByText('Search anything...')
     fireEvent.click(trigger)
 
     const input = (await screen.findByPlaceholderText(
@@ -76,7 +76,7 @@ describe('Search Component', () => {
 
   it('calls useSearchProduct with input value', async () => {
     renderWithProviders(<Search />)
-    const trigger = screen.getByText('Search eyewear...')
+    const trigger = screen.getByText('Search anything...')
     fireEvent.click(trigger)
 
     const input = await screen.findByPlaceholderText('Search by brand, name, or attributes...')
@@ -90,7 +90,7 @@ describe('Search Component', () => {
 
   it('navigates to product detail page when product is clicked', async () => {
     renderWithProviders(<Search />)
-    const trigger = screen.getByText('Search eyewear...')
+    const trigger = screen.getByText('Search anything...')
     fireEvent.click(trigger)
 
     const input = await screen.findByPlaceholderText('Search by brand, name, or attributes...')
