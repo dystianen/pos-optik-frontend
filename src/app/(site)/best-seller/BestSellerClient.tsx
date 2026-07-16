@@ -3,7 +3,17 @@
 import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
 import { useBestSeller } from '@/features/product/hooks'
-import { Badge, Button, Container, Grid, Group, Stack, Text, TextInput, UnstyledButton } from '@mantine/core'
+import {
+  Badge,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+  UnstyledButton
+} from '@mantine/core'
 import { IconSearch, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -41,7 +51,9 @@ const BestSellerClient = () => {
       {/* PAGE HEADER */}
       <div className="sm:flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-1">Best Seller</h2>
+          <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-1">
+            Best Seller
+          </h2>
           <Text size="sm" c="dimmed">
             Browse our top-selling eyewear products
           </Text>
@@ -52,14 +64,18 @@ const BestSellerClient = () => {
             value={localSearch}
             onChange={(e) => setLocalSearch(e.currentTarget.value)}
             className="flex-grow sm:w-72"
-            leftSection={<IconSearch size={18} />}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSearchSubmit()
               }
             }}
           />
-          <Button onClick={handleSearchSubmit} variant="light" color="primary">
+          <Button
+            onClick={handleSearchSubmit}
+            leftSection={<IconSearch size={18} />}
+            variant="light"
+            color="primary"
+          >
             Find
           </Button>
         </Group>
@@ -68,7 +84,12 @@ const BestSellerClient = () => {
       {/* ACTIVE SEARCH TAG */}
       {querySearch && (
         <Group gap="xs" mb="lg" className="p-3 bg-gray-50/50 rounded-xl border border-gray-100">
-          <Text size="xs" fw={700} c="dimmed" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <Text
+            size="xs"
+            fw={700}
+            c="dimmed"
+            style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}
+          >
             Active:
           </Text>
           <Badge
@@ -125,7 +146,8 @@ const BestSellerClient = () => {
             Product Not Found
           </Text>
           <Text c="dimmed" size="sm" ta="center" style={{ maxWidth: 360 }}>
-            Try relaxing your filter parameters, removing active search badges, or searching for other keywords.
+            Try relaxing your filter parameters, removing active search badges, or searching for
+            other keywords.
           </Text>
         </Stack>
       )}

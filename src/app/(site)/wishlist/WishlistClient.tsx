@@ -3,7 +3,17 @@
 import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
 import { useWishlist } from '@/features/product/hooks'
-import { Badge, Button, Container, Grid, Group, Stack, Text, TextInput, UnstyledButton } from '@mantine/core'
+import {
+  Badge,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  TextInput,
+  UnstyledButton
+} from '@mantine/core'
 import { IconSearch, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -52,14 +62,18 @@ const Wishlist = () => {
             value={localSearch}
             onChange={(e) => setLocalSearch(e.currentTarget.value)}
             className="flex-grow sm:w-72"
-            leftSection={<IconSearch size={18} />}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSearchSubmit()
               }
             }}
           />
-          <Button onClick={handleSearchSubmit} variant="light" color="primary">
+          <Button
+            onClick={handleSearchSubmit}
+            leftSection={<IconSearch size={18} />}
+            variant="light"
+            color="primary"
+          >
             Find
           </Button>
         </Group>
@@ -68,7 +82,12 @@ const Wishlist = () => {
       {/* ACTIVE SEARCH TAG */}
       {querySearch && (
         <Group gap="xs" mb="lg" className="p-3 bg-gray-50/50 rounded-xl border border-gray-100">
-          <Text size="xs" fw={700} c="dimmed" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <Text
+            size="xs"
+            fw={700}
+            c="dimmed"
+            style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}
+          >
             Active:
           </Text>
           <Badge
@@ -125,7 +144,7 @@ const Wishlist = () => {
             Product Not Found
           </Text>
           <Text c="dimmed" size="sm" ta="center" style={{ maxWidth: 360 }}>
-            {querySearch 
+            {querySearch
               ? 'Try relaxing your filter parameters, removing active search badges, or searching for other keywords.'
               : 'Your wishlist is currently empty. Add products to your wishlist to view them here.'}
           </Text>

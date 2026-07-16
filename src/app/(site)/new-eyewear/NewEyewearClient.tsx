@@ -52,14 +52,18 @@ const NewEyewearClient = () => {
             value={localSearch}
             onChange={(e) => setLocalSearch(e.currentTarget.value)}
             className="flex-grow sm:w-72"
-            leftSection={<IconSearch size={18} />}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSearchSubmit()
               }
             }}
           />
-          <Button onClick={handleSearchSubmit} variant="light" color="primary">
+          <Button
+            onClick={handleSearchSubmit}
+            leftSection={<IconSearch size={18} />}
+            variant="light"
+            color="primary"
+          >
             Find
           </Button>
         </Group>

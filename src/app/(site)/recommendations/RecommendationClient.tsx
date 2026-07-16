@@ -12,8 +12,8 @@ import {
   Paper,
   Stack,
   Text,
-  ThemeIcon,
   TextInput,
+  ThemeIcon,
   Title,
   UnstyledButton
 } from '@mantine/core'
@@ -86,14 +86,18 @@ const Recommendations = () => {
             value={localSearch}
             onChange={(e) => setLocalSearch(e.currentTarget.value)}
             className="flex-grow sm:w-72"
-            leftSection={<IconSearch size={18} />}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSearchSubmit()
               }
             }}
           />
-          <Button onClick={handleSearchSubmit} variant="light" color="primary">
+          <Button
+            onClick={handleSearchSubmit}
+            leftSection={<IconSearch size={18} />}
+            variant="light"
+            color="primary"
+          >
             Find
           </Button>
         </Group>
@@ -102,7 +106,12 @@ const Recommendations = () => {
       {/* ACTIVE SEARCH TAG */}
       {querySearch && (
         <Group gap="xs" mb="lg" className="p-3 bg-gray-50/50 rounded-xl border border-gray-100">
-          <Text size="xs" fw={700} c="dimmed" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          <Text
+            size="xs"
+            fw={700}
+            c="dimmed"
+            style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}
+          >
             Active:
           </Text>
           <Badge
@@ -147,7 +156,8 @@ const Recommendations = () => {
             style={{
               maxWidth: 500,
               textAlign: 'center',
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%)',
+              background:
+                'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.9) 100%)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(0, 0, 0, 0.1)'
             }}
@@ -157,7 +167,8 @@ const Recommendations = () => {
               radius="50%"
               mx="auto"
               style={{
-                background: 'linear-gradient(135deg, var(--mantine-color-primary-1) 0%, var(--mantine-color-primary-2) 100%)',
+                background:
+                  'linear-gradient(135deg, var(--mantine-color-primary-1) 0%, var(--mantine-color-primary-2) 100%)',
                 color: 'var(--mantine-color-primary-6)'
               }}
             >
@@ -169,13 +180,16 @@ const Recommendations = () => {
             </Title>
 
             <Text c="dimmed" size="sm" mt="xs" mb="lg">
-              Sign in to unlock personalized style recommendations tailored specifically to your preferences and eye prescription.
+              Sign in to unlock personalized style recommendations tailored specifically to your
+              preferences and eye prescription.
             </Text>
 
             <Button
               onClick={() => {
                 if (typeof window !== 'undefined') {
-                  const redirectTo = encodeURIComponent(window.location.pathname + window.location.search)
+                  const redirectTo = encodeURIComponent(
+                    window.location.pathname + window.location.search
+                  )
                   router.push(`/signin?redirectTo=${redirectTo}`)
                 } else {
                   router.push('/signin')
@@ -215,7 +229,8 @@ const Recommendations = () => {
             Product Not Found
           </Text>
           <Text c="dimmed" size="sm" ta="center" style={{ maxWidth: 360 }}>
-            Try relaxing your filter parameters, removing active search badges, or searching for other keywords.
+            Try relaxing your filter parameters, removing active search badges, or searching for
+            other keywords.
           </Text>
         </Stack>
       )}

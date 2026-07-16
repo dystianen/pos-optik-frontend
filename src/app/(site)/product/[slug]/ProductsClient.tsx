@@ -431,7 +431,6 @@ const ProductsClient = ({ slug }: { slug: string }) => {
             value={localSearch}
             onChange={(e) => setLocalSearch(e.currentTarget.value)}
             className="flex-grow sm:w-72"
-            leftSection={<IconSearch size={18} />}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleSearchSubmit()
