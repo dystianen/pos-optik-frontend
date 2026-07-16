@@ -195,14 +195,14 @@ const Header = ({ user }: { user: TUser | null }) => {
             )}
           </nav>
 
-          {user?.name ? (
-            <div className="flex items-center gap-2">
-              <div className="hidden md:flex items-center gap-2">
-                <Search />
-                <Wishlist />
-              </div>
-              <Cart />
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="hidden md:flex items-center gap-2">
+              <Search />
+              <Wishlist isLoggedIn={!!user?.name} />
+            </div>
+            <Cart isLoggedIn={!!user?.name} />
 
+            {user?.name ? (
               <div className="hidden md:block">
                 <Menu
                   width={200}
@@ -238,12 +238,7 @@ const Header = ({ user }: { user: TUser | null }) => {
                   </Menu.Dropdown>
                 </Menu>
               </div>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 md:gap-4">
-              <div className="hidden md:block">
-                <Search />
-              </div>
+            ) : (
               <Link
                 href="/signin"
                 onClick={(e) => {
@@ -259,8 +254,8 @@ const Header = ({ user }: { user: TUser | null }) => {
               >
                 Sign In
               </Link>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 

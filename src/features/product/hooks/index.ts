@@ -179,9 +179,10 @@ export function useToggleWishlist() {
   })
 }
 
-export function useTotalWishlist() {
+export function useTotalWishlist(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['TOTAL_WISHLIST'],
-    queryFn: productApi.getTotalWishlist
+    queryFn: productApi.getTotalWishlist,
+    ...options
   })
 }

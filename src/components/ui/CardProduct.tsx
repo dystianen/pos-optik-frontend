@@ -5,7 +5,7 @@ import { useToggleWishlist } from '@/features/product/hooks'
 import { TProduct } from '@/features/product/types'
 import { formatCurrency } from '@/utils/format'
 import { ActionIcon, Badge, Card, Divider, Group, Stack, Text } from '@mantine/core'
-import { IconHeart, IconHeartFilled, IconPackage, IconShoppingBag } from '@tabler/icons-react'
+import { IconHeart, IconHeartFilled, IconPackage, IconShoppingBag, IconEye } from '@tabler/icons-react'
 import { useQueryClient } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
@@ -123,17 +123,18 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
             </ActionIcon>
 
             {/* Quick view button - Desktop Only */}
-            <div className="absolute bottom-2 left-0 right-0 hidden sm:flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
+            {/* <div className="absolute bottom-2 left-0 right-0 hidden sm:flex justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition">
               <button
                 onClick={(e) => {
                   e.stopPropagation()
                   handleDetail()
                 }}
-                className="bg-white text-xs px-3 py-1 rounded-full shadow hover:bg-primary hover:text-white transition"
+                className="bg-white text-midnight_text hover:text-white text-xs px-3.5 py-1.5 font-semibold rounded-full shadow hover:bg-primary transition flex items-center gap-1.5"
               >
-                View Product
+                <IconEye size={14} />
+                <span>View Product</span>
               </button>
-            </div>
+            </div> */}
           </div>
         </Card.Section>
 

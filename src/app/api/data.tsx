@@ -92,18 +92,18 @@ export const courseData: {
 
 export const MentorData: { profession: string; name: string; imgSrc: string }[] = [
   {
-    profession: 'Ophthalmologist',
-    name: 'Shoo Thar Mien',
+    profession: 'Spesialis Mata (Ophthalmologist)',
+    name: 'Dr. Adrian Wijaya, Sp.M',
     imgSrc: '/images/mentor/user3.png'
   },
   {
-    profession: 'Optometrist',
-    name: 'Shoo Thar Mien',
+    profession: 'Refraksionis Optometris',
+    name: 'Sofia Amanda, A.Md.RO',
     imgSrc: '/images/mentor/user2.png'
   },
   {
-    profession: 'Orthoptist',
-    name: 'Shoo Thar Mien',
+    profession: 'Senior Optometrist',
+    name: 'Hendry Kurniawan, B.Optom',
     imgSrc: '/images/mentor/user1.png'
   }
 ]
@@ -117,50 +117,34 @@ export const TestimonialData: {
 }[] = [
   {
     name: 'Robert Fox',
-    profession: 'CEO, Parkview Int.Ltd',
+    profession: 'Karyawan Swasta',
     comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
+      'Lensa kacamata anti-radiasi di Optikers sangat jernih dan nyaman digunakan seharian di depan layar monitor. Kepala saya tidak pernah pusing lagi!',
     imgSrc: '/images/testimonial/user.svg',
     rating: 5
   },
   {
     name: 'Leslie Alexander',
-    profession: 'CEO, Parkview Int.Ltd',
+    profession: 'Desainer Grafis',
     comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
+      'Desain frame-nya modern dan trendy banget. Kualitas bahannya kokoh, ringan, dan pas di hidung. Sangat merekomendasikan Optikers!',
     imgSrc: '/images/mentor/user2.png',
     rating: 5
   },
   {
     name: 'Cody Fisher',
-    profession: 'CEO, Parkview Int.Ltd',
+    profession: 'Programmer',
     comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
+      'Layanan konsultasi mata gratis dan pembuatannya cepat sekali. Softlens yang saya beli di sini juga sangat nyaman digunakan berjam-jam.',
     imgSrc: '/images/mentor/user3.png',
     rating: 5
   },
   {
-    name: 'Robert Fox',
-    profession: 'CEO, Parkview Int.Ltd',
+    name: 'Jane Cooper',
+    profession: 'Mahasiswi',
     comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
+      'Banyak pilihan kacamata keren yang ramah kantong mahasiswa. Pembeliannya mudah dan pengiriman paket dilapisi bubble wrap tebal dan aman.',
     imgSrc: '/images/mentor/user1.png',
-    rating: 5
-  },
-  {
-    name: 'Leslie Alexander',
-    profession: 'CEO, Parkview Int.Ltd',
-    comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-    imgSrc: '/images/mentor/user2.png',
-    rating: 5
-  },
-  {
-    name: 'Cody Fisher',
-    profession: 'CEO, Parkview Int.Ltd',
-    comment:
-      'There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour',
-    imgSrc: '/images/mentor/user3.png',
     rating: 5
   }
 ]

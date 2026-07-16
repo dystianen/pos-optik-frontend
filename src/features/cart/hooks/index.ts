@@ -40,9 +40,10 @@ export function useAddCart() {
   })
 }
 
-export function useTotalCart() {
+export function useTotalCart(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['total_cart'],
-    queryFn: cartApi.getTotalCart
+    queryFn: cartApi.getTotalCart,
+    ...options
   })
 }
