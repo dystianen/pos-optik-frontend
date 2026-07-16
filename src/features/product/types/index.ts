@@ -87,6 +87,9 @@ export interface TDetailProduct {
   gallery: TGalleryDetail[]
   variants: Variant[]
   is_prescription_supported: boolean
+  is_wishlist: string
+  avg_rating: string
+  total_reviews: string
 }
 
 export type TResDetailProduct = GeneralResponse<TDetailProduct>

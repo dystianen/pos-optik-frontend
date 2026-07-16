@@ -31,3 +31,153 @@
   color: var(--mantine-color-dimmed);
   font-size: var(--mantine-font-size-xs);
 }
+
+/* ─── Wishlist Button ─────────────────────────────── */
+.wishlistBtn {
+  transition: transform 150ms ease, color 150ms ease;
+}
+.wishlistBtn:hover {
+  transform: scale(1.15);
+}
+.wishlistBtn:active {
+  transform: scale(0.95);
+}
+
+/* ─── Thumbnail Gallery ───────────────────────────── */
+.thumbnail {
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+  cursor: pointer;
+}
+.thumbnail:hover {
+  border-color: var(--mantine-primary-color-filled) !important;
+}
+.thumbnailActive {
+  border-color: var(--mantine-primary-color-filled) !important;
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-filled);
+}
+
+/* ─── Main Image Container ────────────────────────── */
+.mainImage {
+  cursor: zoom-in;
+  transition: opacity 200ms ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.mainImage:hover {
+  opacity: 0.95;
+}
+
+/* ─── Stock Badge ─────────────────────────────────── */
+.stockBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+.stockDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.stockIn .stockDot {
+  background: #22c55e;
+}
+.stockLow .stockDot {
+  background: #f59e0b;
+  animation: pulse 1.2s infinite;
+}
+.stockOut .stockDot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ─── Rating Row ──────────────────────────────────── */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ratingValue {
+  font-weight: 700;
+  font-size: 14px;
+}
+.reviewCount {
+  font-size: 12px;
+  color: var(--mantine-color-dimmed);
+}
+
+/* ─── Share Button ────────────────────────────────── */
+.shareBtn {
+  transition: transform 150ms ease;
+}
+.shareBtn:hover {
+  transform: scale(1.08);
+}
+
+/* ─── Brand Chip ──────────────────────────────────── */
+.brandChip {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mantine-primary-color-filled);
+  background: var(--mantine-primary-color-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ─── Price ───────────────────────────────────────── */
+.priceTag {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--mantine-primary-color-filled);
+  line-height: 1.2;
+}
+
+/* ─── Sticky Mobile CTA ───────────────────────────── */
+.mobileCta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid var(--mantine-color-default-border);
+  z-index: 200;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileCta {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+}
+
+/* ─── Variant Card ────────────────────────────────── */
+.variantCard {
+  transition: border-color 150ms ease, box-shadow 150ms ease, transform 120ms ease;
+  cursor: pointer;
+}
+.variantCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.variantCardActive {
+  border-color: var(--mantine-primary-color-filled) !important;
+  box-shadow: 0 0 0 2px var(--mantine-primary-color-filled);
+}
+.variantCardDisabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
