@@ -152,8 +152,8 @@ export default function HomeClient() {
               <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-primary mb-3">
                 <IconTruck size={26} />
               </div>
-              <h3 className="font-bold text-midnight_text text-sm sm:text-base">Free Delivery</h3>
-              <p className="text-[11px] sm:text-xs text-gray-500 mt-1 max-w-[180px]">Safe and fast shipping nationwide</p>
+              <h3 className="font-bold text-midnight_text text-sm sm:text-base">Secure Shipping</h3>
+              <p className="text-[11px] sm:text-xs text-gray-500 mt-1 max-w-[180px]">Insured and trackable delivery nationwide</p>
             </div>
             <div className="flex flex-col items-center text-center p-3 hover:translate-y-[-2px] transition duration-300">
               <div className="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-primary mb-3">
