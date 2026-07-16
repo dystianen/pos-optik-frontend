@@ -3,54 +3,133 @@
 import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
 import { useMyRecommendations, useProduct } from '@/features/product/hooks'
-import { Button, Container, Grid, Paper, Stack, Text, ThemeIcon, TextInput, Title } from '@mantine/core'
-import { useDebouncedValue } from '@mantine/hooks'
-import { IconSearch, IconSparkles } from '@tabler/icons-react'
+import {
+  Badge,
+  Button,
+  Container,
+  Grid,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  TextInput,
+  Title,
+  UnstyledButton
+} from '@mantine/core'
+import { IconSearch, IconSparkles, IconX } from '@tabler/icons-react'
 import { hasCookie } from 'cookies-next/client'
 import Image from 'next/image'
-import { useRouter } from 'nextjs-toploader/app'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Recommendations = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const querySearch = searchParams.get('search') ?? ''
+
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [localSearch, setLocalSearch] = useState('')
 
   useEffect(() => {
     setIsLoggedIn(hasCookie('user'))
   }, [])
 
-  const [search, setSearch] = useState('')
-  const [debouncedSearch] = useDebouncedValue(search, 300)
-
-  // Jika ada search, gunakan general product search
-  // Jika tidak ada search, gunakan personalized recommendations
+  // If search query is present, fall back to general product search
   const { data: myRecs, isLoading: isLoadingRecs } = useMyRecommendations({
-    limit: 20,
+    limit: 12,
     enabled: isLoggedIn
   })
   const { data: searchResult, isLoading: isLoadingSearch } = useProduct({
     category: null,
-    search: debouncedSearch
+    search: querySearch
   })
 
-  const isLoading = debouncedSearch ? isLoadingSearch : isLoadingRecs
-  const products = debouncedSearch ? searchResult : myRecs
+  const isLoading = querySearch ? isLoadingSearch : isLoadingRecs
+  const products = querySearch ? searchResult : myRecs
+
+  const updateUrlParams = (newParams: Record<string, string | null>) => {
+    const urlParams = new URLSearchParams(searchParams.toString())
+    Object.entries(newParams).forEach(([key, val]) => {
+      if (val === null || val === '') {
+        urlParams.delete(key)
+      } else {
+        urlParams.set(key, val)
+      }
+    })
+    router.replace(`?${urlParams.toString()}`, { scroll: false })
+  }
+
+  const handleSearchSubmit = () => {
+    if (!localSearch.trim()) return
+    updateUrlParams({ search: localSearch.trim() })
+    setLocalSearch('')
+  }
 
   return (
     <Container size="xl" my="xl" mt={100} w="100%">
-      <div className="sm:flex justify-between items-center mb-10">
-        <h2 className="text-2xl font-semibold mb-5 sm:mb-0">
-          {debouncedSearch ? `Search Results for "${debouncedSearch}"` : 'Just For You'}
-        </h2>
-        <TextInput
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.currentTarget.value)}
-          className="sm:w-72"
-          leftSection={<IconSearch size={18} />}
-        />
+      {/* PAGE HEADER */}
+      <div className="sm:flex justify-between items-center mb-6">
+        <div>
+          <h2 className="text-midnight_text text-2xl lg:text-4xl font-semibold mb-1">
+            {querySearch ? `Search Results` : 'Just For You'}
+          </h2>
+          <Text size="sm" c="dimmed">
+            {querySearch
+              ? `Showing results for search filter`
+              : 'Personalized styling recommendations curated for you'}
+          </Text>
+        </div>
+        <Group gap="xs" className="mt-4 sm:mt-0 w-full sm:w-auto" wrap="nowrap">
+          <TextInput
+            placeholder="Search recommendations..."
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.currentTarget.value)}
+            className="flex-grow sm:w-72"
+            leftSection={<IconSearch size={18} />}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearchSubmit()
+              }
+            }}
+          />
+          <Button onClick={handleSearchSubmit} variant="light" color="primary">
+            Find
+          </Button>
+        </Group>
       </div>
 
+      {/* ACTIVE SEARCH TAG */}
+      {querySearch && (
+        <Group gap="xs" mb="lg" className="p-3 bg-gray-50/50 rounded-xl border border-gray-100">
+          <Text size="xs" fw={700} c="dimmed" style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            Active:
+          </Text>
+          <Badge
+            variant="light"
+            color="primary"
+            size="md"
+            radius="sm"
+            rightSection={
+              <IconX
+                size={14}
+                className="cursor-pointer hover:text-red-500"
+                onClick={() => updateUrlParams({ search: null })}
+              />
+            }
+          >
+            Search: "{querySearch}"
+          </Badge>
+          <UnstyledButton
+            onClick={() => updateUrlParams({ search: null })}
+            className="text-xs fw-semibold text-red-600 hover:text-red-700 ml-auto flex items-center gap-1"
+          >
+            Clear Search
+          </UnstyledButton>
+        </Group>
+      )}
+
+      {/* PRODUCTS DISPLAY */}
       {isLoading ? (
         <Grid>
           {Array.from({ length: 8 }).map((_, i) => (
@@ -59,7 +138,7 @@ const Recommendations = () => {
             </Grid.Col>
           ))}
         </Grid>
-      ) : !isLoggedIn && !debouncedSearch ? (
+      ) : !isLoggedIn && !querySearch ? (
         <Stack align="center" gap="md" py={50}>
           <Paper
             p="xl"
@@ -84,15 +163,15 @@ const Recommendations = () => {
             >
               <IconSparkles size={36} />
             </ThemeIcon>
-            
+
             <Title order={3} mt="md" fw={700} c="dark.7">
               Discover Your Perfect Fit
             </Title>
-            
+
             <Text c="dimmed" size="sm" mt="xs" mb="lg">
               Sign in to unlock personalized style recommendations tailored specifically to your preferences and eye prescription.
             </Text>
-            
+
             <Button
               onClick={() => {
                 if (typeof window !== 'undefined') {
@@ -124,15 +203,19 @@ const Recommendations = () => {
           ))}
         </Grid>
       ) : (
-        <Stack align="center" gap={0}>
+        <Stack align="center" gap="md" py={60}>
           <Image
             src={'/images/product-not-found.png'}
-            width={400}
-            height={400}
+            width={320}
+            height={320}
             alt="Product not found"
+            className="opacity-80"
           />
-          <Text c="dimmed" fz={24}>
-            Product Not Found.
+          <Text fw={600} fz={20} className="text-gray-800">
+            Product Not Found
+          </Text>
+          <Text c="dimmed" size="sm" ta="center" style={{ maxWidth: 360 }}>
+            Try relaxing your filter parameters, removing active search badges, or searching for other keywords.
           </Text>
         </Stack>
       )}
