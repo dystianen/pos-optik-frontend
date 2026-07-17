@@ -160,7 +160,7 @@ const Header = ({ user }: { user: TUser | null }) => {
   return (
     <header
       className={`fixed top-0 z-[99] w-full md:pb-5 transition-all duration-300 bg-white ${
-        sticky ? ' shadow-lg pb-3' : 'shadow-none pb-3 md:pb-4'
+        sticky ? ' shadow-sm pb-3' : 'shadow-none pb-3 md:pb-4'
       }`}
     >
       {/* 📣 Announcement Banner for Guests / New Users */}

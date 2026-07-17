@@ -581,7 +581,7 @@ const ProductsClient = ({ slug }: { slug: string }) => {
       <Grid gutter="xl">
         {/* DESKTOP SIDEBAR FILTER */}
         <Grid.Col span={{ base: 12, md: 3 }} className="hidden md:block">
-          <Card withBorder radius="lg" p="lg" className="sticky top-28 bg-white shadow-sm">
+          <Card withBorder radius="lg" p="lg" className="sticky top-32 bg-white shadow-">
             {renderFiltersContent()}
           </Card>
         </Grid.Col>
