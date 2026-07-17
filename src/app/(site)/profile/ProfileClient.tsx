@@ -5,6 +5,7 @@ import {
   ActionIcon,
   Avatar,
   Badge,
+  Breadcrumbs,
   Button,
   Card,
   Container,
@@ -18,6 +19,7 @@ import {
   Text,
   Tooltip
 } from '@mantine/core'
+import Link from 'next/link'
 import {
   IconCalendar,
   IconEye,
@@ -62,8 +64,20 @@ const ProfileClient = () => {
     )
   }
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      Profile
+    </Text>
+  ]
+
   return (
     <Container size="md" mt={{ base: 70, md: 100 }} py="xl">
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <Stack gap="xl">
         {/* Header / Banner Card */}
         <Paper

@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { useRouter } from 'nextjs-toploader/app'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -19,6 +20,8 @@ const ModalAuthenticationDynamic = dynamic(() => import('../Modal/ModalAuthentic
 
 const CardProduct = memo(({ item }: { item: TProduct }) => {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const queryClient = useQueryClient()
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const [isWishlistLocal, setIsWishlistLocal] = useState(item.is_wishlist === '1')
@@ -51,8 +54,10 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
 
   const handleDetail = useCallback(() => {
     if (stock === 0) return
-    router.push(`/product/detail?id=${item.product_id}`)
-  }, [item.product_id, stock])
+    const fromUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
+    const fromParam = fromUrl ? `&from=${encodeURIComponent(fromUrl)}` : ''
+    router.push(`/product/detail?id=${item.product_id}${fromParam}`)
+  }, [item.product_id, stock, pathname, searchParams, router])
 
   useEffect(() => {
     setIsWishlistLocal(item.is_wishlist === '1')

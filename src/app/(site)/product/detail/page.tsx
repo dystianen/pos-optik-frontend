@@ -31,8 +31,9 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 }
 
 export default async function Page({ searchParams }: Props) {
-  const { id } = await searchParams
+  const { id, from } = await searchParams
   const productId = id as string
+  const fromPage = from as string | undefined
 
-  return <DetailClient productId={productId} />
+  return <DetailClient productId={productId} fromPage={fromPage} />
 }

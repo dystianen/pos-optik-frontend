@@ -3,12 +3,18 @@ import CardProduct from './CardProduct'
 import { MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useRouter } from 'nextjs-toploader/app'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useToggleWishlist } from '@/features/product/hooks'
 import { toast } from 'react-toastify'
 
 // Mock dependencies
 vi.mock('nextjs-toploader/app', () => ({
   useRouter: vi.fn()
+}))
+
+vi.mock('next/navigation', () => ({
+  usePathname: vi.fn(),
+  useSearchParams: vi.fn()
 }))
 
 vi.mock('@/features/product/hooks', () => ({
@@ -61,6 +67,10 @@ describe('CardProduct Component', () => {
     vi.clearAllMocks()
     vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any)
     vi.mocked(useToggleWishlist).mockReturnValue({ mutate: mockMutate } as any)
+    vi.mocked(usePathname).mockReturnValue('/test-path')
+    vi.mocked(useSearchParams).mockReturnValue({
+      toString: () => 'search=test-query'
+    } as any)
   })
 
   it('renders product information correctly', () => {
@@ -78,7 +88,7 @@ describe('CardProduct Component', () => {
     const card = screen.getByText('Test Product').closest('.mantine-Card-root')
     if (card) fireEvent.click(card)
 
-    expect(mockPush).toHaveBeenCalledWith('/product/detail?id=123')
+    expect(mockPush).toHaveBeenCalledWith('/product/detail?id=123&from=%2Ftest-path%3Fsearch%3Dtest-query')
   })
 
   it('calls toggleWishlist when heart icon is clicked', () => {

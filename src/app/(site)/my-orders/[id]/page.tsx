@@ -16,6 +16,7 @@ import {
   Anchor,
   Badge,
   Box,
+  Breadcrumbs,
   Button,
   Card,
   Container,
@@ -28,6 +29,7 @@ import {
   Text,
   Tooltip
 } from '@mantine/core'
+import Link from 'next/link'
 import { useClipboard } from '@mantine/hooks'
 import {
   IconArrowLeft,
@@ -268,8 +270,23 @@ export default function OrderDetailPage() {
     }
   })()
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Link key="my-orders" href="/my-orders" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">My Orders</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      Order Details
+    </Text>
+  ]
+
   return (
     <Container size="xl" mt={{ base: 70, md: 100 }} mih={900} pos={'relative'}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <Stack gap="lg">
         {/* Header */}
         <Group>

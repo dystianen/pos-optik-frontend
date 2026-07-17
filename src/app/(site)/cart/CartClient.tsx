@@ -10,6 +10,7 @@ import { formatCurrency } from '@/utils/format'
 import {
   Badge,
   Box,
+  Breadcrumbs,
   Button,
   Card,
   Container,
@@ -26,6 +27,7 @@ import {
 import { useLocalStorage } from '@mantine/hooks'
 import { IconLock, IconShoppingBag, IconShoppingCart } from '@tabler/icons-react'
 import { hasCookie } from 'cookies-next/client'
+import Link from 'next/link'
 import { useRouter } from 'nextjs-toploader/app'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -128,8 +130,20 @@ const Cart = () => {
     router.push('/checkout')
   }, [activeOrderFromBackend, setCheckoutOrderRaw, setActiveStep, router])
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      Cart
+    </Text>
+  ]
+
   return (
     <Container size="xl" my={100}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <Stack gap="xl">
         {/* Header Section */}
         <Group justify="space-between" align="center" mb="md">

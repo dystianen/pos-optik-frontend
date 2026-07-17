@@ -8,6 +8,7 @@ import { formatCurrency, formatLabel } from '@/utils/format'
 import {
   ActionIcon,
   Badge,
+  Breadcrumbs,
   Button,
   Card,
   Checkbox,
@@ -28,6 +29,7 @@ import {
   UnstyledButton
 } from '@mantine/core'
 import { useDebouncedValue, useDisclosure } from '@mantine/hooks'
+import Link from 'next/link'
 import {
   IconSearch,
   IconX,
@@ -411,8 +413,20 @@ const ProductsClient = ({ slug }: { slug: string }) => {
     </Stack>
   )
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      {formatCategoryName(slug)}
+    </Text>
+  ]
+
   return (
     <Container size="xl" my="xl" mt={100} w="100%" mih={'60vh'}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       {/* PAGE HEADER */}
       <div className="sm:flex justify-between items-center mb-6">
         <div>

@@ -3,9 +3,10 @@
 import CardProduct from '@/components/ui/CardProduct'
 import CardProductSkeleton from '@/components/ui/Skeleton/CardProductSkeleton'
 import { useNewEyeWear } from '@/features/product/hooks'
-import { Badge, Button, Container, Grid, Group, Stack, Text, TextInput, UnstyledButton } from '@mantine/core'
+import { Badge, Breadcrumbs, Button, Container, Grid, Group, Stack, Text, TextInput, UnstyledButton } from '@mantine/core'
 import { IconSearch, IconX } from '@tabler/icons-react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
@@ -36,8 +37,20 @@ const NewEyewearClient = () => {
     setLocalSearch('')
   }
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      New Eyewear
+    </Text>
+  ]
+
   return (
     <Container size="xl" mt={{ base: 70, md: 100 }}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       {/* PAGE HEADER */}
       <div className="sm:flex justify-between items-center mb-6">
         <div>

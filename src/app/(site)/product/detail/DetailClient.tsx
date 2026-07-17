@@ -85,8 +85,46 @@ function StockBadge({ stock }: { stock: number }) {
   )
 }
 
+/* ─── Breadcrumb helper ─────────────────────────────────── */
+const getBreadcrumbData = (path?: string) => {
+  if (!path) return { label: 'Products', href: null }
+
+  try {
+    const url = new URL(path, 'http://localhost')
+    const pathname = url.pathname
+
+    if (pathname === '/') {
+      return { label: 'Products', href: null }
+    }
+    if (pathname === '/new-eyewear') {
+      return { label: 'New Eyewear', href: path }
+    }
+    if (pathname === '/best-seller') {
+      return { label: 'Best Seller', href: path }
+    }
+    if (pathname === '/recommendations') {
+      return { label: 'Recommendations', href: path }
+    }
+    if (pathname === '/wishlist') {
+      return { label: 'Wishlist', href: path }
+    }
+    if (pathname.startsWith('/product/')) {
+      const slug = pathname.replace('/product/', '')
+      const formatted = slug
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+      return { label: formatted, href: path }
+    }
+
+    return { label: 'Products', href: null }
+  } catch (error) {
+    return { label: 'Products', href: null }
+  }
+}
+
 /* ─── Main Component ─────────────────────────────────────── */
-const DetailClient = ({ productId }: { productId: string }) => {
+const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: string }) => {
   const router = useRouter()
   const isMobile = useMediaQueryFromBreakpoints()
   const [authModalOpen, setAuthModalOpen] = useState(false)
@@ -222,13 +260,18 @@ const DetailClient = ({ productId }: { productId: string }) => {
       : ''
 
   /* ─── Breadcrumb items ──────────────────────────────── */
+  const breadcrumbData = getBreadcrumbData(fromPage)
   const breadcrumbItems = [
     <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
       <Text size="sm" c="dimmed">Home</Text>
     </Link>,
-    <Link key="products" href="/product" style={{ color: 'inherit', textDecoration: 'none' }}>
-      <Text size="sm" c="dimmed">Products</Text>
-    </Link>,
+    breadcrumbData.href ? (
+      <Link key="parent" href={breadcrumbData.href} style={{ color: 'inherit', textDecoration: 'none' }}>
+        <Text size="sm" c="dimmed">{breadcrumbData.label}</Text>
+      </Link>
+    ) : (
+      <Text key="parent" size="sm" c="dimmed">{breadcrumbData.label}</Text>
+    ),
     <Text key="current" size="sm" fw={500} lineClamp={1} style={{ maxWidth: 200 }}>
       {product?.product_name ?? 'Product Detail'}
     </Text>

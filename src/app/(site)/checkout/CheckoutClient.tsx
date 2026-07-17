@@ -10,6 +10,7 @@ import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/typ
 import {
   Alert,
   Box,
+  Breadcrumbs,
   Button,
   Card,
   Container,
@@ -26,6 +27,7 @@ import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
 import { IconEdit, IconInfoCircle } from '@tabler/icons-react'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
@@ -204,8 +206,23 @@ const Orders = () => {
     )
   }
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Link key="cart" href="/cart" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Cart</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      Checkout
+    </Text>
+  ]
+
   return (
     <Container my={120}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <Stepper active={activeStep} size="sm">
         <Stepper.Step label="Shipping">
           <Card withBorder p="xl">

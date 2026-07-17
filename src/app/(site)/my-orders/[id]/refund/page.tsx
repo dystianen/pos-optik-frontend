@@ -18,8 +18,10 @@ import {
   Box,
   rem,
   ThemeIcon,
-  Alert
+  Alert,
+  Breadcrumbs
 } from '@mantine/core'
+import Link from 'next/link'
 import {
   IconArrowLeft,
   IconCheck,
@@ -91,8 +93,26 @@ export default function RefundProgressPage() {
   }
 
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Link key="my-orders" href="/my-orders" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">My Orders</Text>
+    </Link>,
+    <Link key="order-detail" href={`/my-orders/${id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Order Details</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      Refund
+    </Text>
+  ]
+
   return (
     <Container size="lg" my={100} mih={800} pos="relative">
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <LoadingOverlay visible={isLoadingStatus} loaderProps={{ type: 'bars' }} />
 
       <Stack gap="xl">

@@ -19,6 +19,7 @@ import {
 import { useDebouncedValue, useHotkeys } from '@mantine/hooks'
 import { IconSearch, IconSparkles, IconX, IconArrowRight, IconCategory } from '@tabler/icons-react'
 import { useRouter } from 'nextjs-toploader/app'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
 const POPULAR_BRANDS = [
@@ -40,6 +41,8 @@ const POPULAR_CATEGORIES = [
 
 const Search = () => {
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [opened, setOpened] = useState(false)
   const [search, setSearch] = useState('')
   const [debouncedSearch] = useDebouncedValue(search, 300)
@@ -55,7 +58,9 @@ const Search = () => {
   const handleSelectProduct = (productId: string) => {
     setOpened(false)
     setSearch('')
-    router.push(`/product/detail?id=${productId}`)
+    const fromUrl = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
+    const fromParam = fromUrl ? `&from=${encodeURIComponent(fromUrl)}` : ''
+    router.push(`/product/detail?id=${productId}${fromParam}`)
   }
 
   const handleSelectCategory = (categorySlug: string) => {

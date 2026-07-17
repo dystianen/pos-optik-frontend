@@ -1,6 +1,6 @@
 'use client'
 import { useOrders } from '@/features/order/hooks'
-import { Box, Center, Container, Group, LoadingOverlay, Stack, Tabs, Text } from '@mantine/core'
+import { Box, Breadcrumbs, Center, Container, Group, LoadingOverlay, Stack, Tabs, Text } from '@mantine/core'
 import { DatePickerInput } from '@mantine/dates'
 import { useLocalStorage } from '@mantine/hooks'
 import {
@@ -13,6 +13,7 @@ import {
 } from '@tabler/icons-react'
 import dayjs from 'dayjs'
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { useState } from 'react'
 
 const OrderCard = dynamic(
@@ -37,8 +38,20 @@ const MyOrdersClient = () => {
     end_date
   })
 
+  const breadcrumbItems = [
+    <Link key="home" href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
+      <Text size="sm" c="dimmed">Home</Text>
+    </Link>,
+    <Text key="current" size="sm" fw={500}>
+      My Orders
+    </Text>
+  ]
+
   return (
     <Container size="xl" mt={{ base: 70, md: 100 }}>
+      <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
+        {breadcrumbItems}
+      </Breadcrumbs>
       <Stack gap="md">
         {/* Header & Filter */}
         <Group justify="space-between" align="center" wrap="wrap">

@@ -3,11 +3,17 @@ import Search from './Search'
 import { MantineProvider } from '@mantine/core'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useRouter } from 'nextjs-toploader/app'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useSearchProduct } from '@/features/product/hooks'
 
 // Mock dependencies
 vi.mock('nextjs-toploader/app', () => ({
   useRouter: vi.fn()
+}))
+
+vi.mock('next/navigation', () => ({
+  usePathname: vi.fn(),
+  useSearchParams: vi.fn()
 }))
 
 vi.mock('@/features/product/hooks', () => ({
@@ -52,6 +58,10 @@ describe('Search Component', () => {
     vi.clearAllMocks()
     vi.mocked(useRouter).mockReturnValue({ push: mockPush } as any)
     vi.mocked(useSearchProduct).mockReturnValue({ data: mockProducts } as any)
+    vi.mocked(usePathname).mockReturnValue('/search-page')
+    vi.mocked(useSearchParams).mockReturnValue({
+      toString: () => 'q=glasses'
+    } as any)
   })
 
   it('renders search trigger correctly', () => {
@@ -100,6 +110,6 @@ describe('Search Component', () => {
     const productItem = await screen.findByText('Test Glass')
     fireEvent.click(productItem)
 
-    expect(mockPush).toHaveBeenCalledWith('/product/detail?id=p1')
+    expect(mockPush).toHaveBeenCalledWith('/product/detail?id=p1&from=%2Fsearch-page%3Fq%3Dglasses')
   })
 })
