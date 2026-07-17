@@ -4,7 +4,15 @@ import * as orderApi from '../api'
 export function useSummaryOrders() {
   return useMutation({
     mutationKey: ['SUMMARY_ORDERS'],
-    mutationFn: orderApi.summaryOrders
+    mutationFn: ({ addressId, couponCode }: { addressId: string; couponCode?: string }) =>
+      orderApi.summaryOrders(addressId, couponCode)
+  })
+}
+
+export function useAvailableCoupons() {
+  return useQuery({
+    queryKey: ['available_coupons'],
+    queryFn: orderApi.getAvailableCoupons
   })
 }
 
@@ -30,7 +38,8 @@ export function useDetailOrder(id: string) {
 export function useSubmitOrder() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: orderApi.submitOrder,
+    mutationFn: ({ addressId, couponCode }: { addressId: string; couponCode?: string }) =>
+      orderApi.submitOrder({ id: addressId, couponCode }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['total_cart'] })
     }

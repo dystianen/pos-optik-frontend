@@ -3,6 +3,7 @@
 import * as productApi from '@/features/product/api'
 import { useToggleWishlist } from '@/features/product/hooks'
 import { TProduct } from '@/features/product/types'
+import { useAvailableCoupons } from '@/features/order/hooks'
 import { formatCurrency } from '@/utils/format'
 import { ActionIcon, Card, Group, Stack, Text } from '@mantine/core'
 import { IconHeart, IconHeartFilled, IconStar } from '@tabler/icons-react'
@@ -27,6 +28,13 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
   const [isWishlistLocal, setIsWishlistLocal] = useState(item.is_wishlist === '1')
 
   const { mutate: toggleWishlist } = useToggleWishlist()
+
+  const { data: coupons } = useAvailableCoupons()
+  const isExplicitlyNotNewUser = coupons !== undefined && !coupons.some(c => c.code === 'NEWUSER' && c.is_eligible)
+  const showNewUserPrice = !isExplicitlyNotNewUser
+
+  const originalPrice = Number(item.product_price)
+  const newUserPrice = originalPrice * 0.85
 
   const stock = Number(item.product_stock)
   const totalSold = Number(item.total_sold ?? 0)
@@ -159,9 +167,25 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
           </Text>
 
           {/* Price */}
-          <Text fw={700} fz={15} c="primary" className="mt-0.5">
-            {formatCurrency(item.product_price)}
-          </Text>
+          {showNewUserPrice ? (
+            <Stack gap={1} className="mt-0.5">
+              <Group gap="xs" align="center" wrap="nowrap">
+                <Text fw={700} fz={15} c="primary">
+                  {formatCurrency(newUserPrice)}
+                </Text>
+                <Text fz={11} c="dimmed" td="line-through" style={{ flexShrink: 0 }}>
+                  {formatCurrency(originalPrice)}
+                </Text>
+              </Group>
+              <Text fz={9} fw={700} c="teal.6">
+                New User Promo (15% off)
+              </Text>
+            </Stack>
+          ) : (
+            <Text fw={700} fz={15} c="primary" className="mt-0.5">
+              {formatCurrency(originalPrice)}
+            </Text>
+          )}
 
           {/* Footer Metadata */}
           <Group justify="space-between" align="center" mt="xs" pt="xs" className="border-t border-gray-100/60">

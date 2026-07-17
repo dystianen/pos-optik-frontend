@@ -2,6 +2,7 @@
 import { FormValuesRefundAccount, RefundAccountForm } from '@/components/ui/RefundAccountForm'
 import { PaymentCountdown, getRemainingSeconds, DEADLINE_HOURS } from '@/features/order/components/PaymentCountdown'
 import { usePayment, useRefundAccount, useUpdateRefundAccount } from '@/features/order/hooks'
+import { formatCurrency } from '@/utils/format'
 import {
   ActionIcon,
   Alert,
@@ -236,6 +237,31 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
           )}
 
         <Image src="/images/payment.svg" h={360} fit="contain" />
+
+        {checkoutOrder?.grand_total !== undefined && (
+          <Card withBorder p="md" radius="md" style={{ width: '100%', borderLeftWidth: 4, borderLeftColor: 'var(--mantine-color-blue-6)' }}>
+            <Stack gap={2}>
+              <Text size="xs" c="dimmed" fw={500} style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                Total Amount to Pay:
+              </Text>
+              <Group gap="xs" align="baseline">
+                <Text size="xl" fw={800} c="blue.6">
+                  {formatCurrency(checkoutOrder.grand_total)}
+                </Text>
+                <Tooltip label={clipboard.copied ? 'Copied!' : 'Copy Amount'}>
+                  <ActionIcon
+                    variant="light"
+                    size="sm"
+                    color={clipboard.copied ? 'teal' : 'blue'}
+                    onClick={() => clipboard.copy(String(checkoutOrder.grand_total))}
+                  >
+                    {clipboard.copied ? <IconCheck size={14} /> : <IconClipboard size={14} />}
+                  </ActionIcon>
+                </Tooltip>
+              </Group>
+            </Stack>
+          </Card>
+        )}
 
         <Group gap="xs">
           <Text fw={500} size="lg">

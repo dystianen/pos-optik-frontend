@@ -35,7 +35,7 @@ export default function HomeClient() {
     <main className="overflow-hidden bg-slateGray/35 min-h-screen">
       <Stack gap={80} className="pb-24">
         {/* HERO SECTION */}
-        <Container size={'xl'} mt={{ base: 70, md: 100 }} w="100%">
+        <Container size={'xl'} mt={{ base: 70, md: 150 }} w="100%">
           <Carousel
             withIndicators
             w="100%"

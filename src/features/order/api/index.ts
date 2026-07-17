@@ -1,5 +1,6 @@
 import apiClient from '@/lib/apiClient'
 import { API_ROUTES } from '@/constants/api-routes'
+import { GeneralResponse } from '@/types/general'
 import type { FormValuesUpdate } from '@/features/checkout/types'
 import type {
   CancelOrder,
@@ -9,11 +10,19 @@ import type {
   TResRefund,
   TResRefundAccount,
   TResRefundStatus,
-  TResSummaryOrders
+  TResSummaryOrders,
+  TCoupon
 } from '../types'
 
-export const summaryOrders = async (id: string) => {
-  const response = await apiClient.get<TResSummaryOrders>(API_ROUTES.ORDERS.SUMMARY(id))
+export const summaryOrders = async (id: string, couponCode?: string) => {
+  const response = await apiClient.get<TResSummaryOrders>(API_ROUTES.ORDERS.SUMMARY(id), {
+    params: couponCode ? { coupon_code: couponCode } : {}
+  })
+  return response.data.data
+}
+
+export const getAvailableCoupons = async () => {
+  const response = await apiClient.get<GeneralResponse<TCoupon[]>>('/coupons')
   return response.data.data
 }
 
@@ -33,8 +42,10 @@ export const getDetailOrder = async (id: string) => {
   return response.data.data
 }
 
-export const submitOrder = async (id: string) => {
-  const response = await apiClient.post(API_ROUTES.ORDERS.SUBMIT(id))
+export const submitOrder = async (payload: { id: string; couponCode?: string }) => {
+  const response = await apiClient.post(API_ROUTES.ORDERS.SUBMIT(payload.id), {
+    coupon_code: payload.couponCode
+  })
   return response.data.data
 }
 

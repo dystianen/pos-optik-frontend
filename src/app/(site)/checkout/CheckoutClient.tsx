@@ -1,5 +1,5 @@
 'use client'
-import { useActiveOrder, useSummaryOrders } from '@/features/order/hooks'
+import { useActiveOrder, useSummaryOrders, useAvailableCoupons } from '@/features/order/hooks'
 import { TSummaryOrders } from '@/features/order/types'
 import {
   useAllShippingAddress,
@@ -83,9 +83,11 @@ const Orders = () => {
   const { data: shippingAddress } = useGetShippingAddress(csaId)
   const { mutate: saveShippingAddress, isPending: isLoadingSave } = useSaveCustomerShipping()
   const { mutate: summary, isPending: isLoadingSummary } = useSummaryOrders()
+  const { data: availableCoupons } = useAvailableCoupons()
 
   const [showForm, setShowForm] = useState(false)
   const [summaryOrder, setSummaryOrder] = useState<TSummaryOrders | null>(null)
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string>('')
 
   const hasAddress = (shippingAddresses?.length ?? 0) > 0
 
@@ -117,13 +119,25 @@ const Orders = () => {
 
   useEffect(() => {
     if (activeStep === 1 && csaId) {
-      summary(csaId, {
+      summary({ addressId: csaId, couponCode: appliedCouponCode }, {
         onSuccess: (res) => {
           setSummaryOrder(res)
         }
       })
     }
-  }, [activeStep, csaId])
+  }, [activeStep, csaId, appliedCouponCode])
+
+  // Auto-apply NEWUSER coupon for first-time checkout flows
+  useEffect(() => {
+    if (activeStep === 1 && availableCoupons && !appliedCouponCode) {
+      const isEligibleForNewUser = availableCoupons.some(
+        (c) => c.code === 'NEWUSER' && c.is_eligible
+      )
+      if (isEligibleForNewUser) {
+        setAppliedCouponCode('NEWUSER')
+      }
+    }
+  }, [activeStep, availableCoupons, appliedCouponCode])
 
   const handleSaveAddress = (values: TReqCustomerShipping) => {
     const payload = csaId ? { ...values, id: csaId } : { ...values }
@@ -153,7 +167,7 @@ const Orders = () => {
 
   const nextToSummaryOrder = () => {
     if (csaId) {
-      summary(csaId, {
+      summary({ addressId: csaId, couponCode: appliedCouponCode }, {
         onSuccess: (res) => {
           setSummaryOrder(res)
           nextStep()
@@ -400,6 +414,10 @@ const Orders = () => {
           <StepSummaryOrder
             isLoadingSummary={isLoadingSummary}
             summaryOrder={summaryOrder}
+            setSummaryOrder={setSummaryOrder}
+            appliedCouponCode={appliedCouponCode}
+            setAppliedCouponCode={setAppliedCouponCode}
+            summaryMutation={summary}
             prevStep={prevStep}
             nextStep={nextStep}
           />

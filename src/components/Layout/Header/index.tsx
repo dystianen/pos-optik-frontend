@@ -159,11 +159,15 @@ const Header = ({ user }: { user: TUser | null }) => {
 
   return (
     <header
-      className={`fixed top-0 z-[99] w-full md:pb-5 px-3 transition-all duration-300 bg-white ${
-        sticky ? ' shadow-lg py-3' : 'shadow-none py-3 md:py-4'
+      className={`fixed top-0 z-[99] w-full md:pb-5 transition-all duration-300 bg-white ${
+        sticky ? ' shadow-lg pb-3' : 'shadow-none pb-3 md:pb-4'
       }`}
     >
-      <div>
+      {/* 📣 Announcement Banner for Guests / New Users */}
+      <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-center py-2 px-4 text-xs font-semibold flex items-center justify-center gap-2 relative w-full mb-3 shadow-sm">
+        <span>🎉 New User Special: Get 15% Off Your First Order & Free Shipping! Code: <strong className="underline">NEWUSER</strong> or <strong className="underline">FREESHIP</strong></span>
+      </div>
+      <div className="px-3">
         <div className="container mx-auto flex items-center justify-between gap-4 lg:max-w-screen-xl">
           <div className="hidden md:block">
             <Logo />

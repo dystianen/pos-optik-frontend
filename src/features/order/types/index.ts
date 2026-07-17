@@ -9,11 +9,32 @@ export type TReqPayment = {
   proof_of_payment: File
 }
 
+export interface TAppliedCoupon {
+  code: string
+  discount_amount: number
+  is_valid: boolean
+  error_message?: string
+}
+
+export interface TCoupon {
+  coupon_id: string
+  code: string
+  description: string
+  discount_type: 'percentage' | 'fixed'
+  discount_value: number
+  min_order_amount: number | null
+  max_discount: number | null
+  first_order_only: boolean
+  is_eligible: boolean
+  ineligible_reason: string | null
+}
+
 export interface TSummaryOrders {
   shipping_address: ShippingAddress
   items: TItemCart[]
   shipping: Shipping
   summary: Summary
+  coupon_details?: TAppliedCoupon | null
 }
 export type TResSummaryOrders = GeneralResponse<TSummaryOrders>
 
@@ -48,6 +69,7 @@ export interface ShippingAddress {
 export interface Summary {
   subtotal: number
   shipping_cost: number
+  coupon_discount?: number
   total: number
 }
 

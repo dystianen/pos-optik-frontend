@@ -4,7 +4,7 @@ import SectionCarousel from '@/components/Home/SectionCarousel'
 import CardCart from '@/components/ui/CardCart'
 import CardCartSkeleton from '@/components/ui/Skeleton/CardCartSkeleton'
 import { useCart } from '@/features/cart/hooks'
-import { useActiveOrder, useCancelOrder } from '@/features/order/hooks'
+import { useActiveOrder, useCancelOrder, useAvailableCoupons } from '@/features/order/hooks'
 import { useMyRecommendations } from '@/features/product/hooks'
 import { formatCurrency } from '@/utils/format'
 import {
@@ -41,6 +41,14 @@ const Cart = () => {
   }, [])
 
   const { data: cart, isLoading } = useCart()
+  const { data: coupons } = useAvailableCoupons()
+  const isExplicitlyNotNewUser = coupons !== undefined && !coupons.some(c => c.code === 'NEWUSER' && c.is_eligible)
+  const showNewUserPrice = !isExplicitlyNotNewUser
+
+  const originalSubtotal = Number(cart?.summary.total_price || 0)
+  const discountAmount = showNewUserPrice ? Math.min(originalSubtotal * 0.15, 100000) : 0
+  const newSubtotal = originalSubtotal - discountAmount
+
   const [checkingActiveOrder, setCheckingActiveOrder] = useState(false)
 
   const { refetch: refetchActiveOrder } = useActiveOrder()
@@ -288,12 +296,30 @@ const Cart = () => {
                 <Divider />
 
                 <Stack gap="md">
-                  <Group justify="space-between">
+                  <Group justify="space-between" align="baseline">
                     <Text c="dimmed">Subtotal</Text>
-                    <Text fw={600} size="lg">
-                      {formatCurrency(cart?.summary.total_price || '0')}
-                    </Text>
+                    {showNewUserPrice ? (
+                      <Stack gap={1} align="flex-end">
+                        <Text fw={600} size="lg">
+                          {formatCurrency(newSubtotal)}
+                        </Text>
+                        <Text size="xs" c="dimmed" td="line-through">
+                          {formatCurrency(originalSubtotal)}
+                        </Text>
+                      </Stack>
+                    ) : (
+                      <Text fw={600} size="lg">
+                        {formatCurrency(originalSubtotal)}
+                      </Text>
+                    )}
                   </Group>
+
+                  {showNewUserPrice && (
+                    <Group justify="space-between" c="teal.6" fw={500}>
+                      <Text size="sm">New User Promo (15% off)</Text>
+                      <Text size="sm">-{formatCurrency(discountAmount)}</Text>
+                    </Group>
+                  )}
 
                   <Group justify="space-between">
                     <Text c="dimmed">Shipping</Text>
@@ -318,10 +344,15 @@ const Cart = () => {
                       Total Price
                     </Text>
                     <Text fw={700} size="xl" c="primary.8" mt={4}>
-                      {formatCurrency(cart?.summary.total_price || '0')}
+                      {formatCurrency(showNewUserPrice ? newSubtotal : originalSubtotal)}
                     </Text>
                   </Box>
                 </Group>
+                {showNewUserPrice && (
+                  <Text size="10px" c="dimmed" fs="italic">
+                    *Maximum new user discount cap of Rp 100.000 applies.
+                  </Text>
+                )}
 
                 <Button
                   fullWidth

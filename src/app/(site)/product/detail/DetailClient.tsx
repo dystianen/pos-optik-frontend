@@ -4,6 +4,7 @@ import { ProductDetailSkeleton } from '@/components/ui/Skeleton/ProductDetailSke
 import { useAddCart } from '@/features/cart/hooks'
 import type { PrescriptionPayload } from '@/features/cart/types'
 import { useProductAttribute, useProductDetail, useRecommendations, useToggleWishlist } from '@/features/product/hooks'
+import { useAvailableCoupons } from '@/features/order/hooks'
 import type { TGalleryDetail, Variant } from '@/features/product/types'
 import { ReviewSection } from '@/features/review/components/ReviewSection'
 import { useProductReviews } from '@/features/review/hooks'
@@ -246,8 +247,17 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
     }
   }, [])
 
+  const { data: coupons } = useAvailableCoupons()
+  const isExplicitlyNotNewUser = coupons !== undefined && !coupons.some(c => c.code === 'NEWUSER' && c.is_eligible)
+  const showNewUserPrice = !isExplicitlyNotNewUser
+
   /* ─── Derived values ────────────────────────────────── */
   const price = selectedVariant?.price ?? product?.product_price ?? '0'
+  const originalPrice = Number(price)
+  const originalTotal = originalPrice * quantity
+  const discountAmount = showNewUserPrice ? Math.min(originalTotal * 0.15, 100000) : 0
+  const discountedTotal = originalTotal - discountAmount
+
   const currentStock = selectedVariant
     ? Number(selectedVariant.stock)
     : Number(product?.product_stock ?? 0)
@@ -429,12 +439,28 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
                       <Group justify="space-between" align="flex-end" wrap="nowrap" mt="md">
                         <Box>
                           <Text size="xs" c="dimmed" mb={2}>Price</Text>
-                          <Text className={styles.priceTag}>
-                            {formatCurrency(Number(price) * quantity)}
-                          </Text>
+                          {showNewUserPrice ? (
+                            <Stack gap={1} mb={2}>
+                              <Group gap="xs" align="baseline" wrap="nowrap">
+                                <Text className={styles.priceTag}>
+                                  {formatCurrency(discountedTotal)}
+                                </Text>
+                                <Text fz="sm" c="dimmed" td="line-through" style={{ flexShrink: 0 }}>
+                                  {formatCurrency(originalTotal)}
+                                </Text>
+                              </Group>
+                              <Text fz="xs" fw={700} c="teal.6">
+                                New User Promo (15% off)
+                              </Text>
+                            </Stack>
+                          ) : (
+                            <Text className={styles.priceTag}>
+                              {formatCurrency(originalTotal)}
+                            </Text>
+                          )}
                           {quantity > 1 && (
                             <Text size="xs" c="dimmed">
-                              {formatCurrency(Number(price))} × {quantity}
+                              {formatCurrency(showNewUserPrice ? originalPrice * 0.85 : originalPrice)} × {quantity}
                             </Text>
                           )}
                         </Box>

@@ -2,6 +2,7 @@
 
 import { useDeleteCart as useDeleteItemCart, useUpdateCart } from '@/features/cart/hooks'
 import { TItemCart } from '@/features/order/types'
+import { useAvailableCoupons } from '@/features/order/hooks'
 import { formatCurrency } from '@/utils/format'
 import { toast } from 'react-toastify'
 
@@ -37,6 +38,16 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
   const { mutate: deleteItem, isPending } = useDeleteItemCart()
   const { mutate: updateCartItem, isPending: isUpdating } = useUpdateCart()
 
+  const { data: coupons } = useAvailableCoupons()
+  const isExplicitlyNotNewUser = coupons !== undefined && !coupons.some(c => c.code === 'NEWUSER' && c.is_eligible)
+  const showNewUserPrice = !isExplicitlyNotNewUser
+
+  const originalPrice = Number(item.price)
+  const newUserPrice = originalPrice * 0.85
+  const originalSubtotal = originalPrice * localQty
+  const discountAmount = showNewUserPrice ? Math.min(originalSubtotal * 0.15, 100000) : 0
+  const discountedSubtotal = originalSubtotal - discountAmount
+ 
   // Sync localQty if item.quantity changes from outside (refetch)
   useEffect(() => {
     setLocalQty(item.quantity)
@@ -170,9 +181,25 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                 <Text size="sm" c="dimmed">
                   •
                 </Text>
-                <Text size="sm" c="dimmed">
-                  {formatCurrency(item.price)} each
-                </Text>
+                {showNewUserPrice ? (
+                  <Stack gap={1} style={{ minWidth: 100 }}>
+                    <Group gap="xs" align="baseline" wrap="nowrap">
+                      <Text size="sm" fw={600} c="primary">
+                        {formatCurrency(newUserPrice)} each
+                      </Text>
+                      <Text size="xs" c="dimmed" td="line-through" style={{ flexShrink: 0 }}>
+                        {formatCurrency(originalPrice)}
+                      </Text>
+                    </Group>
+                    <Text size="10px" fw={700} c="teal.6">
+                      New User Promo (15% off)
+                    </Text>
+                  </Stack>
+                ) : (
+                  <Text size="sm" c="dimmed">
+                    {formatCurrency(item.price)} each
+                  </Text>
+                )}
               </Group>
 
               {/* Prescription Toggle */}
@@ -271,13 +298,28 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
             <Text size="xs" c="dimmed" tt="uppercase" fw={600}>
               Subtotal
             </Text>
-            <Text fw={700} size="lg" c="primary.8"
-              style={{
-                animation: isUpdating ? 'qty-blink 0.8s ease-in-out infinite' : 'none'
-              }}
-            >
-              {formatCurrency(item.subtotal)}
-            </Text>
+            {showNewUserPrice ? (
+              <Stack gap={1}>
+                <Text fw={700} size="lg" c="primary.8"
+                  style={{
+                    animation: isUpdating ? 'qty-blink 0.8s ease-in-out infinite' : 'none'
+                  }}
+                >
+                  {formatCurrency(discountedSubtotal)}
+                </Text>
+                <Text size="xs" c="dimmed" td="line-through">
+                  {formatCurrency(originalSubtotal)}
+                </Text>
+              </Stack>
+            ) : (
+              <Text fw={700} size="lg" c="primary.8"
+                style={{
+                  animation: isUpdating ? 'qty-blink 0.8s ease-in-out infinite' : 'none'
+                }}
+              >
+                {formatCurrency(originalSubtotal)}
+              </Text>
+            )}
           </Stack>
         </Grid.Col>
 
