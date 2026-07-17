@@ -177,7 +177,7 @@ const CardProduct = memo(({ item }: { item: TProduct }) => {
                   {formatCurrency(originalPrice)}
                 </Text>
               </Group>
-              <Text fz={9} fw={700} c="teal.6">
+              <Text fz={9} fw={700} c="red.8">
                 New User Promo (15% off)
               </Text>
             </Stack>

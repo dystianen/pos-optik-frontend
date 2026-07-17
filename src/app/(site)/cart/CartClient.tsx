@@ -315,7 +315,7 @@ const Cart = () => {
                   </Group>
 
                   {showNewUserPrice && (
-                    <Group justify="space-between" c="teal.6" fw={500}>
+                    <Group justify="space-between" c="red.8" fw={500}>
                       <Text size="sm">New User Promo (15% off)</Text>
                       <Text size="sm">-{formatCurrency(discountAmount)}</Text>
                     </Group>

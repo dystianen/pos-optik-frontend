@@ -449,7 +449,7 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
                                   {formatCurrency(originalTotal)}
                                 </Text>
                               </Group>
-                              <Text fz="xs" fw={700} c="teal.6">
+                              <Text fz="xs" fw={700} c="red.8">
                                 New User Promo (15% off)
                               </Text>
                             </Stack>

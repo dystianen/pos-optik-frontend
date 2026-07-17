@@ -191,7 +191,7 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                         {formatCurrency(originalPrice)}
                       </Text>
                     </Group>
-                    <Text size="10px" fw={700} c="teal.6">
+                    <Text size="10px" fw={700} c="red.8">
                       New User Promo (15% off)
                     </Text>
                   </Stack>
