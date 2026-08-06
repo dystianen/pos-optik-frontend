@@ -9,12 +9,14 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useRegister } from '../hooks'
 import { TPayloadRegister } from '../types'
+import { useReCaptcha } from '@/hooks/useReCaptcha'
 
 const SignUp = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirectTo') || ''
   const [loading, setLoading] = useState(false)
+  const { executeRecaptcha } = useReCaptcha()
 
   const { mutate: submitRegister } = useRegister()
 
@@ -33,24 +35,36 @@ const SignUp = () => {
     } as TPayloadRegister
   })
 
-  const handleSubmit = (values: TPayloadRegister) => {
+  const handleSubmit = async (values: TPayloadRegister) => {
     setLoading(true)
+    try {
+      const captchaToken = await executeRecaptcha('register')
 
-    submitRegister(values, {
-      onSuccess: () => {
-        toast.success('Successfully registered')
-        setLoading(false)
-        router.push(redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : '/signin')
-      },
-      onError: (err) => {
-        setLoading(false)
-        if (err.errors) {
-          form.setErrors(err.errors)
-        } else {
-          toast.error(err.message || 'Registration failed')
+      submitRegister(
+        {
+          ...values,
+          captcha_token: captchaToken
+        },
+        {
+          onSuccess: () => {
+            toast.success('Successfully registered')
+            setLoading(false)
+            router.push(redirectTo ? `/signin?redirectTo=${encodeURIComponent(redirectTo)}` : '/signin')
+          },
+          onError: (err) => {
+            setLoading(false)
+            if (err.errors) {
+              form.setErrors(err.errors)
+            } else {
+              toast.error(err.message || 'Registration failed')
+            }
+          }
         }
-      }
-    })
+      )
+    } catch (error) {
+      setLoading(false)
+      toast.error('Verification failed. Please try again.')
+    }
   }
 
   return (

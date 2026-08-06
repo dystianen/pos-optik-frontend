@@ -1,6 +1,12 @@
 export type TPayloadLogin = {
   customer_email: string
   customer_password: string
+  captcha_token?: string
+}
+
+export type TPayloadGoogleLogin = {
+  id_token: string
+  captcha_token?: string
 }
 
 export type TPayloadForgotPassword = {
@@ -25,6 +31,7 @@ export type TPayloadRegister = {
   customer_occupation: string
   customer_eye_history: string
   customer_preferences: string
+  captcha_token?: string
 }
 
 export type TResLogin = {

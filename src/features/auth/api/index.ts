@@ -2,6 +2,7 @@ import { API_ROUTES } from '@/constants/api-routes'
 import apiClient from '@/lib/apiClient'
 import type {
   TPayloadForgotPassword,
+  TPayloadGoogleLogin,
   TPayloadLogin,
   TPayloadRegister,
   TResForgotPassword,
@@ -12,6 +13,11 @@ import type {
 
 export const login = async (payload: TPayloadLogin) => {
   const response = await apiClient.post<TResLogin>(API_ROUTES.AUTH.LOGIN, payload)
+  return response.data.data
+}
+
+export const googleLogin = async (payload: TPayloadGoogleLogin) => {
+  const response = await apiClient.post<TResLogin>(API_ROUTES.AUTH.GOOGLE_LOGIN, payload)
   return response.data.data
 }
 

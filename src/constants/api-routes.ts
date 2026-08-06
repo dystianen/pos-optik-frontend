@@ -2,6 +2,7 @@ export const API_ROUTES = {
   MENU: '/products/categories',
   AUTH: {
     LOGIN: '/auth/login',
+    GOOGLE_LOGIN: '/auth/google-login',
     REGISTER: '/auth/register',
     LOGOUT: '/auth/logout',
     REFRESH: '/auth/refresh',

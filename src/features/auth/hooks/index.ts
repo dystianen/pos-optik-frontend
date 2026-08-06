@@ -7,6 +7,10 @@ export function useLogin() {
   return useMutation({ mutationFn: authApi.login })
 }
 
+export function useGoogleLogin() {
+  return useMutation({ mutationFn: authApi.googleLogin })
+}
+
 export function useRegister() {
   return useMutation({ mutationFn: authApi.register })
 }
