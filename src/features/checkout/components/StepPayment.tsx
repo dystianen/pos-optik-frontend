@@ -219,7 +219,6 @@ const StepPayment = ({ nextStep }: { nextStep: () => void }) => {
               createdAt={checkoutOrder.created_at}
               onExpired={() => {
                 setIsExpired(true)
-                toast.error('Payment time has expired. This order has been automatically cancelled.')
               }}
             />
           )}

@@ -14,7 +14,7 @@ interface PaymentCountdownProps {
   onExpired?: () => void
 }
 
-export const DEADLINE_HOURS = 1
+export const DEADLINE_HOURS = 5 / 60
 
 export function getRemainingSeconds(createdAt: string | number, deadlineHours: number): number {
   let createdMs: number
@@ -38,6 +38,17 @@ function formatTime(seconds: number) {
     minutes: String(m).padStart(2, '0'),
     seconds: String(s).padStart(2, '0')
   }
+}
+
+function formatDeadline(hours: number): string {
+  const mins = Math.round(hours * 60)
+  if (mins < 60) {
+    return `${mins} minute${mins > 1 ? 's' : ''}`
+  }
+  if (hours % 1 === 0) {
+    return `${hours} hour${hours > 1 ? 's' : ''}`
+  }
+  return `${mins} minutes`
 }
 
 export function PaymentCountdown({
@@ -190,8 +201,8 @@ export function PaymentCountdown({
       )}
 
       <Text size="xs" c="dimmed" ta="center">
-        The order will be automatically cancelled if payment is not received within {deadlineHours}{' '}
-        hours from the time the order was created
+        The order will be automatically cancelled if payment is not received within{' '}
+        {formatDeadline(deadlineHours)} from the time the order was created
       </Text>
 
       {isExpiring && (
