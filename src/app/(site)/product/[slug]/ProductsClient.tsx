@@ -111,7 +111,7 @@ const ProductsClient = ({ slug }: { slug: string }) => {
   const [localSearch, setLocalSearch] = useState('')
   const [localMinPrice, setLocalMinPrice] = useState<number | ''>(queryMinPrice ? Number(queryMinPrice) : '')
   const [localMaxPrice, setLocalMaxPrice] = useState<number | ''>(queryMaxPrice ? Number(queryMaxPrice) : '')
-  
+
   // Debounce price sliders to prevent sending excessive API requests
   const [debouncedMinPrice] = useDebouncedValue(localMinPrice, 400)
   const [debouncedMaxPrice] = useDebouncedValue(localMaxPrice, 400)
@@ -391,10 +391,9 @@ const ProductsClient = ({ slug }: { slug: string }) => {
                 updateUrlParams({ rating: queryRating === stars.toString() ? null : stars.toString() })
               }}
               className={`flex items-center justify-between p-2 rounded-lg transition-colors border
-                ${
-                  queryRating === stars.toString()
-                    ? 'bg-primary-50/30 border-primary-300 text-primary-700'
-                    : 'border-transparent hover:bg-gray-50 text-gray-700'
+                ${queryRating === stars.toString()
+                  ? 'bg-primary-50/30 border-primary-300 text-primary-700'
+                  : 'border-transparent hover:bg-gray-50 text-gray-700'
                 }`}
             >
               <Group gap="xs" wrap="nowrap">
@@ -423,7 +422,7 @@ const ProductsClient = ({ slug }: { slug: string }) => {
   ]
 
   return (
-    <Container size="xl" my="xl" mt={100} w="100%" mih={'60vh'}>
+    <Container size="xl" my="xl" mt={120} w="100%" mih={'60vh'}>
       <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
         {breadcrumbItems}
       </Breadcrumbs>

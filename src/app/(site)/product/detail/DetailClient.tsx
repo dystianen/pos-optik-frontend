@@ -289,7 +289,7 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
 
   return (
     <>
-      <Container size={'xl'} mt={{ base: 70, md: 100 }} pb={isMobile ? 90 : 0}>
+      <Container size={'xl'} mt={{ base: 70, md: 120 }} pb={isMobile ? 90 : 0}>
         {/* ─── Breadcrumb ─────────────────────────────── */}
         {!isLoadingPage && (
           <Breadcrumbs mb="md" separatorMargin={6} styles={{ separator: { color: 'var(--mantine-color-dimmed)' } }}>
@@ -540,19 +540,19 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
                                 border: 'none',
                                 background:
                                   (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
-                                  (!selectedVariant && product && quantity >= Number(product.product_stock))
+                                    (!selectedVariant && product && quantity >= Number(product.product_stock))
                                     ? 'var(--mantine-color-gray-1)'
                                     : 'var(--mantine-color-primary-0)',
                                 cursor:
                                   (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
-                                  (!selectedVariant && product && quantity >= Number(product.product_stock))
+                                    (!selectedVariant && product && quantity >= Number(product.product_stock))
                                     ? 'not-allowed'
                                     : 'pointer',
                                 fontSize: 20,
                                 fontWeight: 700,
                                 color:
                                   (selectedVariant && quantity >= Number(selectedVariant.stock)) ||
-                                  (!selectedVariant && product && quantity >= Number(product.product_stock))
+                                    (!selectedVariant && product && quantity >= Number(product.product_stock))
                                     ? 'var(--mantine-color-gray-5)'
                                     : 'var(--mantine-color-primary-7)',
                                 transition: 'all 0.15s ease',
