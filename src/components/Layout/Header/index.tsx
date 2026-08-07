@@ -218,7 +218,7 @@ const Header = ({ user }: { user: TUser | null }) => {
                     <UnstyledButton className="p-1">
                       <Group gap="xs">
                         <IconUser color={theme.colors.primary[8]} size={25} />
-                        <Text className="hidden md:block font-medium">{user.name}</Text>
+                        <Text className="hidden md:block font-medium max-w-[120px] truncate">{user.name}</Text>
                       </Group>
                     </UnstyledButton>
                   </Menu.Target>
