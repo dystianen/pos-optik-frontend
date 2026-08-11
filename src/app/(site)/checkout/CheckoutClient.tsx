@@ -4,7 +4,11 @@ import { TSummaryOrders } from '@/features/order/types'
 import {
   useAllShippingAddress,
   useGetShippingAddress,
-  useSaveCustomerShipping
+  useSaveCustomerShipping,
+  useProvinces,
+  useCities,
+  useCalculateShippingCost,
+  useDistricts
 } from '@/features/shipping/hooks'
 import { TCustomerShipping, TReqCustomerShipping } from '@/features/shipping/types'
 import {
@@ -21,7 +25,9 @@ import {
   Stepper,
   Text,
   Textarea,
-  TextInput
+  TextInput,
+  Select,
+  Divider
 } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
@@ -57,7 +63,11 @@ const Orders = () => {
       phone: '',
       address: '',
       city: '',
+      city_id: '',
+      district: '',
+      district_id: '',
       province: '',
+      province_id: '',
       postal_code: ''
     }
   })
@@ -76,6 +86,20 @@ const Orders = () => {
     key: 'checkout_order',
     defaultValue: null
   })
+
+  const [selectedCourier, setSelectedCourier] = useLocalStorage<string>({ key: 'checkout_courier', defaultValue: 'jne' })
+  const [selectedService, setSelectedService] = useLocalStorage<string>({ key: 'checkout_service', defaultValue: 'REG' })
+
+  const [shippingOptions, setShippingOptions] = useState<any[]>([])
+  const [isLoadingShippingOptions, setIsLoadingShippingOptions] = useState(false)
+  const { mutate: calculateCost } = useCalculateShippingCost()
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+
+  const [selectedProvinceId, setSelectedProvinceId] = useState<string>('')
+  const [selectedCityId, setSelectedCityId] = useState<string>('')
+  const { data: provinces } = useProvinces()
+  const { data: cities } = useCities(selectedProvinceId)
+  const { data: districts } = useDistricts(selectedCityId)
 
   const { data: activeOrderData, isLoading: isLoadingActiveOrder } = useActiveOrder()
 
@@ -107,6 +131,8 @@ const Orders = () => {
         const topAddress = shippingAddresses[0]
         setCsaId(topAddress.csa_id)
         form.setValues(topAddress)
+        setSelectedProvinceId(topAddress.province_id || '')
+        setSelectedCityId(topAddress.city_id || '')
       }
     }
   }, [shippingAddresses, hasAddress, csaId])
@@ -114,18 +140,46 @@ const Orders = () => {
   useEffect(() => {
     if (csaId && shippingAddress) {
       form.setValues(shippingAddress)
+      setSelectedProvinceId(shippingAddress.province_id || '')
+      setSelectedCityId(shippingAddress.city_id || '')
     }
   }, [csaId, shippingAddress])
 
   useEffect(() => {
+    if (csaId) {
+      setIsLoadingShippingOptions(true)
+      calculateCost(csaId, {
+        onSuccess: (res) => {
+          setShippingOptions(res || [])
+          setIsLoadingShippingOptions(false)
+          if (res && res.length > 0) {
+            const stillExists = res.some(
+              (opt: any) => opt.courier === selectedCourier && opt.service === selectedService
+            )
+            if (!stillExists) {
+              const defaultOpt = res.find((opt: any) => opt.courier === 'jne' && opt.service === 'REG') || res[0]
+              setSelectedCourier(defaultOpt.courier)
+              setSelectedService(defaultOpt.service)
+            }
+          }
+        },
+        onError: (err: any) => {
+          toast.error(err.message || 'Failed to load shipping rates')
+          setIsLoadingShippingOptions(false)
+        }
+      })
+    }
+  }, [csaId, calculateCost, refreshTrigger])
+
+  useEffect(() => {
     if (activeStep === 1 && csaId) {
-      summary({ addressId: csaId, couponCode: appliedCouponCode }, {
+      summary({ addressId: csaId, couponCode: appliedCouponCode, courier: selectedCourier, service: selectedService }, {
         onSuccess: (res) => {
           setSummaryOrder(res)
         }
       })
     }
-  }, [activeStep, csaId, appliedCouponCode])
+  }, [activeStep, csaId, appliedCouponCode, selectedCourier, selectedService])
 
   // Auto-apply NEWUSER coupon for first-time checkout flows
   useEffect(() => {
@@ -148,6 +202,7 @@ const Orders = () => {
 
         setCsaId(id)
         setShowForm(false)
+        setRefreshTrigger((prev) => prev + 1) // Force refresh shipping rates after save/update
       },
       onError: (err) => {
         toast.error(err.message)
@@ -167,7 +222,7 @@ const Orders = () => {
 
   const nextToSummaryOrder = () => {
     if (csaId) {
-      summary({ addressId: csaId, couponCode: appliedCouponCode }, {
+      summary({ addressId: csaId, couponCode: appliedCouponCode, courier: selectedCourier, service: selectedService }, {
         onSuccess: (res) => {
           setSummaryOrder(res)
           nextStep()
@@ -180,18 +235,25 @@ const Orders = () => {
     if (!address) {
       // ➕ New address
       form.reset()
+      setSelectedProvinceId('')
+      setSelectedCityId('')
       setShowForm(true)
       return
     }
 
     setCsaId(address.csa_id)
     form.setValues(address)
+    setSelectedProvinceId(address.province_id || '')
+    setSelectedCityId(address.city_id || '')
     setShowForm(false)
+    setRefreshTrigger((prev) => prev + 1) // Force refresh shipping rates after selecting address
   }
 
   const handleEditAddress = (address: any) => {
     setCsaId(address.csa_id)
     form.setValues(address)
+    setSelectedProvinceId(address.province_id || '')
+    setSelectedCityId(address.city_id || '')
     setShowForm(true)
   }
 
@@ -307,7 +369,7 @@ const Orders = () => {
                                   </Text>
 
                                   <Text size="sm">
-                                    {address.city}, {address.province} {address.postal_code}
+                                    {address.district ? `${address.district}, ` : ''}{address.city}, {address.province} {address.postal_code}
                                   </Text>
                                 </Stack>
                               </Group>
@@ -334,12 +396,81 @@ const Orders = () => {
                       Select an existing address or add a new one.
                     </Text>
 
+                    {csaId && (
+                      <Stack gap="sm" mt="xl" style={{ position: 'relative' }}>
+                        <Divider label="Select Courier & Service" labelPosition="center" />
+                        <LoadingOverlay
+                          visible={isLoadingShippingOptions}
+                          zIndex={1000}
+                          overlayProps={{ radius: 'lg', blur: 3 }}
+                        />
+                        {shippingOptions && shippingOptions.length > 0 ? (
+                          <Radio.Group
+                            value={`${selectedCourier}|${selectedService}`}
+                            onChange={(val) => {
+                              if (val) {
+                                const [cour, serv] = val.split('|')
+                                setSelectedCourier(cour)
+                                setSelectedService(serv)
+                              }
+                            }}
+                          >
+                            <Stack gap="xs" mt="xs">
+                              {shippingOptions.map((opt: any, idx: number) => (
+                                <Card
+                                  key={idx}
+                                  withBorder
+                                  p="sm"
+                                  style={{
+                                    borderColor:
+                                      selectedCourier === opt.courier && selectedService === opt.service
+                                        ? 'var(--mantine-color-blue-6)'
+                                        : undefined,
+                                    backgroundColor:
+                                      selectedCourier === opt.courier && selectedService === opt.service
+                                        ? 'var(--mantine-color-blue-0)'
+                                        : undefined,
+                                    cursor: 'pointer'
+                                  }}
+                                  onClick={() => {
+                                    setSelectedCourier(opt.courier)
+                                    setSelectedService(opt.service)
+                                  }}
+                                >
+                                  <Group justify="space-between" wrap="nowrap">
+                                    <Group gap="sm" wrap="nowrap">
+                                      <Radio value={`${opt.courier}|${opt.service}`} />
+                                      <Stack gap={2}>
+                                        <Text fw={600} size="sm">
+                                          {opt.courier_name} - {opt.service}
+                                        </Text>
+                                        <Text size="xs" c="dimmed">
+                                          {opt.description} {opt.etd ? `(Estimated: ${opt.etd} days)` : ''}
+                                        </Text>
+                                      </Stack>
+                                    </Group>
+                                    <Text fw={700} size="sm" c="blue" style={{ whiteSpace: 'nowrap' }}>
+                                      Rp {opt.cost.toLocaleString('id-ID')}
+                                    </Text>
+                                  </Group>
+                                </Card>
+                              ))}
+                            </Stack>
+                          </Radio.Group>
+                        ) : (
+                          <Alert title="No Shipping Rates Found" color="red">
+                            No shipping services are available for the selected address. Please check if your city and province match RajaOngkir IDs.
+                          </Alert>
+                        )}
+                      </Stack>
+                    )}
+
                     <Group grow justify="center" mt="xl">
                       <Button variant="default" onClick={handleBackOrCancel}>
                         Back
                       </Button>
 
-                      <Button type="submit" loading={isLoadingSummary} onClick={nextToSummaryOrder}>
+                      <Button type="submit" loading={isLoadingSummary} onClick={nextToSummaryOrder} disabled={!csaId || shippingOptions.length === 0}>
                         Next
                       </Button>
                     </Group>
@@ -372,19 +503,69 @@ const Orders = () => {
                         key={form.key('address')}
                         {...form.getInputProps('address')}
                       />
-                      <TextInput
-                        withAsterisk
-                        label="City"
-                        placeholder="eg: Jakarta Selatan"
-                        key={form.key('city')}
-                        {...form.getInputProps('city')}
-                      />
-                      <TextInput
+                      <Select
                         withAsterisk
                         label="Province"
-                        placeholder="eg: Jakarta"
-                        key={form.key('province')}
-                        {...form.getInputProps('province')}
+                        placeholder="Select Province"
+                        data={(provinces || []).map((p: any) => ({
+                          value: p.province_id,
+                          label: p.province
+                        }))}
+                        searchable
+                        key={form.key('province_id')}
+                        {...form.getInputProps('province_id')}
+                        onChange={(val) => {
+                          form.setFieldValue('province_id', val || '')
+                          const provName = provinces?.find((p: any) => p.province_id === val)?.province || ''
+                          form.setFieldValue('province', provName)
+                          setSelectedProvinceId(val || '')
+                          form.setFieldValue('city_id', '')
+                          form.setFieldValue('city', '')
+                        }}
+                      />
+                      <Select
+                        withAsterisk
+                        label="City"
+                        placeholder="Select City"
+                        data={(cities || []).map((c: any) => ({
+                          value: c.city_id,
+                          label: `${c.type} ${c.city_name}`
+                        }))}
+                        searchable
+                        disabled={!selectedProvinceId}
+                        key={form.key('city_id')}
+                        {...form.getInputProps('city_id')}
+                        onChange={(val) => {
+                          form.setFieldValue('city_id', val || '')
+                          const cityObj = cities?.find((c: any) => c.city_id === val)
+                          const cityName = cityObj ? `${cityObj.type} ${cityObj.city_name}` : ''
+                          form.setFieldValue('city', cityName)
+                          setSelectedCityId(val || '')
+                          form.setFieldValue('district_id', '')
+                          form.setFieldValue('district', '')
+                          if (cityObj?.postal_code) {
+                            form.setFieldValue('postal_code', cityObj.postal_code)
+                          }
+                        }}
+                      />
+                      <Select
+                        withAsterisk
+                        label="District (Kecamatan)"
+                        placeholder="Select District"
+                        data={(districts || []).map((d: any) => ({
+                          value: d.subdistrict_id,
+                          label: d.subdistrict_name
+                        }))}
+                        searchable
+                        disabled={!selectedCityId}
+                        key={form.key('district_id')}
+                        {...form.getInputProps('district_id')}
+                        onChange={(val) => {
+                          form.setFieldValue('district_id', val || '')
+                          const distObj = districts?.find((d: any) => d.subdistrict_id === val)
+                          const distName = distObj ? distObj.subdistrict_name : ''
+                          form.setFieldValue('district', distName)
+                        }}
                       />
                       <TextInput
                         withAsterisk
@@ -420,6 +601,8 @@ const Orders = () => {
             summaryMutation={summary}
             prevStep={prevStep}
             nextStep={nextStep}
+            courier={selectedCourier}
+            service={selectedService}
           />
         </Stepper.Step>
         <Stepper.Step label="Payment">

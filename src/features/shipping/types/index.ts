@@ -10,7 +10,11 @@ export interface TReqCustomerShipping {
   phone: string
   address: string
   city: string
+  city_id?: string
+  district: string
+  district_id?: string
   province: string
+  province_id?: string
   postal_code: string
 }
 

@@ -32,3 +32,35 @@ export function useSaveCustomerShipping() {
     }
   })
 }
+
+export function useProvinces() {
+  return useQuery({
+    queryKey: ['provinces'],
+    queryFn: shippingApi.getProvinces,
+    staleTime: 1000 * 60 * 60
+  })
+}
+
+export function useCities(provinceId?: string) {
+  return useQuery({
+    queryKey: ['cities', provinceId],
+    queryFn: () => shippingApi.getCities(provinceId),
+    enabled: !!provinceId,
+    staleTime: 1000 * 60 * 60
+  })
+}
+
+export function useCalculateShippingCost() {
+  return useMutation({
+    mutationFn: (addressId: string) => shippingApi.calculateShippingCost(addressId)
+  })
+}
+
+export function useDistricts(cityId?: string) {
+  return useQuery({
+    queryKey: ['districts', cityId],
+    queryFn: () => shippingApi.getDistricts(cityId),
+    enabled: !!cityId,
+    staleTime: 1000 * 60 * 60
+  })
+}

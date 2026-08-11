@@ -4,8 +4,8 @@ import * as orderApi from '../api'
 export function useSummaryOrders() {
   return useMutation({
     mutationKey: ['SUMMARY_ORDERS'],
-    mutationFn: ({ addressId, couponCode }: { addressId: string; couponCode?: string }) =>
-      orderApi.summaryOrders(addressId, couponCode)
+    mutationFn: ({ addressId, couponCode, courier, service }: { addressId: string; couponCode?: string; courier?: string; service?: string }) =>
+      orderApi.summaryOrders(addressId, couponCode, courier, service)
   })
 }
 
@@ -38,8 +38,8 @@ export function useDetailOrder(id: string) {
 export function useSubmitOrder() {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ addressId, couponCode }: { addressId: string; couponCode?: string }) =>
-      orderApi.submitOrder({ id: addressId, couponCode }),
+    mutationFn: ({ addressId, couponCode, courier, service }: { addressId: string; couponCode?: string; courier?: string; service?: string }) =>
+      orderApi.submitOrder({ id: addressId, couponCode, courier, service }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['total_cart'] })
     }

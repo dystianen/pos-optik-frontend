@@ -15,7 +15,9 @@ const StepSummaryOrder = ({
   summaryMutation,
   isLoadingSummary,
   prevStep,
-  nextStep
+  nextStep,
+  courier,
+  service
 }: {
   summaryOrder: TSummaryOrders | null
   setSummaryOrder: React.Dispatch<React.SetStateAction<TSummaryOrders | null>>
@@ -25,6 +27,8 @@ const StepSummaryOrder = ({
   isLoadingSummary: boolean
   prevStep: () => void
   nextStep: () => void
+  courier?: string
+  service?: string
 }) => {
   const csaId = readLocalStorageValue<string>({ key: 'csaId' })
   const [, setCheckoutOrder] = useLocalStorage({ key: 'checkout_order' })
@@ -36,7 +40,7 @@ const StepSummaryOrder = ({
   const handleApplyCoupon = (code: string) => {
     if (!code.trim()) return
     const formattedCode = code.trim().toUpperCase()
-    summaryMutation({ addressId: csaId, couponCode: formattedCode }, {
+    summaryMutation({ addressId: csaId, couponCode: formattedCode, courier, service }, {
       onSuccess: (res: TSummaryOrders) => {
         setSummaryOrder(res)
         if (res.coupon_details?.is_valid) {
@@ -53,7 +57,7 @@ const StepSummaryOrder = ({
   }
 
   const handleRemoveCoupon = () => {
-    summaryMutation({ addressId: csaId, couponCode: '' }, {
+    summaryMutation({ addressId: csaId, couponCode: '', courier, service }, {
       onSuccess: (res: TSummaryOrders) => {
         setSummaryOrder(res)
         setAppliedCouponCode('')
@@ -67,7 +71,7 @@ const StepSummaryOrder = ({
   }
 
   const handleSubmitOrders = () => {
-    submitOrder({ addressId: csaId, couponCode: appliedCouponCode }, {
+    submitOrder({ addressId: csaId, couponCode: appliedCouponCode, courier, service }, {
       onSuccess: (res) => {
         const payload = {
           order_id: res.order_id,
@@ -113,6 +117,7 @@ const StepSummaryOrder = ({
             </Text>
 
             <Text size="sm" c="gray.6">
+              {summaryOrder.shipping_address.district ? `${summaryOrder.shipping_address.district}, ` : ''}
               {summaryOrder.shipping_address.city}, {summaryOrder.shipping_address.province}{' '}
               {summaryOrder.shipping_address.postal_code}
             </Text>

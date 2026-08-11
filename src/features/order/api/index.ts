@@ -14,9 +14,13 @@ import type {
   TCoupon
 } from '../types'
 
-export const summaryOrders = async (id: string, couponCode?: string) => {
+export const summaryOrders = async (id: string, couponCode?: string, courier?: string, service?: string) => {
   const response = await apiClient.get<TResSummaryOrders>(API_ROUTES.ORDERS.SUMMARY(id), {
-    params: couponCode ? { coupon_code: couponCode } : {}
+    params: {
+      ...(couponCode ? { coupon_code: couponCode } : {}),
+      ...(courier ? { courier } : {}),
+      ...(service ? { service } : {})
+    }
   })
   return response.data.data
 }
@@ -42,9 +46,11 @@ export const getDetailOrder = async (id: string) => {
   return response.data.data
 }
 
-export const submitOrder = async (payload: { id: string; couponCode?: string }) => {
+export const submitOrder = async (payload: { id: string; couponCode?: string; courier?: string; service?: string }) => {
   const response = await apiClient.post(API_ROUTES.ORDERS.SUBMIT(payload.id), {
-    coupon_code: payload.couponCode
+    coupon_code: payload.couponCode,
+    courier: payload.courier,
+    service: payload.service
   })
   return response.data.data
 }

@@ -62,7 +62,11 @@ export interface ShippingAddress {
   phone: string
   address: string
   city: string
+  city_id?: string
+  district?: string
+  district_id?: string
   province: string
+  province_id?: string
   postal_code: string
 }
 
@@ -95,6 +99,7 @@ export interface Order {
     grand_total: number
     shipping_cost: number
     total_items: number
+    coupon_discount?: number
   }
   shipping: {
     method: string | null

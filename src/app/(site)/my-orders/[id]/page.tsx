@@ -547,7 +547,7 @@ export default function OrderDetailPage() {
                           </Text>
                           <Text size="sm">
                             {formatCurrency(
-                              order.summary.grand_total - order.summary.shipping_cost
+                              order.summary.grand_total - order.summary.shipping_cost + (order.summary.coupon_discount || 0)
                             )}
                           </Text>
                         </Group>
@@ -557,6 +557,12 @@ export default function OrderDetailPage() {
                           </Text>
                           <Text size="sm">{formatCurrency(order.summary.shipping_cost)}</Text>
                         </Group>
+                        {order.summary.coupon_discount !== undefined && order.summary.coupon_discount > 0 && (
+                          <Group justify="space-between" c="green.6" fw={500}>
+                            <Text size="sm">Coupon Discount</Text>
+                            <Text size="sm">-{formatCurrency(order.summary.coupon_discount)}</Text>
+                          </Group>
+                        )}
                         <Divider />
                         <Group justify="space-between">
                           <Text fw={600}>Total</Text>
