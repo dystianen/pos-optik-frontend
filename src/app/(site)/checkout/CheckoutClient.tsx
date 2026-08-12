@@ -119,6 +119,10 @@ const Orders = () => {
     // Kalau user BELUM punya alamat → langsung tampilkan form
     if (shippingAddresses && !hasAddress) {
       setShowForm(true)
+      setCsaId('')
+      form.reset()
+      setSelectedProvinceId('')
+      setSelectedCityId('')
     }
 
     // Kalau user SUDAH punya alamat → tampilkan list
