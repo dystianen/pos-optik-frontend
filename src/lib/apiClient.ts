@@ -58,7 +58,7 @@ const addAuthInterceptor = (instance: AxiosInstance) => {
           const { access_token } = response.data.data
 
           // Simpan access token baru
-          setAccessToken(access_token)
+          await setAccessToken(access_token)
 
           // Update header dengan token baru
           originalRequest.headers.Authorization = `Bearer ${access_token}`

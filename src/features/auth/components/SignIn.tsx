@@ -48,12 +48,13 @@ const SignIn = () => {
           captcha_token: captchaToken
         },
         {
-          onSuccess: ({ access_token, refresh_token, user }) => {
-            setAccessToken(access_token)
-            setRefreshToken(refresh_token)
-            setUser(JSON.stringify(user))
+          onSuccess: async ({ access_token, refresh_token, user }) => {
+            await setAccessToken(access_token)
+            await setRefreshToken(refresh_token)
+            await setUser(JSON.stringify(user))
             setLoading(false)
             router.replace(redirectTo)
+            router.refresh()
           },
           onError: (err) => {
             setLoading(false)
@@ -116,12 +117,13 @@ const SignIn = () => {
           captcha_token: captchaToken
         },
         {
-          onSuccess: ({ access_token, refresh_token, user }) => {
-            setAccessToken(access_token)
-            setRefreshToken(refresh_token)
-            setUser(JSON.stringify(user))
+          onSuccess: async ({ access_token, refresh_token, user }) => {
+            await setAccessToken(access_token)
+            await setRefreshToken(refresh_token)
+            await setUser(JSON.stringify(user))
             setLoading(false)
             router.replace(redirectTo)
+            router.refresh()
           },
           onError: (err) => {
             setLoading(false)

@@ -124,9 +124,10 @@ const Header = ({ user }: { user: TUser | null }) => {
     }
   }, [])
 
-  const handleLogout = useCallback(() => {
-    removeTokens()
+  const handleLogout = useCallback(async () => {
+    await removeTokens()
     router.push('/signin')
+    router.refresh()
   }, [])
 
   const handleRedirectToOrders = useCallback(() => {
