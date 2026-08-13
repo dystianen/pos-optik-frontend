@@ -32,6 +32,7 @@ import {
 import { useForm } from '@mantine/form'
 import { useLocalStorage } from '@mantine/hooks'
 import { IconEdit, IconInfoCircle } from '@tabler/icons-react'
+import CourierSelector from './CourierSelector'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -128,7 +129,7 @@ const Orders = () => {
     // Kalau user SUDAH punya alamat → tampilkan list
     if (shippingAddresses && hasAddress) {
       setShowForm(false)
-      
+
       // Auto select the first address if csaId is empty or not in shippingAddresses
       const exists = shippingAddresses.some((address) => address.csa_id === csaId)
       if (!csaId || !exists) {
@@ -403,64 +404,25 @@ const Orders = () => {
                     {csaId && (
                       <Stack gap="sm" mt="xl" style={{ position: 'relative' }}>
                         <Divider label="Select Courier & Service" labelPosition="center" />
-                        <LoadingOverlay
-                          visible={isLoadingShippingOptions}
-                          zIndex={1000}
-                          overlayProps={{ radius: 'lg', blur: 3 }}
-                        />
                         {shippingOptions && shippingOptions.length > 0 ? (
-                          <Radio.Group
-                            value={`${selectedCourier}|${selectedService}`}
-                            onChange={(val) => {
-                              if (val) {
-                                const [cour, serv] = val.split('|')
-                                setSelectedCourier(cour)
-                                setSelectedService(serv)
-                              }
+                          <CourierSelector
+                            options={shippingOptions}
+                            selectedCourier={selectedCourier}
+                            selectedService={selectedService}
+                            isLoading={isLoadingShippingOptions}
+                            onChange={(courier, service) => {
+                              setSelectedCourier(courier)
+                              setSelectedService(service)
                             }}
-                          >
-                            <Stack gap="xs" mt="xs">
-                              {shippingOptions.map((opt: any, idx: number) => (
-                                <Card
-                                  key={idx}
-                                  withBorder
-                                  p="sm"
-                                  style={{
-                                    borderColor:
-                                      selectedCourier === opt.courier && selectedService === opt.service
-                                        ? 'var(--mantine-color-blue-6)'
-                                        : undefined,
-                                    backgroundColor:
-                                      selectedCourier === opt.courier && selectedService === opt.service
-                                        ? 'var(--mantine-color-blue-0)'
-                                        : undefined,
-                                    cursor: 'pointer'
-                                  }}
-                                  onClick={() => {
-                                    setSelectedCourier(opt.courier)
-                                    setSelectedService(opt.service)
-                                  }}
-                                >
-                                  <Group justify="space-between" wrap="nowrap">
-                                    <Group gap="sm" wrap="nowrap">
-                                      <Radio value={`${opt.courier}|${opt.service}`} />
-                                      <Stack gap={2}>
-                                        <Text fw={600} size="sm">
-                                          {opt.courier_name} - {opt.service}
-                                        </Text>
-                                        <Text size="xs" c="dimmed">
-                                          {opt.description} {opt.etd ? `(Estimated: ${opt.etd} days)` : ''}
-                                        </Text>
-                                      </Stack>
-                                    </Group>
-                                    <Text fw={700} size="sm" c="blue" style={{ whiteSpace: 'nowrap' }}>
-                                      Rp {opt.cost.toLocaleString('id-ID')}
-                                    </Text>
-                                  </Group>
-                                </Card>
-                              ))}
-                            </Stack>
-                          </Radio.Group>
+                          />
+                        ) : isLoadingShippingOptions ? (
+                          <CourierSelector
+                            options={[]}
+                            selectedCourier={selectedCourier}
+                            selectedService={selectedService}
+                            isLoading={true}
+                            onChange={() => { }}
+                          />
                         ) : (
                           <Alert title="No Shipping Rates Found" color="red">
                             No shipping services are available for the selected address. Please check if your city and province match RajaOngkir IDs.
