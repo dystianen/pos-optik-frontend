@@ -98,7 +98,7 @@ export function OrderCard({ order }: OrderCardProps) {
                 <IconTruck size={16} />
                 <Text size="sm" c="dimmed">
                   {order.shipping.method}
-                  {order.shipping.estimated_days && ` (${order.shipping.estimated_days})`}
+                  {order.shipping.estimated_days && ` (${order.shipping.estimated_days}) days`}
                 </Text>
               </Group>
             )}

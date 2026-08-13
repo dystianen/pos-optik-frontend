@@ -404,7 +404,7 @@ export default function OrderDetailPage() {
                               </Text>
                               {order.shipping.estimated_days && (
                                 <Text size="xs" c="dimmed">
-                                  Estimated: {order.shipping.estimated_days}
+                                  Estimated: {order.shipping.estimated_days} days
                                 </Text>
                               )}
                             </div>
