@@ -291,10 +291,10 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
     currentStock === 0
       ? 'Product is out of stock'
       : isPrescriptionInvalid
-      ? 'Please select a valid prescription or Manual Input'
-      : variants.length > 0 && !selectedVariant
-      ? 'Select variant first'
-      : ''
+        ? 'Please select a valid prescription or Manual Input'
+        : variants.length > 0 && !selectedVariant
+          ? 'Select variant first'
+          : ''
 
   /* ─── Breadcrumb items ──────────────────────────────── */
   const breadcrumbData = getBreadcrumbData(fromPage)

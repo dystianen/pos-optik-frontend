@@ -157,8 +157,8 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
               !isLoggedIn
                 ? 'Sign in to use your saved eye examination results'
                 : !hasHistory
-                ? 'No examination history recorded from our clinic yet'
-                : 'Automatically use eye examination results from clinic record'
+                  ? 'No examination history recorded from our clinic yet'
+                  : 'Automatically use eye examination results from clinic record'
             }
             badge={
               !isLoggedIn ? (
@@ -368,7 +368,7 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
                 }
               />
               <TextInput
-                label="CYL (Cylinder)"
+                label="CYL"
                 placeholder="-0.50"
                 size="xs"
                 value={value.right?.cyl ?? ''}
@@ -379,7 +379,7 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
                 }
               />
               <TextInput
-                label="AXIS (Degrees)"
+                label="AXIS (°)"
                 placeholder="180"
                 size="xs"
                 value={value.right?.axis ?? ''}
@@ -423,7 +423,7 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
                 }
               />
               <TextInput
-                label="CYL (Cylinder)"
+                label="CYL"
                 placeholder="-0.50"
                 size="xs"
                 value={value.left?.cyl ?? ''}
@@ -434,7 +434,7 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
                 }
               />
               <TextInput
-                label="AXIS (Degrees)"
+                label="AXIS (°)"
                 placeholder="180"
                 size="xs"
                 value={value.left?.axis ?? ''}
@@ -496,13 +496,12 @@ function PaperRadioOption({
       withBorder
       p="sm"
       radius="sm"
-      className={`transition-all ${
-        disabled
-          ? 'opacity-60 bg-gray-50/70 border-gray-200 cursor-not-allowed border-dashed'
-          : isSelected
+      className={`transition-all ${disabled
+        ? 'opacity-60 bg-gray-50/70 border-gray-200 cursor-not-allowed border-dashed'
+        : isSelected
           ? 'border-blue-500 bg-blue-50/30 shadow-xs cursor-pointer'
           : 'border-gray-200 hover:border-gray-300 bg-white cursor-pointer'
-      }`}
+        }`}
       onClick={() => {
         if (disabled) {
           onDisabledClick?.()

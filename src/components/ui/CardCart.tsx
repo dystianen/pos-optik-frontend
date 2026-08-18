@@ -47,7 +47,7 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
   const originalSubtotal = originalPrice * localQty
   const discountAmount = showNewUserPrice ? Math.min(originalSubtotal * 0.15, 100000) : 0
   const discountedSubtotal = originalSubtotal - discountAmount
- 
+
   // Sync localQty if item.quantity changes from outside (refetch)
   useEffect(() => {
     setLocalQty(item.quantity)
@@ -256,7 +256,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                             <Table.Th fw={600}>CYL</Table.Th>
                             <Table.Th fw={600}>AXIS</Table.Th>
                             <Table.Th fw={600}>PD</Table.Th>
-                            <Table.Th fw={600}>ADD</Table.Th>
                           </Table.Tr>
                         </Table.Thead>
 
@@ -269,7 +268,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                             <Table.Td>{prescription.right?.cyl ?? '-'}</Table.Td>
                             <Table.Td>{prescription.right?.axis ?? '-'}</Table.Td>
                             <Table.Td>{prescription.right?.pd ?? '-'}</Table.Td>
-                            <Table.Td>{prescription.right?.add ?? '-'}</Table.Td>
                           </Table.Tr>
 
                           <Table.Tr>
@@ -280,7 +278,6 @@ const CardCart = memo(({ item, hideAction = false }: TCardCart) => {
                             <Table.Td>{prescription.left?.cyl ?? '-'}</Table.Td>
                             <Table.Td>{prescription.left?.axis ?? '-'}</Table.Td>
                             <Table.Td>{prescription.left?.pd ?? '-'}</Table.Td>
-                            <Table.Td>{prescription.left?.add ?? '-'}</Table.Td>
                           </Table.Tr>
                         </Table.Tbody>
                       </Table>
