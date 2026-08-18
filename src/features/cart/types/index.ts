@@ -2,7 +2,7 @@ import { GeneralResponse } from '@/types/general'
 import { TItemCart } from '@/features/order/types'
 
 export type PrescriptionPayload = {
-  type: 'none' | 'manual'
+  type: 'none' | 'manual' | 'history'
   right?: {
     sph?: string
     cyl?: string
@@ -17,6 +17,8 @@ export type PrescriptionPayload = {
     pd?: string
     add?: string
   }
+  examination_date?: string
+  diagnosis?: string
 }
 
 export type TReqAddToCart = {

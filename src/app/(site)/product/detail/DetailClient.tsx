@@ -683,7 +683,11 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
                   )}
 
                   {product?.is_prescription_supported && (
-                    <CartLensForm value={prescription} onChange={setPrescription} />
+                    <CartLensForm
+                      value={prescription}
+                      onChange={setPrescription}
+                      onAuthRequired={() => setAuthModalOpen(true)}
+                    />
                   )}
                 </Stack>
               </Grid.Col>

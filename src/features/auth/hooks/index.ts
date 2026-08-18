@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { deleteCookie } from 'cookies-next/client'
+import { deleteCookie, hasCookie } from 'cookies-next/client'
 import { useRouter } from 'nextjs-toploader/app'
 import * as authApi from '../api'
 
@@ -22,7 +22,9 @@ export function useForgotPassword() {
 export function useProfile() {
   return useQuery({
     queryKey: ['profile'],
-    queryFn: authApi.getProfile
+    queryFn: authApi.getProfile,
+    enabled: typeof window !== 'undefined' ? hasCookie('user') || hasCookie('access_token') : false,
+    retry: false
   })
 }
 
