@@ -175,6 +175,15 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
 
   /* ─── Handlers ──────────────────────────────────────── */
   const handleAddCart = async () => {
+    // Validate prescription if supported
+    if (product?.is_prescription_supported && prescription.type === 'history') {
+      const hasHistoryData = !!(prescription.right?.sph || prescription.left?.sph)
+      if (!hasHistoryData) {
+        toast.error('No saved prescription record found. Please select Manual Input or Plano (0.00).')
+        return
+      }
+    }
+
     const isLoggedIn = hasCookie('user')
     if (isLoggedIn) {
       setLoading(true)
@@ -267,6 +276,24 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
   const variantLabel =
     selectedVariant && selectedVariant.variant_name !== product?.product_name
       ? `(${selectedVariant.variant_name})`
+      : ''
+
+  const isPrescriptionInvalid =
+    product?.is_prescription_supported &&
+    prescription.type === 'history' &&
+    !prescription.right?.sph &&
+    !prescription.left?.sph
+
+  const isAddToCartDisabled =
+    (variants.length > 0 && !selectedVariant) || currentStock === 0 || isPrescriptionInvalid
+
+  const addToCartTooltip =
+    currentStock === 0
+      ? 'Product is out of stock'
+      : isPrescriptionInvalid
+      ? 'Please select a valid prescription or Manual Input'
+      : variants.length > 0 && !selectedVariant
+      ? 'Select variant first'
       : ''
 
   /* ─── Breadcrumb items ──────────────────────────────── */
@@ -568,12 +595,12 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
                           {/* Add to Cart — Desktop */}
                           {!isMobile && (
                             <Tooltip
-                              label="Select variant first"
-                              disabled={variants.length === 0 || !!selectedVariant}
+                              label={addToCartTooltip}
+                              disabled={!isAddToCartDisabled}
                             >
                               <Button
                                 onClick={handleAddCart}
-                                disabled={variants.length > 0 && !selectedVariant || currentStock === 0}
+                                disabled={isAddToCartDisabled}
                                 loading={loading}
                                 leftSection={<IconShoppingCart size={16} />}
                                 radius="md"
@@ -727,10 +754,10 @@ const DetailClient = ({ productId, fromPage }: { productId: string; fromPage?: s
       {/* ─── Mobile Sticky CTA ──────────────────────────── */}
       {!isLoadingPage && product && isMobile && (
         <div className={styles.mobileCta}>
-          <Tooltip label="Select variant first" disabled={variants.length === 0 || !!selectedVariant}>
+          <Tooltip label={addToCartTooltip} disabled={!isAddToCartDisabled}>
             <Button
               onClick={handleAddCart}
-              disabled={variants.length > 0 && !selectedVariant || currentStock === 0}
+              disabled={isAddToCartDisabled}
               loading={loading}
               leftSection={<IconShoppingCart size={16} />}
               radius="md"

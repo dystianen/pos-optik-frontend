@@ -28,6 +28,7 @@ import {
   IconSparkles
 } from '@tabler/icons-react'
 import dayjs from 'dayjs'
+import { useEffect } from 'react'
 
 type CartLensFormProps = {
   value: PrescriptionPayload
@@ -39,6 +40,14 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
   const { data: profile, isLoading } = useProfile()
   const eyeHistory = profile?.preferences_history?.eye_history
   const isLoggedIn = !!profile?.personal_info
+  const hasHistory = !!eyeHistory
+
+  // Auto fallback if user was on 'history' but no history exists or user is not logged in
+  useEffect(() => {
+    if (!isLoading && value.type === 'history' && !hasHistory) {
+      onChange({ type: 'none' })
+    }
+  }, [isLoading, hasHistory, value.type, onChange])
 
   const update = (patch: Partial<PrescriptionPayload>) => {
     onChange({ ...value, ...patch })
@@ -46,29 +55,31 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
 
   const handleSelectType = (selectedType: 'none' | 'manual' | 'history') => {
     if (selectedType === 'history') {
-      if (eyeHistory) {
-        onChange({
-          type: 'history',
-          right: {
-            sph: eyeHistory.right_eye.sph !== undefined ? String(eyeHistory.right_eye.sph) : '',
-            cyl: eyeHistory.right_eye.cyl !== undefined ? String(eyeHistory.right_eye.cyl) : '',
-            axis: eyeHistory.right_eye.axs !== undefined ? String(eyeHistory.right_eye.axs) : '',
-            pd: value.right?.pd || '62'
-          },
-          left: {
-            sph: eyeHistory.left_eye.sph !== undefined ? String(eyeHistory.left_eye.sph) : '',
-            cyl: eyeHistory.left_eye.cyl !== undefined ? String(eyeHistory.left_eye.cyl) : '',
-            axis: eyeHistory.left_eye.axs !== undefined ? String(eyeHistory.left_eye.axs) : '',
-            pd: value.left?.pd || '62'
-          },
-          examination_date: eyeHistory.last_check,
-          diagnosis: eyeHistory.diagnosis
-        })
-      } else {
-        onChange({
-          type: 'history'
-        })
+      if (!isLoggedIn) {
+        onAuthRequired?.()
+        return
       }
+      if (!hasHistory) {
+        return
+      }
+
+      onChange({
+        type: 'history',
+        right: {
+          sph: eyeHistory.right_eye.sph !== undefined ? String(eyeHistory.right_eye.sph) : '',
+          cyl: eyeHistory.right_eye.cyl !== undefined ? String(eyeHistory.right_eye.cyl) : '',
+          axis: eyeHistory.right_eye.axs !== undefined ? String(eyeHistory.right_eye.axs) : '',
+          pd: value.right?.pd || '62'
+        },
+        left: {
+          sph: eyeHistory.left_eye.sph !== undefined ? String(eyeHistory.left_eye.sph) : '',
+          cyl: eyeHistory.left_eye.cyl !== undefined ? String(eyeHistory.left_eye.cyl) : '',
+          axis: eyeHistory.left_eye.axs !== undefined ? String(eyeHistory.left_eye.axs) : '',
+          pd: value.left?.pd || '62'
+        },
+        examination_date: eyeHistory.last_check,
+        diagnosis: eyeHistory.diagnosis
+      })
     } else if (selectedType === 'manual') {
       onChange({
         type: 'manual',
@@ -101,6 +112,8 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
     return num > 0 ? `+${num.toFixed(2)}` : num.toFixed(2)
   }
 
+  const isHistoryDisabled = !isLoggedIn || !hasHistory
+
   return (
     <Card withBorder radius="md" padding="lg" className="border-gray-200">
       <Group justify="space-between" mb="md" align="center">
@@ -110,7 +123,7 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
             Lens Prescription
           </Text>
         </Group>
-        {eyeHistory && (
+        {hasHistory && (
           <Badge variant="light" color="blue" size="sm" leftSection={<IconSparkles size={12} />}>
             Clinic Record Available
           </Badge>
@@ -127,15 +140,40 @@ export default function CartLensForm({ value, onChange, onAuthRequired }: CartLe
           <PaperRadioOption
             value="history"
             currentValue={value.type}
-            icon={<IconHistory size={18} className="text-blue-600" />}
+            disabled={isHistoryDisabled}
+            onDisabledClick={() => {
+              if (!isLoggedIn) {
+                onAuthRequired?.()
+              }
+            }}
+            icon={
+              <IconHistory
+                size={18}
+                className={isHistoryDisabled ? 'text-gray-400' : 'text-blue-600'}
+              />
+            }
             title="Use Latest Prescription"
-            description="Automatically use eye examination results from clinic record"
+            description={
+              !isLoggedIn
+                ? 'Sign in to use your saved eye examination results'
+                : !hasHistory
+                ? 'No examination history recorded from our clinic yet'
+                : 'Automatically use eye examination results from clinic record'
+            }
             badge={
-              eyeHistory ? (
+              !isLoggedIn ? (
+                <Badge size="xs" color="gray" variant="light" leftSection={<IconLock size={10} />}>
+                  Sign In Required
+                </Badge>
+              ) : !hasHistory ? (
+                <Badge size="xs" color="gray" variant="light">
+                  No Record
+                </Badge>
+              ) : (
                 <Badge size="xs" color="teal" variant="light">
                   Recommended
                 </Badge>
-              ) : undefined
+              )
             }
           />
 
@@ -438,7 +476,9 @@ function PaperRadioOption({
   icon,
   title,
   description,
-  badge
+  badge,
+  disabled,
+  onDisabledClick
 }: {
   value: string
   currentValue: string
@@ -446,6 +486,8 @@ function PaperRadioOption({
   title: string
   description: string
   badge?: React.ReactNode
+  disabled?: boolean
+  onDisabledClick?: () => void
 }) {
   const isSelected = currentValue === value
 
@@ -454,23 +496,33 @@ function PaperRadioOption({
       withBorder
       p="sm"
       radius="sm"
-      className={`cursor-pointer transition-all ${
-        isSelected
-          ? 'border-blue-500 bg-blue-50/30 shadow-xs'
-          : 'border-gray-200 hover:border-gray-300 bg-white'
+      className={`transition-all ${
+        disabled
+          ? 'opacity-60 bg-gray-50/70 border-gray-200 cursor-not-allowed border-dashed'
+          : isSelected
+          ? 'border-blue-500 bg-blue-50/30 shadow-xs cursor-pointer'
+          : 'border-gray-200 hover:border-gray-300 bg-white cursor-pointer'
       }`}
       onClick={() => {
+        if (disabled) {
+          onDisabledClick?.()
+          return
+        }
         const input = document.getElementById(`radio-lens-${value}`) as HTMLInputElement | null
         input?.click()
       }}
     >
       <Group justify="space-between" wrap="nowrap" align="center">
         <Group gap="sm" wrap="nowrap">
-          <Radio id={`radio-lens-${value}`} value={value} size="xs" />
+          <Radio id={`radio-lens-${value}`} value={value} size="xs" disabled={disabled} />
           <Box>{icon}</Box>
           <Box>
             <Group gap="xs">
-              <Text fz="sm" fw={isSelected ? 600 : 500} className="text-gray-900 leading-tight">
+              <Text
+                fz="sm"
+                fw={isSelected ? 600 : 500}
+                className={disabled ? 'text-gray-500 leading-tight' : 'text-gray-900 leading-tight'}
+              >
                 {title}
               </Text>
               {badge}
